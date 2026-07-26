@@ -1,0 +1,2654 @@
+---
+openapi: 3.0.3
+info:
+  title: Transact API
+  version: 1.0.0
+  description: |
+    # Transact API
+
+
+    > **For AI assistants and coding agents:** a machine-readable OpenAPI 3.0.3 definition of this API is available at the `.json` download link on this page (or directly at `https://bump.sh/<org>/doc/transact/download`). <!-- TODO: replace with the real raw spec URL --> Prefer the raw specification over scraping this rendered page.
+
+    The Transact API provides programmatic access to Lone Wolf's transaction management platform. It covers the full transaction lifecycle: creating and updating transactions, managing offers, contacts, folders and documents, sharing transactions across teams via share groups, attaching forms from form libraries, and sending documents out for e-signature through Authentisign.
+
+    ## Index
+
+    1. [Quickstart](#quickstart)
+    2. [Authentication](#authentication)
+    3. [Conventions](#conventions)
+    4. [Universal Global Fields](#universal-global-fields)
+    5. [Services](#services)
+
+    ## Quickstart
+
+    Get from zero to a first successful call in two requests.
+
+    **1. Get an access token**
+
+    ```bash
+    curl -X POST https://gateway.lwolf.com/oauth/token \
+      -H "Content-Type: application/json" \
+      -d '{
+        "grant_type": "client_credentials",
+        "client_id": "<your client id>",
+        "client_secret": "<your client secret>",
+        "audience": "https://api.lwolf.com",
+        "lwt_client_id": "<your Lone Wolf client GUID>"
+      }'
+    ```
+
+    Copy the `access_token` from the response.
+
+    **2. Make an authenticated call**
+
+    Every request needs **both** the Bearer token and the subscription key:
+
+    ```bash
+    curl "https://gateway.lwolf.com/transact-workflow/v1/users/<userId>/transactions" \
+      -H "Authorization: Bearer <access_token>" \
+      -H "lw-subscription-key: <your subscription key>"
+    ```
+
+    A `200` with a JSON list of transactions means you're fully set up. A `401` usually means the token is missing or expired; a `403` usually means the `lw-subscription-key` header is missing or invalid.
+
+
+    ## Authentication
+
+    All endpoints (except the token endpoint itself) require **two** credentials on every request:
+
+    | Credential | Where | Description |
+    |---|---|---|
+    | Access token | `Authorization: Bearer <token>` header | JWT obtained via the OAuth 2.0 client credentials flow |
+    | Subscription key | `lw-subscription-key` header | API subscription key issued by Lone Wolf |
+
+    ### Obtaining an access token
+
+    Send a `POST` request to `https://gateway.lwolf.com/oauth/token` with a JSON body:
+
+    ```json
+    {
+        "grant_type": "client_credentials",
+        "client_id": "<your client id>",
+        "client_secret": "<your client secret>",
+        "audience": "https://api.lwolf.com",
+        "lwt_client_id": "<your Lone Wolf client GUID>"
+    }
+    ```
+
+    The response contains an `access_token` to be sent as a Bearer token on subsequent calls. Tokens are short-lived; request a new token when the current one expires.
+
+    ## Conventions
+
+    - **User scoping** — most resources are addressed under `/users/{userId}/…`. The `userId` is the GUID of the user on whose behalf the operation is performed.
+    - **OData queries** — collection endpoints on the Transact Workflow service support OData query options. Use `$filter` to restrict results (e.g. `$filter=opportunityId eq <guid>`) and `$expand` to embed related entities (e.g. `$expand=members, opportunities` on share groups).
+    - **Partial updates** — `PATCH` endpoints accept a partial resource representation; only the fields provided are updated.
+    - **Content type** — request bodies are JSON unless noted otherwise. Document upload and signing creation use `multipart/form-data`.
+
+    ## Universal Global Fields
+
+    A consolidated reference of the transaction-related fields that can be updated through the API. These fields correspond to the request schemas of the create/update endpoints below.
+
+    ### 1. Property fields — `POST /Transactions`, `PATCH /users/{userId}/transactions/{transactionId}`
+
+    `type`, `address1`–`address4`, `locality`, `region`, `subRegion`, `postalCode`, `country`, `legalDescription`, `propertyIncludes`, `propertyExcludes`, `taxNumber`, `mlsNumber`, `note`, `schoolDistrict`, `zoningClass`, `yearBuilt`, `phase`, `propertyType`, `asking`, `deposit`, `taxes`, `closingDate`, `listingExpiration`, `listingGoesLive`
+
+    ### 2. Transaction dates & financials — `POST /Offers`, `PATCH /users/{userId}/Offers/{offerId}`
+
+    `closingDate`, `finalWalkthroughDate`, `possessionDate`, `offerDate`, `expirationDate`, `acceptanceDate`, `purchasePrice`, `deposit`
+
+    ### 3. Contact fields — `POST /Contacts`, `PATCH /users/{userId}/Contacts/{contactId}`
+
+    `contactType`, `slot`, `prefix`, `suffix`, `firstname`, `middlename`, `lastname`, `email`, `phone`, `cellPhone`, `workPhone`, `fax`, `agentId`, `agentLicense`, `companyName`, `officeId`, `officeLicense`, `escrowNumber`, `address1`–`address4`, `locality`, `region`, `postalCode`, `country`, `llcPoa`
+
+    The `slot` field determines the ordering of contacts of the same type (`1` = Buyer 1 / Seller 1, `2` = Buyer 2 / Seller 2). The full `contactType` enumeration (0–21, from Buyer to PestControlCompany) is documented on the Contact schemas.
+
+    ## Services
+
+    The API is composed of several services routed through the same gateway host:
+
+    | Service | Base path | Purpose |
+    |---|---|---|
+    | Platform | `/platform/v1` | Client users and offices |
+    | Transact Workflow | `/transact-workflow/v1` | Transactions, offers, contacts, folders, documents, share groups, templates |
+    | Forms Design | `/forms-design/api` | Form libraries and library forms |
+    | Forms Editor | `/forms-editor/api/v1` | Forms attached to a transaction (form packages) |
+    | Authentisign | `/authentisign/v3` | E-signature signings, participants, and signed documents |
+  contact:
+    name: Lone Wolf Technologies
+    url: https://www.lwolf.com
+servers:
+- url: https://gateway.lwolf.com
+  description: Production API gateway
+- url: "{tw_host}"
+  description: Environment-specific host (e.g. pre-production)
+  variables:
+    tw_host:
+      default: https://api.pre.lwolf.com
+      description: Base host for the target environment.
+security:
+- bearerAuth: []
+  subscriptionKey: []
+tags:
+- name: Authorization
+  description: OAuth 2.0 client credentials token endpoint.
+- name: Users and Offices
+  description: Users and offices belonging to a client account (Platform service).
+- name: Transactions
+  description: Create, read, update, and delete transactions.
+- name: Share Groups
+  description: Share transactions with groups of users and manage group membership.
+- name: Transaction Templates
+  description: Read transaction templates available to a user.
+- name: Offers
+  description: Manage offers on transactions.
+- name: Contacts
+  description: Manage transaction contacts.
+- name: Folders
+  description: Manage folders within transactions.
+- name: Documents
+  description: Upload, list, download, and delete transaction documents.
+- name: Form Libraries
+  description: Browse form libraries and library forms (Forms Design service).
+- name: Transaction Forms
+  description: Manage forms attached to a transaction's form package (Forms Editor
+    service).
+- name: Signings
+  description: Create signings, manage participants, and retrieve signed documents
+    (Authentisign service).
+paths:
+  "/oauth/token":
+    post:
+      tags:
+      - Authorization
+      summary: Obtain an access token
+      description: |-
+        Exchanges OAuth client credentials for a JWT access token. The returned `access_token` must be sent as a Bearer token in the `Authorization` header on all subsequent requests, together with the `lw-subscription-key` header.
+
+        **Note:** this endpoint is served from the gateway root (`https://gateway.lwolf.com`) rather than a service base path.
+      operationId: getToken
+      responses:
+        '200':
+          description: Token issued successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TokenResponse"
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TokenRequest"
+            example:
+              grant_type: client_credentials
+              client_id: "<your client id>"
+              client_secret: "<your client secret>"
+              audience: https://api.lwolf.com
+              lwt_client_id: "<your Lone Wolf client GUID>"
+      security: []
+  "/platform/v1/clients/{clientId}/users":
+    get:
+      tags:
+      - Users and Offices
+      summary: List users
+      description: Returns the users belonging to the specified client account.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: GUID of the Lone Wolf client (tenant) account.
+        schema:
+          type: string
+          format: uuid
+  "/platform/v1/clients/{clientId}/offices":
+    get:
+      tags:
+      - Users and Offices
+      summary: List offices
+      description: Returns the offices belonging to the specified client account.
+      operationId: getOffices
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: GUID of the Lone Wolf client (tenant) account.
+        schema:
+          type: string
+          format: uuid
+  "/platform/v1/clients/{clientId}/users/invite":
+    post:
+      tags:
+      - Users and Offices
+      summary: Send a user invite
+      description: Sends an invitation to add a user to the specified client account.
+      operationId: sendUserInvite
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: GUID of the Lone Wolf client (tenant) account.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UserInvite"
+  "/transact-workflow/v1/Transactions":
+    post:
+      tags:
+      - Transactions
+      summary: Create a transaction
+      description: Creates a new transaction for the user specified in the request
+        body.
+      operationId: createTransaction
+      responses:
+        '201':
+          description: Transaction created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TransactionCreate"
+  "/transact-workflow/v1/users/{userId}/transactions":
+    get:
+      tags:
+      - Transactions
+      summary: List transactions
+      description: Returns the transactions visible to the specified user. Supports
+        OData `$filter` (e.g. `$filter=opportunityId eq <guid>`).
+      operationId: getTransactions
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: "$filter"
+        in: query
+        required: false
+        description: OData filter expression used to restrict the result set.
+        schema:
+          type: string
+        example: opportunityId eq 5a283c97-44a9-45a9-2f3a-08de10e96589
+  "/transact-workflow/v1/users/{userId}/transactions/{transactionId}":
+    get:
+      tags:
+      - Transactions
+      summary: Get a transaction
+      description: Returns a single transaction by its key.
+      operationId: getTransactionByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags:
+      - Transactions
+      summary: Update a transaction
+      description: Applies a partial update to a transaction. Only the fields present
+        in the body are modified.
+      operationId: updateTransaction
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TransactionUpdate"
+    delete:
+      tags:
+      - Transactions
+      summary: Delete a transaction
+      description: Deletes the specified transaction.
+      operationId: deleteTransaction
+      responses:
+        '204':
+          description: Transaction deleted.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/users/{userId}/ShareGroup":
+    get:
+      tags:
+      - Share Groups
+      summary: List share groups
+      description: 'Returns the share groups visible to the specified user. Supports
+        OData `$expand` (e.g. `$expand=opportunities`) and `$filter`, including lambda
+        expressions such as `$filter=opportunities/any(o: o/opportunityId eq <guid>)`.'
+      operationId: getShareGroups
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: "$expand"
+        in: query
+        required: false
+        description: Comma-separated list of related entities to include inline in
+          the response.
+        schema:
+          type: string
+        example: members, opportunities
+      - name: "$filter"
+        in: query
+        required: false
+        description: OData filter expression used to restrict the result set.
+        schema:
+          type: string
+        example: opportunityId eq 5a283c97-44a9-45a9-2f3a-08de10e96589
+    post:
+      tags:
+      - Share Groups
+      summary: Create a share group
+      description: Creates a new, empty share group. Use the update endpoint to add
+        members and share opportunities.
+      operationId: createShareGroup
+      responses:
+        '201':
+          description: Share group created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ShareGroupCreate"
+  "/transact-workflow/v1/users/{userId}/ShareGroup/{shareGroupId}":
+    get:
+      tags:
+      - Share Groups
+      summary: Get a share group
+      description: Returns a single share group by its key. Use `$expand=members`
+        and/or `$expand=opportunities` to embed group members and shared opportunities
+        in the response.
+      operationId: getShareGroupByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: shareGroupId
+        in: path
+        required: true
+        description: GUID of the share group.
+        schema:
+          type: string
+          format: uuid
+      - name: "$expand"
+        in: query
+        required: false
+        description: Comma-separated list of related entities to include inline in
+          the response.
+        schema:
+          type: string
+        example: members, opportunities
+    put:
+      tags:
+      - Share Groups
+      summary: Update a share group (add members and share)
+      description: Replaces the share group definition, including its member list
+        and the opportunities shared with the group.
+      operationId: updateShareGroup
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: shareGroupId
+        in: path
+        required: true
+        description: GUID of the share group.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ShareGroupUpdate"
+  "/transact-workflow/v1/users/{userId}/templates":
+    get:
+      tags:
+      - Transaction Templates
+      summary: List templates
+      description: Returns the transaction templates available to the specified user.
+      operationId: getTemplates
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/users/{userId}/templates/{templateId}":
+    get:
+      tags:
+      - Transaction Templates
+      summary: Get a template
+      description: Returns a single transaction template by its key.
+      operationId: getTemplateByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        required: true
+        description: GUID of the transaction template.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/Offers":
+    post:
+      tags:
+      - Offers
+      summary: Create an offer
+      description: Creates a new offer on a transaction for the user specified in
+        the request body. A user-scoped alternative is available at `POST /transact-workflow/v1/users/{userId}/Offers`.
+      operationId: createOffer
+      responses:
+        '201':
+          description: Offer created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OfferCreate"
+  "/transact-workflow/v1/users/{userId}/Offers":
+    get:
+      tags:
+      - Offers
+      summary: List offers
+      description: Returns the offers visible to the specified user.
+      operationId: getOffers
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+      - Offers
+      summary: Create an offer (user-scoped)
+      description: Creates a new offer on a transaction under the specified user's
+        path. Equivalent to `POST /transact-workflow/v1/Offers` with the user supplied
+        in the path instead of the request body.
+      operationId: createOfferForUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OfferCreate"
+      responses:
+        '201':
+          description: Offer created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/transact-workflow/v1/users/{userId}/Offers/{offerId}":
+    get:
+      tags:
+      - Offers
+      summary: Get an offer
+      description: Returns a single offer by its key.
+      operationId: getOfferByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: offerId
+        in: path
+        required: true
+        description: GUID of the offer.
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags:
+      - Offers
+      summary: Update an offer
+      description: Applies a partial update to an offer. Only the fields present in
+        the body are modified.
+      operationId: updateOffer
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: offerId
+        in: path
+        required: true
+        description: GUID of the offer.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OfferUpdate"
+    delete:
+      tags:
+      - Offers
+      summary: Delete an offer
+      description: Deletes the specified offer.
+      operationId: deleteOffer
+      responses:
+        '204':
+          description: Offer deleted.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: offerId
+        in: path
+        required: true
+        description: GUID of the offer.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/Contacts":
+    post:
+      tags:
+      - Contacts
+      summary: Create a contact
+      description: Creates a new contact on a transaction for the user specified in
+        the request body.
+      operationId: createContact
+      responses:
+        '201':
+          description: Contact created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ContactCreate"
+  "/transact-workflow/v1/users/{userId}/Contacts":
+    get:
+      tags:
+      - Contacts
+      summary: List contacts
+      description: Returns the transaction contacts visible to the specified user.
+      operationId: getContacts
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/users/{userId}/Contacts/{contactId}":
+    get:
+      tags:
+      - Contacts
+      summary: Get a contact
+      description: Returns a single contact by its key.
+      operationId: getContactByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: contactId
+        in: path
+        required: true
+        description: GUID of the contact.
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags:
+      - Contacts
+      summary: Update a contact
+      description: Applies a partial update to a contact. Only the fields present
+        in the body are modified.
+      operationId: updateContact
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: contactId
+        in: path
+        required: true
+        description: GUID of the contact.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ContactUpdate"
+    delete:
+      tags:
+      - Contacts
+      summary: Delete a contact
+      description: Deletes the specified contact.
+      operationId: deleteContact
+      responses:
+        '204':
+          description: Contact deleted.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: contactId
+        in: path
+        required: true
+        description: GUID of the contact.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/Folders":
+    post:
+      tags:
+      - Folders
+      summary: Create a folder
+      description: Creates a new folder within a transaction for the user specified
+        in the request body.
+      operationId: createFolder
+      responses:
+        '201':
+          description: Folder created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/FolderCreate"
+  "/transact-workflow/v1/users/{userId}/Folders":
+    get:
+      tags:
+      - Folders
+      summary: List folders
+      description: Returns the transaction folders visible to the specified user.
+      operationId: getFolders
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/users/{userId}/Folders/{folderId}":
+    get:
+      tags:
+      - Folders
+      summary: Get a folder
+      description: Returns a single folder by its key.
+      operationId: getFolderByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: folderId
+        in: path
+        required: true
+        description: GUID of the folder.
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags:
+      - Folders
+      summary: Update a folder
+      description: Applies a partial update to a folder. Only the fields present in
+        the body are modified.
+      operationId: updateFolder
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: folderId
+        in: path
+        required: true
+        description: GUID of the folder.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/FolderUpdate"
+    delete:
+      tags:
+      - Folders
+      summary: Delete a folder
+      description: Deletes the specified folder.
+      operationId: deleteFolder
+      responses:
+        '204':
+          description: Folder deleted.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: folderId
+        in: path
+        required: true
+        description: GUID of the folder.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/Documents":
+    post:
+      tags:
+      - Documents
+      summary: Upload a document
+      description: Uploads a document file to a transaction. The request is sent as
+        `multipart/form-data`. A user-scoped alternative is available at `POST /transact-workflow/v1/users/{userId}/documents`.
+      operationId: createDocument
+      responses:
+        '201':
+          description: Document uploaded.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - name
+              - file
+              - transactionId
+              - userId
+              properties:
+                name:
+                  type: string
+                  description: Display name of the document.
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to upload.
+                transactionId:
+                  type: string
+                  format: uuid
+                  description: GUID of the transaction the document belongs to.
+                parentId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of the folder to place the document in.
+                formId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of a form to associate the document with.
+                userId:
+                  type: string
+                  format: uuid
+                  description: GUID of the user uploading the document.
+  "/transact-workflow/v1/users/{userId}/documents":
+    get:
+      tags:
+      - Documents
+      summary: List documents
+      description: Returns the documents visible to the specified user.
+      operationId: getDocuments
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: "$filter"
+        in: query
+        required: false
+        description: 'OData filter expression used to restrict the result set (e.g.
+          filter documents by folder: `parentId eq <folderId>`).'
+        schema:
+          type: string
+        example: parentId eq c69f5c7f-f9f4-4d7c-c22f-08de10fda488
+    post:
+      tags:
+      - Documents
+      summary: Upload a document (user-scoped)
+      description: Uploads a document file to a transaction under the specified user's
+        path. Equivalent to `POST /transact-workflow/v1/Documents` with the user supplied
+        in the path instead of the form body. The request is sent as `multipart/form-data`.
+      operationId: createDocumentForUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - name
+              - file
+              - transactionId
+              properties:
+                name:
+                  type: string
+                  description: Display name of the document.
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to upload.
+                transactionId:
+                  type: string
+                  format: uuid
+                  description: GUID of the transaction the document belongs to.
+                parentId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of the folder to place the document in.
+                formId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of a form to associate the document with.
+      responses:
+        '201':
+          description: Document uploaded.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+  "/transact-workflow/v1/users/{userId}/documents/{documentId}":
+    get:
+      tags:
+      - Documents
+      summary: Get a document
+      description: Returns a single document's metadata by its key.
+      operationId: getDocumentByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        required: true
+        description: GUID of the document.
+        schema:
+          type: string
+          format: uuid
+    delete:
+      tags:
+      - Documents
+      summary: Delete a document
+      description: Deletes the specified document.
+      operationId: deleteDocument
+      responses:
+        '204':
+          description: Document deleted.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        required: true
+        description: GUID of the document.
+        schema:
+          type: string
+          format: uuid
+  "/transact-workflow/v1/users/{userId}/documents/file/{documentId}":
+    get:
+      tags:
+      - Documents
+      summary: Download a document file
+      description: Returns the binary file content of the specified document.
+      operationId: getDocumentFile
+      responses:
+        '200':
+          description: Document file content.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        required: true
+        description: GUID of the document.
+        schema:
+          type: string
+          format: uuid
+  "/forms-design/api/users/{userId}/libraries":
+    get:
+      tags:
+      - Form Libraries
+      summary: List form libraries
+      description: Returns the form libraries available to the specified user, including
+        field schema information.
+      operationId: getLibraries
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+  "/forms-design/api/users/{userId}/forms":
+    get:
+      tags:
+      - Form Libraries
+      summary: List library forms
+      description: Returns the forms in the specified library.
+      operationId: getForms
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: libId
+        in: query
+        required: true
+        description: GUID of the form library to list forms from.
+        schema:
+          type: string
+          format: uuid
+  "/forms-design/api/users/{userId}/forms/{libId}/{formId}":
+    get:
+      tags:
+      - Form Libraries
+      summary: Get a library form
+      description: Returns a single form from the specified library.
+      operationId: getLibraryForm
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: libId
+        in: path
+        required: true
+        description: GUID of the form library.
+        schema:
+          type: string
+          format: uuid
+      - name: formId
+        in: path
+        required: true
+        description: GUID of the form.
+        schema:
+          type: string
+          format: uuid
+  "/forms-design/api/users/{userId}/images/{imageId}/{pageNum}":
+    get:
+      tags:
+      - Form Libraries
+      summary: Stream a form page image
+      description: Streams the rendered image of a single page of a form.
+      operationId: getFormPageImage
+      responses:
+        '200':
+          description: Form page image.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: imageId
+        in: path
+        required: true
+        description: GUID of the form image resource.
+        schema:
+          type: string
+          format: uuid
+      - name: pageNum
+        in: path
+        required: true
+        description: 1-based page number to stream.
+        schema:
+          type: integer
+          minimum: 1
+  "/forms-editor/api/v1/users/{userId}/FormPackages/{transactionId}/forms":
+    get:
+      tags:
+      - Transaction Forms
+      summary: List transaction forms
+      description: Returns the forms attached to the specified transaction's form
+        package.
+      operationId: getTransactionForms
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction (form package).
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+      - Transaction Forms
+      summary: Add forms to a transaction
+      description: Adds one or more library forms to the transaction's form package.
+      operationId: addFormsToTransaction
+      responses:
+        '201':
+          description: Forms added to the transaction.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction (form package).
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                "$ref": "#/components/schemas/FormPackageFormAdd"
+  "/forms-editor/api/v1/users/{userId}/FormPackages/{transactionId}/forms/{formId}":
+    get:
+      tags:
+      - Transaction Forms
+      summary: Get a transaction form PDF
+      description: Returns the PDF rendering of a form attached to the transaction.
+      operationId: getTransactionFormPdf
+      responses:
+        '200':
+          description: Form PDF content.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction (form package).
+        schema:
+          type: string
+          format: uuid
+      - name: formId
+        in: path
+        required: true
+        description: GUID of the form within the form package.
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags:
+      - Transaction Forms
+      summary: Move a form to another folder
+      description: Updates the parent folder of a form within the transaction's form
+        package.
+      operationId: moveTransactionForm
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction (form package).
+        schema:
+          type: string
+          format: uuid
+      - name: formId
+        in: path
+        required: true
+        description: GUID of the form within the form package.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/FormMoveRequest"
+  "/authentisign/v3/users/{userId}/signings":
+    get:
+      tags:
+      - Signings
+      summary: List signings
+      description: Returns the signings belonging to the specified user.
+      operationId: getSignings
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: api-version
+        in: query
+        required: true
+        description: Authentisign API version. Use `3`.
+        schema:
+          type: string
+          default: '3'
+        example: '3'
+    post:
+      tags:
+      - Signings
+      summary: Create a signing
+      description: Creates a new signing with one or more documents. The request is
+        sent as `multipart/form-data`.
+      operationId: createSigning
+      responses:
+        '201':
+          description: Signing created.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: api-version
+        in: query
+        required: true
+        description: Authentisign API version. Use `3`.
+        schema:
+          type: string
+          default: '3'
+        example: '3'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - Name
+              - Files
+              properties:
+                Name:
+                  type: string
+                  description: Display name of the signing.
+                isOrdered:
+                  type: boolean
+                  description: Whether participants must sign in order.
+                ExpirationDate:
+                  type: string
+                  format: date-time
+                  description: Expiration date of the signing.
+                Files:
+                  type: string
+                  format: binary
+                  description: Document file(s) to include in the signing.
+                CallbackUrl:
+                  type: string
+                  format: uri
+                  description: Optional callback URL invoked on signing events.
+                TransactionId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of the transaction to associate the signing
+                    with.
+  "/authentisign/v3/api/v3/users/{userId}/sso/signing/{signingId}":
+    get:
+      tags:
+      - Signings
+      summary: Get a signing SSO link
+      description: Returns a single-sign-on link that opens the specified signing
+        in the Authentisign UI.
+      operationId: getSigningSsoLink
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+      - name: redirectUrl
+        in: query
+        required: false
+        description: URL to redirect the user to after the signing session.
+        schema:
+          type: string
+          format: uri
+  "/authentisign/v3/api/v3/users/{userId}/participants/batch":
+    post:
+      tags:
+      - Signings
+      summary: Add signing participants (batch)
+      description: Adds multiple participants to a signing in a single request. The
+        `type` field on each participant controls their role (e.g. signer vs. carbon-copy
+        recipient).
+      operationId: addSigningParticipants
+      responses:
+        '201':
+          description: Participants added.
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                "$ref": "#/components/schemas/SigningParticipant"
+  "/authentisign/v3/api/v3/users/{userId}/signings/{signingId}/documents":
+    get:
+      tags:
+      - Signings
+      summary: List original signing documents
+      description: Returns the original (unsigned) documents attached to the signing.
+      operationId: getSigningDocuments
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+  "/authentisign/v3/api/v3/users/{userId}/signings/{signingId}/documents/s":
+    get:
+      tags:
+      - Signings
+      summary: List signed documents
+      description: Returns the signed documents for the signing.
+      operationId: getSignedDocuments
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+  "/authentisign/v3/api/v3/users/{userId}/signings/{signingId}/documents/sc":
+    get:
+      tags:
+      - Signings
+      summary: List signing certificates
+      description: Returns the signing certificates for the signing's documents.
+      operationId: getSigningCertificates
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow
+          resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+  "/authentisign/v3/api/v3/{encryptedDocumentId}/d":
+    get:
+      tags:
+      - Signings
+      summary: Download an individual signed document
+      description: Downloads a single signed document by its encrypted document identifier.
+      operationId: getSignedDocument
+      responses:
+        '200':
+          description: Signed document content.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          "$ref": "#/components/responses/BadRequest"
+        '401':
+          "$ref": "#/components/responses/Unauthorized"
+        '403':
+          "$ref": "#/components/responses/Forbidden"
+        '404':
+          "$ref": "#/components/responses/NotFound"
+      parameters:
+      - name: encryptedDocumentId
+        in: path
+        required: true
+        description: Encrypted identifier of the signed document, as returned by the
+          signed documents listing endpoints.
+        schema:
+          type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT access token obtained from the `/oauth/token` endpoint, sent
+        as `Authorization: Bearer <token>`.'
+    subscriptionKey:
+      type: apiKey
+      in: header
+      name: lw-subscription-key
+      description: API subscription key issued by Lone Wolf, sent on every request.
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+  schemas:
+    TokenRequest:
+      type: object
+      required:
+      - grant_type
+      - client_id
+      - client_secret
+      - audience
+      - lwt_client_id
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - client_credentials
+          description: OAuth 2.0 grant type. Always `client_credentials`.
+        client_id:
+          type: string
+          description: OAuth client identifier issued by Lone Wolf.
+        client_secret:
+          type: string
+          description: OAuth client secret issued by Lone Wolf.
+        audience:
+          type: string
+          example: https://api.lwolf.com
+          description: Token audience. Always `https://api.lwolf.com`.
+        lwt_client_id:
+          type: string
+          format: uuid
+          description: Lone Wolf client (tenant) GUID.
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token to be sent as a Bearer token.
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds.
+    UserInvite:
+      type: object
+      description: Invitation payload for adding a user to the client account.
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the user to invite.
+      additionalProperties: true
+    TransactionBase:
+      type: object
+      properties:
+        type:
+          type: integer
+          description: 'Transaction type code. Observed value: `1`. **TODO: document
+            the full list of code values and their meanings.**'
+          example: 1
+        address1:
+          type: string
+          description: Property street address, line 1.
+        address2:
+          type: string
+          description: Property street address, line 2.
+        address3:
+          type: string
+          description: Property street address, line 3 (e.g. unit number).
+        address4:
+          type: string
+          description: Property street address, line 4.
+        locality:
+          type: string
+          description: City / locality.
+        region:
+          type: string
+          description: State or province code.
+          example: 'ON'
+        subRegion:
+          type: string
+          description: County or sub-region.
+        postalCode:
+          type: string
+          description: Postal / ZIP code.
+        country:
+          type: string
+          description: Country.
+        legalDescription:
+          type: string
+          description: Legal description of the property.
+        propertyIncludes:
+          type: string
+          description: Items included with the property.
+        propertyExcludes:
+          type: string
+          description: Items excluded from the property.
+        taxNumber:
+          type: string
+          description: Property tax number.
+        mlsNumber:
+          type: string
+          description: MLS listing number.
+        note:
+          type: string
+          description: Free-form note.
+        schoolDistrict:
+          type: string
+          description: School district.
+        zoningClass:
+          type: string
+          description: Zoning classification.
+        yearBuilt:
+          type: integer
+          example: 1980
+          description: Year the property was built.
+        phase:
+          type: integer
+          description: 'Transaction phase code. Observed value: `1`. **TODO: document
+            the full list of code values and their meanings.**'
+          example: 1
+        propertyType:
+          type: integer
+          description: 'Property type code. Observed value: `0`. **TODO: document
+            the full list of code values and their meanings.**'
+          example: 0
+        asking:
+          type: number
+          description: Asking price.
+          example: 250000
+        deposit:
+          type: number
+          description: Deposit amount.
+          example: 10000
+        taxes:
+          type: number
+          description: Annual taxes.
+          example: 5000
+        closingDate:
+          type: string
+          format: date-time
+          description: Closing date.
+        listingExpiration:
+          type: string
+          format: date-time
+          description: Listing expiration date.
+        listingGoesLive:
+          type: string
+          format: date-time
+          description: Date the listing goes live.
+    TransactionCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the transaction.
+      - "$ref": "#/components/schemas/TransactionBase"
+      description: Payload for creating a new transaction.
+    TransactionUpdate:
+      allOf:
+      - "$ref": "#/components/schemas/TransactionBase"
+      description: Partial transaction representation. Only the provided fields are
+        updated.
+    ShareGroupCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Display name of the share group.
+          example: West Team Share Group
+    ShareGroupMember:
+      type: object
+      required:
+      - userId
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: GUID of the member user.
+        permissionLevel:
+          type: integer
+          description: 'Permission level code for the member. Observed value: `1`.
+            **TODO: document the full list of code values and their meanings.**'
+          example: 1
+        isActive:
+          type: boolean
+          description: Whether the membership is active.
+          example: true
+    ShareGroupOpportunity:
+      type: object
+      required:
+      - opportunityId
+      properties:
+        opportunityId:
+          type: string
+          format: uuid
+          description: GUID of the shared opportunity (transaction).
+    ShareGroupUpdate:
+      type: object
+      properties:
+        shareGroupId:
+          type: string
+          format: uuid
+          description: GUID of the share group.
+        name:
+          type: string
+          description: Display name of the share group.
+        opportunities:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ShareGroupOpportunity"
+          description: Opportunities (transactions) shared with the group.
+        members:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ShareGroupMember"
+          description: Members of the share group and their permissions.
+      description: Full share group representation used to add members and share opportunities.
+    OfferBase:
+      type: object
+      properties:
+        closingDate:
+          type: string
+          format: date-time
+          description: Closing date.
+        finalWalkthroughDate:
+          type: string
+          format: date-time
+          description: Final walkthrough date.
+        possessionDate:
+          type: string
+          format: date-time
+          description: Possession date.
+        offerDate:
+          type: string
+          format: date-time
+          description: Date the offer was made.
+        expirationDate:
+          type: string
+          format: date-time
+          description: Offer expiration date.
+        acceptanceDate:
+          type: string
+          format: date-time
+          description: Offer acceptance date.
+        purchasePrice:
+          type: number
+          description: Purchase price.
+          example: 650500
+        deposit:
+          type: number
+          description: Deposit amount.
+          example: 100000
+    OfferCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        - transactionId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the offer.
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the offer belongs to.
+      - "$ref": "#/components/schemas/OfferBase"
+      description: Payload for creating a new offer on a transaction.
+    OfferUpdate:
+      allOf:
+      - "$ref": "#/components/schemas/OfferBase"
+      description: Partial offer representation. Only the provided fields are updated.
+    ContactBase:
+      type: object
+      properties:
+        contactType:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          description: |-
+            Contact type code identifying the contact's role on the transaction.
+
+            | Value | Contact type |
+            |---|---|
+            | `0` | Buyer |
+            | `1` | Seller |
+            | `2` | BuyerAgent |
+            | `3` | Other |
+            | `4` | SellerAgent |
+            | `5` | AppraisalCompany |
+            | `6` | BuyerLawyer |
+            | `7` | BuyerBroker |
+            | `8` | CondoAssociationHOA |
+            | `9` | EscrowCompany |
+            | `10` | Landlord |
+            | `11` | SellerBroker |
+            | `12` | MortgageAppraiser |
+            | `13` | BuyerLendingCompany |
+            | `14` | SellerLawyer |
+            | `15` | Tenant |
+            | `16` | TitleCompany |
+            | `17` | Admin |
+            | `18` | SellerLendingCompany |
+            | `19` | DisclosureCompany |
+            | `20` | HomeWarrantyCompany |
+            | `21` | PestControlCompany |
+          example: 0
+        slot:
+          type: integer
+          example: 1
+          minimum: 1
+          description: 'Determines the ordering of contacts of the same type: `1`
+            = Buyer 1 / Seller 1, `2` = Buyer 2 / Seller 2, and so on.'
+        prefix:
+          type: string
+          description: Name prefix (e.g. Mr., Dr.).
+        suffix:
+          type: string
+          description: Name suffix (e.g. Jr.).
+        firstname:
+          type: string
+          description: First name.
+        middlename:
+          type: string
+          description: Middle name.
+        lastname:
+          type: string
+          description: Last name.
+        email:
+          type: string
+          format: email
+          description: Email address.
+        phone:
+          type: string
+          description: Primary phone number.
+        cellPhone:
+          type: string
+          description: Cell phone number.
+        workPhone:
+          type: string
+          description: Work phone number.
+        fax:
+          type: string
+          description: Fax number.
+        agentId:
+          type: string
+          description: Agent identifier.
+        agentLicense:
+          type: string
+          description: Agent license number.
+        companyName:
+          type: string
+          description: Company name.
+        officeId:
+          type: string
+          description: Office identifier.
+        officeLicense:
+          type: string
+          description: Office license number.
+        escrowNumber:
+          type: string
+          description: Escrow number.
+        address1:
+          type: string
+          description: Street address, line 1.
+        address2:
+          type: string
+          description: Street address, line 2.
+        address3:
+          type: string
+          description: Street address, line 3.
+        address4:
+          type: string
+          description: Street address, line 4.
+        locality:
+          type: string
+          description: City / locality.
+        region:
+          type: string
+          description: State or province.
+        postalCode:
+          type: string
+          description: Postal / ZIP code.
+        country:
+          type: string
+          description: Country.
+        llcPoa:
+          type: string
+          description: LLC / power of attorney designation.
+    ContactCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        - transactionId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the contact.
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the contact belongs to.
+      - "$ref": "#/components/schemas/ContactBase"
+      description: Payload for creating a new transaction contact.
+    ContactUpdate:
+      allOf:
+      - type: object
+        properties:
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the contact belongs to.
+      - "$ref": "#/components/schemas/ContactBase"
+      description: Partial contact representation. Only the provided fields are updated.
+    FolderCreate:
+      type: object
+      required:
+      - userId
+      - transactionId
+      - name
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: GUID of the user creating the folder.
+        transactionId:
+          type: string
+          format: uuid
+          description: GUID of the transaction the folder belongs to.
+        name:
+          type: string
+          description: Folder name.
+          example: Closing Documents
+    FolderUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Folder name.
+      description: Partial folder representation. Only the provided fields are updated.
+      additionalProperties: true
+    FormPackageFormAdd:
+      type: object
+      required:
+      - libraryId
+      - formId
+      properties:
+        libraryId:
+          type: string
+          format: uuid
+          description: GUID of the form library the form comes from.
+        formId:
+          type: string
+          format: uuid
+          description: GUID of the library form to add.
+        parentId:
+          type: string
+          format: uuid
+          description: GUID of the parent folder within the transaction to place the
+            form in.
+        sortOrder:
+          type: integer
+          description: Sort order of the form within its folder.
+          example: 0
+    FormMoveRequest:
+      type: object
+      required:
+      - parentId
+      properties:
+        parentId:
+          type: string
+          format: uuid
+          description: GUID of the destination folder for the form.
+    SigningParticipant:
+      type: object
+      required:
+      - signingId
+      - firstName
+      - lastName
+      - email
+      - type
+      properties:
+        signingId:
+          type: string
+          format: uuid
+          description: GUID of the signing the participant is added to.
+        firstName:
+          type: string
+          description: Participant first name.
+        middleName:
+          type: string
+          description: Participant middle name.
+        lastName:
+          type: string
+          description: Participant last name.
+        email:
+          type: string
+          format: email
+          description: Participant email address.
+        type:
+          type: integer
+          description: 'Participant role code. Observed values: `1` and `0` — these
+            appear to distinguish signer from carbon-copy recipient roles. **TODO:
+            confirm the code-to-role mapping and document all values.**'
+        staticSignatureEnabled:
+          type: boolean
+          description: Whether static (typed) signatures are allowed.
+        scriptedSignatureEnabled:
+          type: boolean
+          description: Whether scripted (drawn) signatures are allowed.
+        imageSignatureEnabled:
+          type: boolean
+          description: Whether image signatures are allowed.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true

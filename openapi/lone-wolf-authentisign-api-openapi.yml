@@ -1,0 +1,2220 @@
+openapi: 3.0.1
+info:
+  title: Authentisign API
+  description: Authentisign API
+  version: '1.0'
+servers:
+  - url: 'https://api.lwolf.com/authentisign'
+paths:
+  /api/v1/accounts/email-signature:
+    post:
+      tags:
+        - Accounts
+      summary: Update Email Signature. Use this endpoint to update the email signature associated with the current account.
+      description: "Sample request:\r\n            \r\n    POST /Accounts/email-signature\r\n    \"emailSignature\" : \"Best Regards, John Doe\""
+      operationId: UpdateEmailSignature
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                emailSignature:
+                  type: string
+            encoding:
+              emailSignature:
+                style: form
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/ccs':
+    get:
+      tags:
+        - CCs
+      summary: Retrieve CCs for a signing. This endpoint fetches all the CCs associated with the provided signing ID.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/CCs"
+      operationId: GetCcs
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which CCs are to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/ccs/batch:
+    post:
+      tags:
+        - CCs
+      summary: Add CCs in batch. This endpoint allows you to add multiple CCs at once for efficient processing.
+      description: "Sample request:\r\n            \r\n    POST /api/v1/signings/{signingId}/CCs/batch\r\n    [\r\n        {\r\n            \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"signingId\": \"12345678-1234-1234-1234-123456789012\",\r\n            \"firstName\": \"John\",\r\n            \"middleName\": \"D\",\r\n            \"lastName\": \"Doe\",\r\n            \"email\": \"john.doe@example.com\",\r\n            \"displayOrder\": 1,\r\n            \"externalId\": \"EXT1234\",\r\n            \"transactionId\": \"9b74f03d-71d4-4911-a0d4-60c720bacea1\",\r\n            \"saveToContacts\": true\r\n        },\r\n        ... [more CCs]\r\n    ]"
+      operationId: AddCCs
+      parameters:
+        - name: externalId
+          in: header
+          description: The external ID from header.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: A list of CC data transfer objects to be added.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.CcDto'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.CcDto'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.CcDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/{signingId}/documents':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve signing document IDs. This endpoint fetches the document IDs associated with the provided signing ID.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents"
+      operationId: GetDocuments
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which document IDs are to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/documents/{documentId}':
+    patch:
+      tags:
+        - Documents
+      summary: Apply a layout to a document within a specific signing.
+      description: "Sample request:\r\n            \r\n    PATCH /api/v1/signings/3fa85f64-5717-4562-b3fc-2c963f66afa6/documents/3fa85f64-5717-4562-b3fc-2c963f66afa7\r\n    {\r\n       \"LayoutId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa8\"\r\n    }"
+      operationId: ApplyLayout
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing to which the document belongs.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: documentId
+          in: path
+          description: The identifier of the document to which the layout is to be applied.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: LayoutId
+          in: query
+          description: Get or Set Layout ID. This property represents the unique identifier of the document layout.
+          required: true
+      requestBody:
+        description: The layout details to be applied.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.DocumentLayoutDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.DocumentLayoutDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.DocumentLayoutDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/documents/s':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the fully executed combined signing package PDF.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents/s"
+      operationId: GetFinalSigningDocument
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which the final document is to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/documents/s/url':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the URL to a fully executed combined signing package PDF.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents/s/url"
+      operationId: GetFinalSigningDocumentUrl
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which the final document URL is to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/documents/sc':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the signing certificate for a specific signing.
+      description: "Sample request:\r\n            \r\n    GET ~/api/v1/signings/{signingId}/documents/sc"
+      operationId: GetSigningCertificate
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which the certificate is to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/documents/ls':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the latest signed document for a specific signing.
+      description: "Sample request:\r\n            \r\n    GET ~/api/v1/signings/{signingId}/documents/ls"
+      operationId: GetLatestSignedDocument
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which the latest signed document is to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/documents/ls/url':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the URL to latest signed document associated with the specified signing ID.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents/ls/url"
+      operationId: GetLatestSignedDocumentUrl
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which the final document URL is to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/documents/{encryptedDocumentId}/o':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the original document using its encrypted ID.
+      description: "Sample request:\r\n            \r\n    GET /{encryptedDocumentId}/o"
+      operationId: GetOriginalDocument
+      parameters:
+        - name: encryptedDocumentId
+          in: path
+          description: The encrypted identifier of the document to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/documents/{documentId}/o/url':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the URL of the original document.
+      description: "Sample request:\r\n            \r\n    GET /{documentId}/o/url"
+      operationId: GetOriginalDocumentUrl
+      parameters:
+        - name: documentId
+          in: path
+          description: The unique identifier of the document.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/documents/{encryptedDocumentId}/d':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the final version of a document using its encrypted ID.
+      description: "Sample request:\r\n            \r\n    GET /{encryptedDocumentId}/d"
+      operationId: GetFinalDocument
+      parameters:
+        - name: encryptedDocumentId
+          in: path
+          description: The encrypted identifier of the document to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/documents/{documentId}/d/url':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the URL of the final version of a document.
+      description: "Sample request:\r\n            \r\n    GET /{documentId}/d/url"
+      operationId: GetFinalDocumentUrl
+      parameters:
+        - name: documentId
+          in: path
+          description: The unique identifier of the document.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/documents/{encryptedDocumentId}/dc':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the certificate of a document using its encrypted ID.
+      description: "Sample request:\r\n            \r\n    GET /{encryptedDocumentId}/dc"
+      operationId: GetDocumentCertificate
+      parameters:
+        - name: encryptedDocumentId
+          in: path
+          description: The encrypted identifier of the document for which the certificate is to be fetched.
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/documents/{documentId}/dc/url':
+    get:
+      tags:
+        - Documents
+      summary: Retrieve the URL of the document's certificate.
+      description: "Sample request:\r\n            \r\n    GET /{documentId}/dc/url"
+      operationId: GetDocumentCertificateUrl
+      parameters:
+        - name: documentId
+          in: path
+          description: The unique identifier of the document.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/history':
+    get:
+      tags:
+        - History
+      summary: Retrieve Audit Trail. This endpoint allows you to pull a list of all audit trail events related to this signing. The audit trail is also embedded into the final signed documents themselves.
+      description: "Sample request:\r\n            \r\n    GET /signings/{signingId}/history\r\n            \r\nHeader:\r\n    externalId: SomeExternalId"
+      operationId: GetSigningHistory
+      parameters:
+        - name: signingId
+          in: path
+          description: The unique identifier of the signing for which the audit trail is to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/layouts:
+    get:
+      tags:
+        - Layouts
+      summary: Get layouts by language. This endpoint retrieves all layouts created under the account based on the specified language.
+      description: "Sample request:\r\n            \r\n    GET /layouts?language=en"
+      operationId: GetLayouts
+      parameters:
+        - name: language
+          in: query
+          description: The language used in the API call.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    post:
+      tags:
+        - Layouts
+      summary: Create a new layout. This endpoint allows you to create a signature layout for future signing.
+      description: "Sample request:\r\n            \r\n    POST /layouts\r\n    {\r\n        \"name\": \"Test Layout\"\r\n    }"
+      operationId: CreateLayout
+      parameters:
+        - name: Name
+          in: query
+          description: Get or Set the Layout Name. This property represents the descriptive name of the layout.
+      requestBody:
+        description: The layout details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.LayoutDtoExternal'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.LayoutDtoExternal'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.LayoutDtoExternal'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/layouts/{id}/copy':
+    post:
+      tags:
+        - Layouts
+      summary: Copy an existing layout. This endpoint lets you duplicate a layout for reuse.
+      description: "Sample request:\r\n            \r\n    POST /layouts/{layoutId}/copy"
+      operationId: CopyLayout
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the layout to copy.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/layouts/{id}':
+    delete:
+      tags:
+        - Layouts
+      summary: Delete a specific layout. This endpoint removes a layout based on its ID.
+      description: "Sample request:\r\n            \r\n    DELETE /layouts/{LayoutId}"
+      operationId: DeleteLayout
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the layout to delete.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/participants':
+    get:
+      tags:
+        - Participants
+      summary: Retrieve the list of signing participants within a signing.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/participants"
+      operationId: GetParticipants
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which participants are to be fetched.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/participants/{participantId}/email':
+    put:
+      tags:
+        - Participants
+      summary: Update the email address of a signing participant and resend the invitation.
+      description: "Sample request:\r\n            \r\n    PATCH /api/v1/participants/{participantId}/email \r\n    {\r\n        \"email\": \"change@lwolf.com\"\r\n    }"
+      operationId: UpdateParticipantEmail
+      parameters:
+        - name: participantId
+          in: path
+          description: The identifier of the participant whose email is to be updated.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Email
+          in: query
+          description: Get or Set the email address of the participant.
+      requestBody:
+        description: The data transfer object containing the new email address.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantEmailDtoExternal'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantEmailDtoExternal'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantEmailDtoExternal'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/participants/batch:
+    post:
+      tags:
+        - Participants
+      summary: Batch creation of signing participants for a signing process.
+      description: "Sample request:\r\n            \r\n    POST /api/v1/participants/batch \r\n    Header: externalId\r\n    Request Body:\r\n    [\r\n        {\r\n            \"Id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"SigningId\": \"5c192f97-41e4-ed11-8e8b-00224827d18c\",\r\n            \"FirstName\": \"John\",\r\n            \"MiddleName\": \"D\",\r\n            \"LastName\": \"Doe\",\r\n            \"Email\": \"john.doe@example.com\",\r\n            \"ParticipantRole\": \"Buyer\",\r\n            \"CustomSignature\": \"JD_Signature\",\r\n            \"CustomInitials\": \"JD\",\r\n            \"SigningPin\": \"123456\",\r\n            \"Type\": 0,\r\n            \"DisplayOrder\": 1,\r\n            \"SignerGroup\": 1,\r\n            \"CustomInvitationSubject\": \"Invitation to Sign\",\r\n            \"CustomInvitationMessage\": \"Please review and sign the document.\",\r\n            \"ExternalId\": \"External12345\",\r\n            \"TransactionId\": \"3fb95f64-5717-4562-b3fc-2c963f66bfa7\",\r\n            \"Language\": \"en\",\r\n            \"StaticSignatureEnabled\": true,\r\n            \"ScriptedSignatureEnabled\": true,\r\n            \"ImageSignatureEnabled\": true,\r\n            \"TrestleRole\": \"Role1\"\r\n        }\r\n    ]"
+      operationId: AddParticipants
+      parameters:
+        - name: externalId
+          in: header
+          description: External identifier provided in the header.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: List of participant data transfer objects to be created.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /api/v1/signings:
+    get:
+      tags:
+        - Signings
+      summary: Retrieve all signings owned by a user. This endpoint fetches a list of all the signings that the user owns.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings?SortBy=LastModified&SortDescending=true&FilterBy=exampleFilter&SkipItems=0&ItemLimit=50&TransactionId=example-transaction-id&StatusId=1,21"
+      operationId: GetSignings
+      parameters:
+        - name: TransactionId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: StatusId
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+        - name: SortBy
+          in: query
+          schema:
+            type: string
+        - name: SortDescending
+          in: query
+          schema:
+            type: boolean
+        - name: FilterBy
+          in: query
+          schema:
+            type: string
+        - name: SkipItems
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: ItemLimit
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    post:
+      tags:
+        - Signings
+      summary: 'Create a signing. This endpoint allows for the creation of a new signing, including the ability to add a webhook callback URL.'
+      description: "Sample request:\r\n            \r\n    POST /signings\r\n            \r\nRequest Body:\r\n            \r\n```json\r\n{\r\n    \"Id\": \"example-guid-1\",\r\n    \"Name\": \"Test Layout\",\r\n    \"AccountId\": \"example-guid-2\",\r\n    \"StatusId\": 1,\r\n    \"IsOrdered\": false,\r\n    \"DateCreated\": \"2023-04-20T02:59:00Z\",\r\n    \"LastModified\": \"2023-04-21T02:59:00Z\",\r\n    \"ExpirationDate\": \"2023-04-26T02:59:00Z\",\r\n    \"IdPosition\": 1,\r\n    \"ReminderDay\": 5,\r\n    \"ReminderHour\": 2,\r\n    \"TransactionId\": \"example-guid-3\",\r\n    \"TechnologyProvider\": \"TechProviderName\",\r\n    \"CallbackUrl\": \"https://yourcallbackurl.com\",\r\n    \"Files\": [\"File1\", \"File2\"],\r\n    \"FilesWithStrikeoutsDisabled\": [\"FileName1\", \"FileName2\"]\r\n}\r\n```\r\n            \r\nNote: Replace \"example-guid-1\", \"example-guid-2\", etc., with actual GUID values and \"File1\", \"File2\" with your file objects."
+      operationId: CreateSigning
+      parameters:
+        - name: externalId
+          in: header
+          description: The external identifier associated with the signing.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - Name
+                - Participants
+              type: object
+              properties:
+                Files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                FilesWithStrikeoutsDisabled:
+                  type: array
+                  items:
+                    type: string
+                Fields:
+                  type: object
+                  additionalProperties:
+                    type: string
+                Participants:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+                Id:
+                  type: string
+                  format: uuid
+                Name:
+                  type: string
+                AccountId:
+                  type: string
+                  format: uuid
+                StatusId:
+                  type: integer
+                  format: int32
+                IsOrdered:
+                  type: boolean
+                DateCreated:
+                  type: string
+                  format: date-time
+                LastModified:
+                  type: string
+                  format: date-time
+                ExpirationDate:
+                  type: string
+                  format: date-time
+                IdPosition:
+                  type: integer
+                  format: int32
+                ReminderDay:
+                  type: integer
+                  format: int32
+                ReminderHour:
+                  type: integer
+                  format: int32
+                TransactionId:
+                  type: string
+                  format: uuid
+                TechnologyProvider:
+                  type: string
+                CallbackUrl:
+                  type: string
+                LayoutId:
+                  type: string
+                  format: uuid
+                ApplyLayout:
+                  type: boolean
+            encoding:
+              Files:
+                style: form
+              FilesWithStrikeoutsDisabled:
+                style: form
+              Fields:
+                style: form
+              Participants:
+                style: form
+              Id:
+                style: form
+              Name:
+                style: form
+              AccountId:
+                style: form
+              StatusId:
+                style: form
+              IsOrdered:
+                style: form
+              DateCreated:
+                style: form
+              LastModified:
+                style: form
+              ExpirationDate:
+                style: form
+              IdPosition:
+                style: form
+              ReminderDay:
+                style: form
+              ReminderHour:
+                style: form
+              TransactionId:
+                style: form
+              TechnologyProvider:
+                style: form
+              CallbackUrl:
+                style: form
+              LayoutId:
+                style: form
+              ApplyLayout:
+                style: form
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{id}':
+    get:
+      tags:
+        - Signings
+      summary: Retrieve details of an individual signing. This endpoint fetches details for the signing associated with the provided signing ID.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/signings/{id}"
+      operationId: GetSigning
+      parameters:
+        - name: id
+          in: path
+          description: The identifier of the signing to be retrieved.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    patch:
+      tags:
+        - Signings
+      summary: Update the callback URL for a signing. This endpoint allows you to update the callback URL on the signing for webhook events.
+      description: "Sample request:\r\n            \r\n    PATCH /api/v1/signings/{id}\r\n    {\r\n        \"CallbackUrl\": \"https://newcallbackurl.com\"\r\n    }"
+      operationId: UpdateSigningCallback
+      parameters:
+        - name: id
+          in: path
+          description: The identifier of the signing to be updated.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: CallbackUrl
+          in: query
+          description: Get or Set the Callback URL. This property represents the URL to which callbacks related to the signing should be sent.
+      requestBody:
+        description: 'The details of the signing update, including the new callback URL.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.SigningUpdateDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.SigningUpdateDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.SigningUpdateDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    delete:
+      tags:
+        - Signings
+      summary: Deletes a signing session. This endpoint removes a signing session based on the provided signing ID.
+      description: "Sample request:\r\n            \r\n    DELETE /signings/{id}"
+      operationId: DeleteSigning
+      parameters:
+        - name: id
+          in: path
+          description: The identifier of the signing session to be deleted.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{id}/copy':
+    post:
+      tags:
+        - Signings
+      summary: Duplicate an existing signing. This endpoint creates a copy of a signing session based on the provided signing ID.
+      description: "Sample request:\r\n            \r\n    POST /signings/{id}/copy"
+      operationId: CopySigning
+      parameters:
+        - name: id
+          in: path
+          description: The identifier of the signing session to be copied.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{id}/reset':
+    post:
+      tags:
+        - Signings
+      summary: Reset a signing session. This endpoint resets the status of a signing session based on its ID.
+      description: "Sample request:\r\n            \r\n    POST /signings/{id}/reset"
+      operationId: ResetSigning
+      parameters:
+        - name: id
+          in: path
+          description: The identifier of the signing session to be reset.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{id}/resend-invitation':
+    post:
+      tags:
+        - Signings
+      summary: Resend the signing invitation. This endpoint resends the invitation for a signing session based on the provided signing ID.
+      description: "Sample request:\r\n            \r\n    POST /signings/{id}/resend-invitation"
+      operationId: ResendInvitation
+      parameters:
+        - name: id
+          in: path
+          description: The identifier of the signing session.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/send-final-documents':
+    post:
+      tags:
+        - Signings
+      summary: Send final documents of a signing session. This endpoint sends the final documents for a completed signing session.
+      description: "Sample request:\r\n            \r\n    POST /signings/{signingId}/send-final-documents\r\n            \r\nRequest Body:\r\n            \r\n```json\r\n{\r\n   \"Emails\": \"email1@example.com,email2@example.com\"\r\n}\r\n```"
+      operationId: SendFinalDocuments
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing session.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Emails
+          in: query
+          description: 'Get or Set the email addresses. This property represents the email addresses, typically in a serialized or comma-separated format.'
+          required: true
+      requestBody:
+        description: Emails to which the final documents should be sent.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.EmailsDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.EmailsDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.EmailsDto'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/link-transaction':
+    post:
+      tags:
+        - Signings
+      summary: Link a transaction to a signing session. This endpoint associates a transaction with a signing session based on the provided ID.
+      description: "Sample request:\r\n            \r\n    POST /signings/{signingId}/link-transaction\r\n            \r\nRequest Body:\r\n            \r\n```json\r\n{\r\n    \"TransactionId\": \"example-transaction-id\",\r\n    \"Documents\": [\r\n        {\r\n            \"Id\": \"example-document-id-1\",\r\n            \"BFMDocumentId\": \"BFMDoc-001\"\r\n        },\r\n        {\r\n            \"Id\": \"example-document-id-2\",\r\n            \"BFMDocumentId\": \"BFMDoc-002\"\r\n        }\r\n        // ... add more documents as required\r\n    ]\r\n}\r\n```"
+      operationId: LinkTransaction
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing session.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: TransactionId
+          in: query
+          description: Get or Set the unique identifier of the transaction.
+        - name: Documents
+          in: query
+          description: Get or Set the list of documents associated with the transaction.
+      requestBody:
+        description: The data required to link the transaction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/signings/{signingId}/force-complete':
+    post:
+      tags:
+        - Signings
+      summary: Force completes a signing session. This endpoint forcefully completes a signing session based on the provided signing ID.
+      description: "Sample request:\r\n            \r\n    POST /signings/{signingId}/force-complete"
+      operationId: ForceCompleteSigning
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing session to be forcefully completed.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/signings/deleted:
+    get:
+      tags:
+        - Signings
+      summary: Retrieve deleted signing sessions. This endpoint fetches all the deleted signing sessions for a given external ID.
+      description: "Sample request:\r\n            \r\n    GET /signings/deleted\r\n    Headers:\r\n        externalId: your-external-id-guid"
+      operationId: GetDeletedSignings
+      parameters:
+        - name: externalId
+          in: header
+          description: The external identifier used to fetch the deleted signings.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/{signingId}/recover-deleted':
+    put:
+      tags:
+        - Signings
+      summary: Recover a deleted signing session. This endpoint recovers a deleted signing session based on the provided signing ID.
+      description: "Sample request:\r\n            \r\n    PUT /signings/{signingId}/recover-deleted"
+      operationId: RecoverDeletedSigning
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing session to be recovered.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/{signingId}/send-signing':
+    post:
+      tags:
+        - Signings
+      summary: Send a signing session to participants. This endpoint starts the signing process for a signing session based on the provided signing ID.
+      description: "Sample request:\r\n            \r\n    POST /signings/{signingId}/send-signing"
+      operationId: SendSigning
+      parameters:
+        - name: signingId
+          in: path
+          description: The email to query.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/{signingId}/reject':
+    post:
+      tags:
+        - Signings
+      summary: This is only called by Trestle client
+      operationId: RejectSigning
+      parameters:
+        - name: signingId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/participants/{signingId}/invitations':
+    get:
+      tags:
+        - Signings
+      operationId: GetLinksOfInvitationsWhenSigningIsSent
+      parameters:
+        - name: signingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/documents/{signingId}/completed':
+    get:
+      tags:
+        - Signings
+      operationId: GetLinksOfDocumentsWhenSigningIsCompleted
+      parameters:
+        - name: signingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/documents/{signingId}/originals':
+    get:
+      tags:
+        - Signings
+      operationId: GetLinksOfOriginalDocuments
+      parameters:
+        - name: signingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/signings/documents/{signingId}/certificates':
+    get:
+      tags:
+        - Signings
+      operationId: GetLinksOfCertificateDocuments
+      parameters:
+        - name: signingId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  '/api/v1/sso/signing/{signingId}':
+    get:
+      tags:
+        - Sso
+      summary: Retrieve an SSO URL for a specific signing. This endpoint generates an SSO URL that directly lands the user into the design phase of the signing.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/sso/signing/{signingId}?redirectUrl=https://example.com"
+      operationId: DesignSso
+      parameters:
+        - name: signingId
+          in: path
+          description: The identifier of the signing for which the SSO URL is to be generated.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: redirectUrl
+          in: query
+          description: The URL where the user will be redirected to upon exiting the design phase.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  '/api/v1/sso/layout/{layoutId}':
+    post:
+      tags:
+        - Sso
+      summary: SSO into the layout design phase with account update. This endpoint allows customization of the layout and setting up signature blocks.
+      description: "Sample request:\r\n            \r\n    POST /api/v1/sso/layout/{layoutId}\r\n    {\r\n        \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n        \"firstName\": \"John\",\r\n        \"middleName\": \"D\",\r\n        \"lastName\": \"Doe\",\r\n        \"email\": \"john.doe@example.com\",\r\n        \"phone\": \"555-5555\",\r\n        \"company\": \"JD Inc\",\r\n        \"clientId\": \"Client123\",\r\n        \"clientFullName\": \"John Doe\",\r\n        \"clientShortName\": \"JD\",\r\n        \"timeZone\": \"EST\",\r\n        \"gmtOffset\": -5,\r\n        \"applyDST\": true,\r\n        \"isExpired\": false,\r\n        \"isValid\": true,\r\n        \"isDisabled\": false,\r\n        \"isDeleted\": false,\r\n        \"language\": \"en\",\r\n        \"isInitialized\": true,\r\n        \"hasMoxiContacts\": false,\r\n        \"lwaId\": \"LWA12345\"\r\n    }"
+      operationId: LayoutSso
+      parameters:
+        - name: layoutId
+          in: path
+          description: The identifier for the layout.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: redirectUrl
+          in: query
+          description: Redirect URL after customization.
+          schema:
+            type: string
+        - name: Id
+          in: query
+          description: Get or Set Account ID. This property represents the unique identifier of the account.
+        - name: FirstName
+          in: query
+          description: Get or Set First Name. This property represents the first name of the account holder.
+        - name: MiddleName
+          in: query
+          description: Get or Set Middle Name. This property represents the middle name of the account holder.
+        - name: LastName
+          in: query
+          description: Get or Set Last Name. This property represents the last name of the account holder.
+        - name: Email
+          in: query
+          description: Get or Set Email. This property represents the email address associated with the account.
+        - name: Phone
+          in: query
+          description: Get or Set Phone. This property represents the phone number associated with the account.
+        - name: Company
+          in: query
+          description: Get or Set Company. This property represents the company associated with the account.
+        - name: ClientId
+          in: query
+          description: Get or Set Client ID. This property represents the identifier of the client associated with the account.
+        - name: ClientFullName
+          in: query
+          description: Get or Set Client Full Name. This property represents the full name of the client associated with the account.
+        - name: ClientShortName
+          in: query
+          description: Get or Set Client Short Name. This property represents the short name of the client associated with the account.
+        - name: TimeZone
+          in: query
+          description: Get or Set Time Zone. This property represents the time zone of the account.
+        - name: GMTOffset
+          in: query
+          description: Get or Set GMT Offset. This property represents the Greenwich Mean Time (GMT) offset of the account's time zone.
+        - name: ApplyDST
+          in: query
+          description: Get or Set Apply DST. This property indicates whether Daylight Saving Time (DST) is applied to the account's time zone.
+        - name: IsExpired
+          in: query
+          description: Get or Set Is Expired. This property indicates whether the account is expired.
+        - name: IsValid
+          in: query
+          description: Get or Set Is Valid. This property indicates whether the account is valid.
+        - name: IsDisabled
+          in: query
+          description: Get or Set Is Disabled. This property indicates whether the account is disabled.
+        - name: IsDeleted
+          in: query
+          description: Get or Set Is Deleted. This property indicates whether the account is deleted.
+        - name: Language
+          in: query
+          description: Get or Set Language. This property represents the preferred language of the account holder.
+        - name: IsInitialized
+          in: query
+          description: Get or Set Is Initialized. This property indicates whether the account has been initialized.
+        - name: HasMoxiContacts
+          in: query
+          description: Get or Set Has Moxi Contacts. This property indicates whether the account has contacts in Moxi.
+        - name: LwaId
+          in: query
+          description: 'Get or Set LWA ID. This property represents the identifier used for linking with an external system, if applicable.'
+      requestBody:
+        description: Account details for SSO.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.AccountDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.AccountDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.AccountDto'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    get:
+      tags:
+        - Sso
+      summary: SSO into the layout design phase. This endpoint allows customization of the layout and setting up signature blocks.
+      description: "Sample request:\r\n            \r\n    GET /api/v1/sso/layout/{layoutId}?redirectUrl=https://example.com&language=en"
+      operationId: LayoutSso
+      parameters:
+        - name: layoutId
+          in: path
+          description: The identifier for the layout.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: redirectUrl
+          in: query
+          description: Redirect URL after customization.
+          schema:
+            type: string
+        - name: language
+          in: query
+          description: Optional language parameter. If not supplied the language setting of the account will be used.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+components:
+  schemas:
+    Authentisign.Services.Dtos.AccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        company:
+          type: string
+          nullable: true
+        clientId:
+          type: string
+          nullable: true
+        clientFullName:
+          type: string
+          nullable: true
+        clientShortName:
+          type: string
+          nullable: true
+        timeZone:
+          type: string
+          nullable: true
+        gmtOffset:
+          type: number
+          format: float
+        applyDST:
+          type: boolean
+        isExpired:
+          type: boolean
+        isValid:
+          type: boolean
+        isDisabled:
+          type: boolean
+        isDeleted:
+          type: boolean
+        language:
+          type: string
+          nullable: true
+        isInitialized:
+          type: boolean
+        hasMoxiContacts:
+          type: boolean
+        lwaId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.CcDto:
+      required:
+        - firstName
+        - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        signingId:
+          type: string
+          format: uuid
+        firstName:
+          minLength: 1
+          type: string
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          minLength: 1
+          type: string
+        email:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+          format: int32
+        externalId:
+          type: string
+          nullable: true
+        transactionId:
+          type: string
+          format: uuid
+          nullable: true
+        saveToContacts:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.DocumentLayoutDto:
+      required:
+        - layoutId
+      type: object
+      properties:
+        layoutId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Authentisign.Services.Dtos.EmailsDto:
+      required:
+        - emails
+      type: object
+      properties:
+        emails:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          nullable: true
+        details:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.LayoutDtoExternal:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.ParticipantDto:
+      required:
+        - firstName
+        - lastName
+        - type
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        signingId:
+          type: string
+          format: uuid
+        firstName:
+          minLength: 1
+          type: string
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          minLength: 1
+          type: string
+        email:
+          type: string
+          nullable: true
+        participantRole:
+          type: string
+          nullable: true
+        customSignature:
+          type: string
+          nullable: true
+        customInitials:
+          type: string
+          nullable: true
+        signingPin:
+          type: string
+          nullable: true
+        type:
+          type: integer
+          format: int32
+        displayOrder:
+          type: integer
+          format: int32
+        signerGroup:
+          type: integer
+          format: int32
+        customInvitationSubject:
+          type: string
+          nullable: true
+        customInvitationMessage:
+          type: string
+          nullable: true
+        externalId:
+          type: string
+          nullable: true
+        transactionId:
+          type: string
+          format: uuid
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        staticSignatureEnabled:
+          type: boolean
+          nullable: true
+        scriptedSignatureEnabled:
+          type: boolean
+          nullable: true
+        imageSignatureEnabled:
+          type: boolean
+          nullable: true
+        trestleRole:
+          type: string
+          nullable: true
+        crmId:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.ParticipantEmailDtoExternal:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.SigningUpdateDto:
+      type: object
+      properties:
+        callbackUrl:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bfmDocumentId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto'
+          nullable: true
+      additionalProperties: false
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+x-topics:
+  - title: Overview
+    content:
+      $ref: ./docs/authentisign-overview.md
+  - title: Getting started
+    content:
+      $ref: ./docs/getting-started.md
+  - title: Authentication Token
+    content:
+      $ref: ./docs/authentication.md
+  - title: HTTP Request
+    content:
+      $ref: ./docs/http-request.md
+

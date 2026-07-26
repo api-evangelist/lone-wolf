@@ -1,0 +1,301 @@
+aid: lone-wolf
+name: Lone Wolf Technologies
+kind: company
+url: https://raw.githubusercontent.com/api-evangelist/lone-wolf/refs/heads/main/apis.yml
+description: >-
+  Lone Wolf Technologies is the dominant back-office, transaction-management and
+  forms vendor in North American residential real estate, headquartered in Dallas,
+  Texas and backed by Stone Point Capital. Its software runs the paperwork and money
+  side of the deal rather than the listing feed: brokerage accounting and commission
+  processing (Back Office, the brokerWOLF lineage), transaction management in two
+  editions (zipForm Edition and TransactionDesk Edition), Authentisign and Inkless
+  e-signature, Cloud CMA comparative market analysis, Boost digital advertising
+  (HomeSpotter), Spacio open-house lead capture, and Propertybase/Relationships CRM.
+  Its forms suites are distributed to agents as association member benefits through
+  state REALTOR associations and MLSs, which places it between the MLS layer and the
+  brokerage. On API posture it is one of the strongest surfaces in this sector and an
+  instructive counter-example to the MLS data providers: on 2026-02-02 it launched a
+  public API Portal for the Lone Wolf Foundation platform, and its documentation hub
+  at apidocs.lwolf.com publishes seven complete, anonymously downloadable OpenAPI 3.0
+  definitions (Transact, Deals, Back Office, Authentisign, TransactionDesk, zipForm and
+  WolfConnect) plus an MCP server endpoint. Documentation is genuinely open; credentials
+  are not. Keys are issued only after an access-request form is reviewed by the
+  integrations team, and the zipForm API is explicitly licensed to third-party
+  application partners. Lone Wolf is not a RESO-certified data distributor and publishes
+  no RESO Web API, Data Dictionary endpoint, OData $metadata document or Universal
+  Property Identifier — RESO certification governs MLS listing feeds, which is not the
+  layer Lone Wolf occupies; it consumes MLS data under MLS agreements (Cloud CMA
+  documents RETS live queries) rather than redistributing it.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+  - Real Estate
+  - United States
+  - PropTech
+  - Transactions
+  - Transaction Management
+  - Brokerage Back Office
+  - Real Estate Accounting
+  - Commissions
+  - Forms
+  - zipForm
+  - TransactionDesk
+  - E-Signature
+  - CMA
+  - Valuation
+  - CRM
+  - MLS
+  - Real Estate Agents
+  - Brokers
+created: '2026-07-26'
+modified: '2026-07-26'
+specificationVersion: '0.19'
+apis:
+  - aid: lone-wolf:lone-wolf-transact-api
+    name: Lone Wolf Transact API
+    description: >-
+      Programmatic access to Lone Wolf's transaction management platform across the full
+      transaction lifecycle — creating and updating transactions, managing offers,
+      contacts, folders and documents, sharing transactions across teams via share groups,
+      attaching forms from form libraries, and sending documents out for e-signature.
+      Resources are scoped under /users/{userId}. Collection endpoints on the Transact
+      Workflow service support OData query options ($filter, $expand); this is OData query
+      syntax only and is not a RESO Web API surface. Secured with a bearer token plus a
+      subscription key. 37 paths / 53 operations in the published OpenAPI 3.0.3 definition.
+    humanURL: https://apidocs.lwolf.com/doc/transact-api
+    baseURL: https://gateway.lwolf.com
+    tags:
+      - Transactions
+      - Offers
+      - Documents
+      - Signings
+      - Contacts
+      - Form Libraries
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-transact-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/transact-api
+      - type: APIReference
+        url: https://apidocs.lwolf.com/doc/transact-api
+      - type: Changelog
+        url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+  - aid: lone-wolf:lone-wolf-deals-api
+    name: Lone Wolf Deals API
+    description: >-
+      Partner-integration API (release 25.01.00) covering deal records across the Lone Wolf
+      Foundation platform. All requests require an Authorization header carrying a Bearer
+      JWT obtained by POSTing credentials to https://authentication.api.lwolf.com/v1/login.
+      The largest operation surface published by Lone Wolf — 53 paths / 86 operations — but
+      the OpenAPI definition declares no servers block, so no production base URL is
+      asserted here.
+    humanURL: https://apidocs.lwolf.com/doc/deals-api
+    tags:
+      - Deals
+      - Transactions
+      - Partner Integration
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-deals-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/deals-api
+      - type: Changelog
+        url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+      - type: Authentication
+        url: https://authentication.api.lwolf.com/v1/login
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+  - aid: lone-wolf:lone-wolf-back-office-api
+    name: Lone Wolf Back Office API
+    description: >-
+      Brokerage back-office and accounting API covering the money side of the transaction —
+      commissions, commission fees and tiers, deposits, conditions and condition types,
+      classifications, employees, offices, transactions, and business and client contacts.
+      This is the brokerWOLF/Back Office Online lineage, the system of record for brokerage
+      accounting. 39 paths / 69 operations in the published OpenAPI 3.0.1 definition.
+    humanURL: https://apidocs.lwolf.com/doc/back-office-online-api
+    baseURL: https://api.lwolf.com/backoffice
+    tags:
+      - Back Office
+      - Accounting
+      - Commissions
+      - Deposits
+      - Offices
+      - Employees
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-back-office-online-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/back-office-online-api
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+  - aid: lone-wolf:lone-wolf-authentisign-api
+    name: Lone Wolf Authentisign API
+    description: >-
+      E-signature API for Authentisign, Lone Wolf's signing product. Creates and manages
+      signings, signer roles, documents and signing status. Supports an optional CallbackUrl
+      on a signing, and a PATCH endpoint to update it, giving a real webhook surface for
+      signing events — the only genuine event/callback mechanism found across Lone Wolf's
+      published definitions. 41 paths / 46 operations in the published OpenAPI 3.0.1
+      definition; the definition declares no securitySchemes block.
+    humanURL: https://apidocs.lwolf.com/doc/authentisign-api
+    baseURL: https://api.lwolf.com/authentisign
+    tags:
+      - E-Signature
+      - Signings
+      - Documents
+      - Webhooks
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-authentisign-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/authentisign-api
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+  - aid: lone-wolf:lone-wolf-transactiondesk-api
+    name: Lone Wolf TransactionDesk Partner API
+    description: >-
+      Partner API for the TransactionDesk edition of Lone Wolf Transactions, covering
+      transaction summaries, documents, contacts and contact types, transaction types and
+      statuses, single sign-on, and resource metadata. Uses an OAuth 2.0 authorization-code
+      flow — redirect to /oauth/authorize, exchange a one-time code (10-minute expiry) at
+      POST /oauth/token, then send Authorization: Bearer. 25 paths / 44 operations. Note the
+      only server declared in the definition is the preproduction host
+      https://api.pre.transactiondesk.com; no production base URL is published.
+    humanURL: https://apidocs.lwolf.com/doc/transactiondesk-api
+    baseURL: https://api.pre.transactiondesk.com
+    tags:
+      - Transactions
+      - Documents
+      - Contacts
+      - Single Sign On
+      - OAuth
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-transactiondesk-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/transactiondesk-api
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+  - aid: lone-wolf:lone-wolf-zipform-api
+    name: Lone Wolf zipForm Partner API
+    description: >-
+      The zipForm REST web service (v5.1), exposing zipForm transaction data, PDF forms and
+      selected zipForm application functionality for integration into partner applications.
+      Explicitly made available on a licensed basis to third-party application partners.
+      Authentication combines a Shared Key with either a Context Id or an External Id,
+      passed via X-Auth-ContextId / X-Auth-SharedKey headers or query string. 22 paths /
+      28 operations, with production and staging base URLs both published.
+    humanURL: https://apidocs.lwolf.com/doc/zipform-api
+    baseURL: https://ws.zipformplus.com/api
+    tags:
+      - zipForm
+      - Forms
+      - Transactions
+      - Templates
+      - Title Integration
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-zipform-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/zipform-api
+      - type: Changelog
+        url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+  - aid: lone-wolf:lone-wolf-wolfconnect-api
+    name: Lone Wolf WolfConnect API
+    description: >-
+      A collection of RESTful web resources giving third parties access to Lone Wolf data —
+      members, transactions, classifications, conditions, contact types, property types and
+      sources of business. Authentication uses a signed Authorization header (LoneWolfToken
+      HMAC signature scheme). Documents OData support, concurrency checking, compression and
+      permissions. 15 paths / 22 operations, with both production and sandbox hosts published.
+    humanURL: https://apidocs.lwolf.com/doc/wolfconnect-api
+    baseURL: https://api.globalwolfweb.com
+    tags:
+      - Members
+      - Transactions
+      - Classifications
+      - Property Types
+    properties:
+      - type: OpenAPI
+        url: openapi/lone-wolf-wolfconnect-api-openapi.yml
+      - type: Documentation
+        url: https://apidocs.lwolf.com/doc/wolfconnect-api
+      - type: Changelog
+        url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+      - type: Sandbox
+        url: https://api-sb.globalwolfweb.com
+      - type: DeveloperPortal
+        url: https://www.lwolf.com/api-portal
+common:
+  - type: Website
+    url: https://www.lwolf.com/
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/
+  - type: GettingStarted
+    url: https://www.lwolf.com/api-getting-started
+  - type: Signup
+    url: https://www.lwolf.com/api-getting-started
+  - type: Changelog
+    url: https://apidocs.lwolf.com/changes
+  - type: MCPServer
+    url: https://apidocs.lwolf.com/mcp
+  - type: LlmsText
+    url: https://apidocs.lwolf.com/?format=md
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: OpenIDConnectDiscovery
+    url: https://gateway.lwolf.com/.well-known/openid-configuration
+  - type: TokenEndpoint
+    url: https://gateway.lwolf.com/oauth/token
+  - type: JWKS
+    url: https://gateway.lwolf.com/.well-known/jwks.json
+  - type: Login
+    url: https://gateway.lwolf.com/u/login/identifier
+  - type: Integrations
+    url: https://www.lwolf.com/integrations
+  - type: About
+    url: https://www.lwolf.com/about
+  - type: Leadership
+    url: https://www.lwolf.com/leadership
+  - type: Support
+    url: https://www.lwolf.com/support
+  - type: Contact
+    url: https://www.lwolf.com/contact
+  - type: News
+    url: https://www.lwolf.com/news-press
+  - type: PrivacyPolicy
+    url: https://www.lwolf.com/privacy-policy
+  - type: TermsOfService
+    url: https://www.lwolf.com/terms-of-use
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/getlwolf/
+  - type: Facebook
+    url: https://www.facebook.com/GetLWolf
+  - type: Instagram
+    url: https://www.instagram.com/getlwolf
+  - type: YouTube
+    url: https://www.youtube.com/user/GetLWolf
+  - type: ProductDocumentation
+    name: Cloud CMA Developers
+    url: https://cloudcma.com/developers
+  - type: ProductDocumentation
+    name: Boost (HomeSpotter) API Reference
+    url: https://docs.homespotter.com/
+  - type: ProductDocumentation
+    name: Spacio API Reference
+    url: https://spac.io/docs/api/
+  - type: ProductDocumentation
+    name: Propertybase (Front Office) API Docs
+    url: https://apidocs.propertybase.com/
+  - type: Product
+    name: Inkless eSignature
+    url: https://signinkless.com/
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

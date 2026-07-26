@@ -1,0 +1,4929 @@
+---
+openapi: 3.0.3
+info:
+  title: Deals API
+  version: 1.0.0
+  description: |+
+    ## Index
+
+    For partner integration use (25.01.00)
+
+    ### Getting Started
+
+    #### Getting a JWT Access Token
+
+    `POST https://authentication.api.lwolf.com/v1/login`
+
+    All APIs require an *Authorization* HTTP Header that contains a *Bearer {token}* as its value. The token is a JSON Web Token (JWT) and can be generated as needed from the Authentication API using a POST request to the `/v1/login` endpoint with your provided credentials / secrets.
+
+    This will provide a JWT token in the response which can then be used as your Bearer token in your Authorization header when making API calls.
+
+    **Request Example**
+
+    ```json
+    {
+      "emailAddress": "api-aaaa111@apps.lwolf.com",
+      "password": "AAAA111",
+      "clientId": "GgP8g-zksBgWuXum!DbXh*qASYCsfNZF"
+    }
+    ```
+
+    **cURL**
+
+    ```bash
+    curl --location --request POST 'https://authentication.api.lwolf.com/v1/login' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+    "emailAddress": "api-aaa111@apps.lwolf.com",
+    "clientId": "AAAA111",
+    "password": "GgP8g-zksBgWuXum!DbXh*qASYCsfNZF"
+    }'
+    ```
+
+    **Response Example (200 OK)**
+
+    ```json
+    {
+      "token": "<JWT string>",
+      "expiresIn": 86400
+    }
+    ```
+
+    ### Searching Deals
+
+    #### Using Field Search on Summaries
+
+    `GET https://deals.api.lwolf.com/v1/search`
+
+    The Deals API supports searching deal summaries, compact and heavily indexed versions of deals, by a single field and value.
+
+    **Example**
+
+    ```
+    https://deals.api.lwolf.com/v1/deals/search?entityPath=deal&fieldName=bwId&searchText=12345
+    ```
+
+    #### Using OData on Full Details
+
+    `GET https://deals.api.lwolf.com/v1/deals`
+
+    The Deals API supports searching deals using a subset of OData queries ($filter, $top, $skip, $limit). Any top-level field can be used in a query however at the current time fields from nested objects is not supported. As well the use of the IN operator is not supported, however multiple OR operators can be used instead.
+
+    **Example**
+
+    ```
+    https://deals.api.lwolf.com/v1/deals?$filter=addressStreetNumber%20eq%20%27263%27%20and%20%20addressStreetName%20eq%20%27Wellington%20St%27%20and%20addressUnitNumber%20eq%20%27701%27
+    ```
+
+    API for managing deals, commissions, conditions, and client contacts.
+
+    ## Roster API
+
+    Lone Wolf Technologies Roster API
+
+    **API Endpoint:** `https://roster.api.lwolf.com/v1`
+
+    **Schemes:** https
+
+    **Version:** 1.0.0
+
+    ### Authentication
+
+    **Bearer Token**
+
+    Use the Authentication API to retrieve the JSON Web Token for all calls to this API. Pass the token as `Authorization: Bearer {token}` in the request header.
+
+    ### Members
+
+    #### Add new member
+
+    `POST /members`
+
+    If the 'id' is passed in this object, the API will attempt to use that for its member id. If 'id' is null or undefined, the API will generate one.
+
+    **Request Example**
+
+    ```json
+    {
+      "id": "string (UUID)",
+      "bwId": "number (int32)",
+      "firstName": "string",
+      "middleName": "string",
+      "lastName": "string",
+      "number": "string",
+      "officeId": "string (UUID)",
+      "bwOfficeId": "number (int32)",
+      "inactiveDate": "string (date)",
+      "legalName": "string",
+      "primaryEmailAddress": "string",
+      "addressLine1": "string",
+      "addressLine2": "string",
+      "addressCity": "string",
+      "addressPostalCode": "string",
+      "addressProvinceCode": "string",
+      "addressCountryCode": "string",
+      "birthDate": "string (date)",
+      "typeId": "string",
+      "lwaId": "string (UUID)",
+      "memberTypeCode": {
+        "createdTimestamp": "string (date-time)",
+        "modifiedTimestamp": "string (date-time)",
+        "id": "string (UUID)",
+        "code": "string",
+        "name": "string"
+      }
+    }
+    ```
+
+    | Response | Description |
+    |---|---|
+    | 201 Created | Member created |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 409 Conflict | Member already exists. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (201 Created)**
+
+    ```json
+    {
+      "createdTimestamp": "string (date-time)",
+      "modifiedTimestamp": "string (date-time)",
+      "id": "string (UUID)",
+      "version": "number (int32)",
+      "bwId": "number (int32)",
+      "firstName": "string",
+      "middleName": "string",
+      "lastName": "string",
+      "number": "string",
+      "officeId": "string (UUID)",
+      "bwOfficeId": "number (int32)",
+      "inactiveDate": "string (date)",
+      "legalName": "string",
+      "primaryEmailAddress": "string",
+      "addressLine1": "string",
+      "addressLine2": "string",
+      "addressCity": "string",
+      "addressPostalCode": "string",
+      "addressProvinceCode": "string",
+      "addressCountryCode": "string",
+      "birthDate": "string (date)",
+      "typeId": "string",
+      "lwaId": "string (UUID)",
+      "memberTypeCode": {
+        "createdTimestamp": "string (date-time)",
+        "modifiedTimestamp": "string (date-time)",
+        "id": "string (UUID)",
+        "code": "string",
+        "name": "string"
+      }
+    }
+    ```
+
+    **Response Example (409 Conflict)**
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### Get list of members
+
+    `GET /members`
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Success |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (200 OK)**
+
+    ```json
+    [
+      {
+        "createdTimestamp": "string (date-time)",
+        "modifiedTimestamp": "string (date-time)",
+        "id": "string (UUID)",
+        "version": "number (int32)",
+        "bwId": "number (int32)",
+        "firstName": "string",
+        "middleName": "string",
+        "lastName": "string",
+        "number": "string",
+        "officeId": "string (UUID)",
+        "bwOfficeId": "number (int32)",
+        "inactiveDate": "string (date)",
+        "legalName": "string",
+        "primaryEmailAddress": "string",
+        "addressLine1": "string",
+        "addressLine2": "string",
+        "addressCity": "string",
+        "addressPostalCode": "string",
+        "addressProvinceCode": "string",
+        "addressCountryCode": "string",
+        "birthDate": "string (date)",
+        "typeId": "string",
+        "lwaId": "string (UUID)",
+        "memberTypeCode": {
+          "createdTimestamp": "string (date-time)",
+          "modifiedTimestamp": "string (date-time)",
+          "id": "string (UUID)",
+          "code": "string",
+          "name": "string"
+        }
+      }
+    ]
+    ```
+
+    #### Delete a specific member
+
+    `DELETE /members/{memberId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | memberId | string (UUID) | |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Member deleted. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Member not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (404 Not Found)**
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### Get a specific member
+
+    `GET /members/{memberId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | memberId | string (UUID) | |
+
+    **Query Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | isBwId | boolean | Indicates whether the passed 'memberId' should be treated as the brokerWOLF id |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Member found. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Member not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    #### Update a member property
+
+    `PATCH /members/{memberId}`
+
+    Updates properties on the member entity. None of its child collections can be updated with this route.
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | memberId | string (UUID) | |
+
+    **Request Example**
+
+    ```json
+    {
+      "bwId": "number (int32)",
+      "firstName": "string",
+      "middleName": "string",
+      "lastName": "string",
+      "number": "string",
+      "officeId": "string (UUID)",
+      "bwOfficeId": "number (int32)",
+      "inactiveDate": "string (date)",
+      "legalName": "string",
+      "primaryEmailAddress": "string",
+      "addressLine1": "string",
+      "addressLine2": "string",
+      "addressCity": "string",
+      "addressPostalCode": "string",
+      "addressProvinceCode": "string",
+      "addressCountryCode": "string",
+      "birthDate": "string (date)",
+      "typeId": "string",
+      "lwaId": "string (UUID)",
+      "memberTypeCode": {
+        "createdTimestamp": "string (date-time)",
+        "modifiedTimestamp": "string (date-time)",
+        "id": "string (UUID)",
+        "code": "string",
+        "name": "string"
+      }
+    }
+    ```
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Member updated. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Member not found. |
+    | 412 Precondition Failed | Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    ### Offices
+
+    #### Add new office
+
+    `POST /offices`
+
+    If the 'id' is passed in this object, the API will attempt to use that for its office id. If 'id' is null or undefined, the API will generate one.
+
+    **Request Example**
+
+    ```json
+    {
+      "id": "string (UUID)",
+      "bwId": "number (int32)",
+      "name": "string",
+      "shortName": "string",
+      "inactiveDate": "string (date)"
+    }
+    ```
+
+    | Response | Description |
+    |---|---|
+    | 201 Created | Office created |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 409 Conflict | Office already exists. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (201 Created)**
+
+    ```json
+    {
+      "createdTimestamp": "string (date-time)",
+      "modifiedTimestamp": "string (date-time)",
+      "id": "string (UUID)",
+      "version": "number (int32)",
+      "bwId": "number (int32)",
+      "name": "string",
+      "shortName": "string",
+      "inactiveDate": "string (date)"
+    }
+    ```
+
+    #### Get list of offices
+
+    `GET /offices`
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Success |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (200 OK)**
+
+    ```json
+    [
+      {
+        "createdTimestamp": "string (date-time)",
+        "modifiedTimestamp": "string (date-time)",
+        "version": "number (int32)",
+        "id": "string (UUID)",
+        "bwId": "number (int32)",
+        "name": "string",
+        "shortName": "string",
+        "inactiveDate": "string (date)"
+      }
+    ]
+    ```
+
+    #### Delete a specific office
+
+    `DELETE /offices/{officeId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | officeId | string (UUID) | |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Office deleted. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Office not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    #### Get a specific office
+
+    `GET /offices/{officeId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | officeId | string (UUID) | |
+
+    **Query Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | isBwId | boolean | Indicates whether the passed 'officeId' should be treated as the brokerWOLF id |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Office found. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Office not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    #### Update an office property
+
+    `PATCH /offices/{officeId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | officeId | string (UUID) | |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Office updated. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Office not found. |
+    | 412 Precondition Failed | Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    #### Get list of office summaries
+
+    `GET /offices/summary`
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Success |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (200 OK)**
+
+    ```json
+    [
+      {
+        "id": "string (UUID)",
+        "name": "string",
+        "shortName": "string",
+        "inactiveDate": "string (date)"
+      }
+    ]
+    ```
+
+    ### Brokerages
+
+    #### Add new brokerage
+
+    `POST /brokerages`
+
+    If the 'id' is passed in this object, the API will attempt to use that for its brokerage id. If 'id' is null or undefined, the API will generate one. An internal token is needed to access this endpoint.
+
+    **Request Example**
+
+    ```json
+    {
+      "createdTimestamp": "string (date-time)",
+      "modifiedTimestamp": "string (date-time)",
+      "name": "string",
+      "shortName": "string",
+      "id": "string",
+      "companyTypeCode": "string",
+      "addressPostalCode": "string",
+      "addressCountryCode": "string"
+    }
+    ```
+
+    | Response | Description |
+    |---|---|
+    | 201 Created | Brokerage created |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 409 Conflict | Brokerage already exists. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (201 Created)**
+
+    ```json
+    {
+      "createdTimestamp": "string (date-time)",
+      "modifiedTimestamp": "string (date-time)",
+      "name": "string",
+      "shortName": "string",
+      "id": "string",
+      "companyTypeCode": "string",
+      "addressPostalCode": "string",
+      "addressCountryCode": "string"
+    }
+    ```
+
+    #### Retrieve all brokerages
+
+    `GET /brokerages`
+
+    This endpoint is internal only and requires an internal token. The response will be all brokerages in the database.
+
+    **Query Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | filter | string | Filter that will be used to query the database. |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Success |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    #### Delete a specific brokerage
+
+    `DELETE /brokerages/{clientId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | clientId | string (UUID) | |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Brokerage deleted. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Brokerage not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    #### Get a specific brokerage
+
+    `GET /brokerages/{clientId}`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | clientId | string | |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Brokerage found. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Brokerage not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    ### Member Types
+
+    #### Get a specific Member Type
+
+    `GET /member-types`
+
+    **Path Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | id | string (UUID) | |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Member Type found. |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 403 Forbidden | Permission denied. See response body for details. |
+    | 404 Not Found | Brokerage not found. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    **Response Example (200 OK)**
+
+    ```json
+    {
+      "id": "string (UUID)",
+      "createdTimestamp": "string (date-time)",
+      "modifiedTimestamp": "string (date-time)",
+      "version": "number (int32)",
+      "code": "string",
+      "name": "string"
+    }
+    ```
+
+    #### Retrieve all Member Types
+
+    `GET /member-types`
+
+    This endpoint is internal only and requires an internal token. The response will be all brokerages in the database.
+
+    **Query Parameters**
+
+    | Parameter | Type | Description |
+    |---|---|---|
+    | filter | string | Filter that will be used to query the database. |
+
+    | Response | Description |
+    |---|---|
+    | 200 OK | Success |
+    | 400 Bad Request | Invalid request. See response body for details. |
+    | 401 Unauthorized | Unauthorized request. See response body for details. |
+    | 500 Internal Server Error | Unknown error. See response body for details. |
+
+    ### Schema Definitions
+
+    #### HttpStatus400
+
+    Invalid request. See response body for details.
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### HttpStatus401
+
+    Unauthorized request. See response body for details.
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### HttpStatus403
+
+    Permission denied. See response body for details.
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### HttpStatus412
+
+    Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database.
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### HttpStatus500
+
+    Unknown error. See response body for details.
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### ApiError
+
+    | Field | Type | Description |
+    |---|---|---|
+    | code | integer (int32) | An error code. This is typically the same as the http status code but can be different in some cases. |
+    | message | string | Simple message about the error. |
+    | details | string[] | An array of strings holding more details about the error. |
+
+    ```json
+    {
+      "code": "integer (int32)",
+      "message": "string",
+      "details": ["string"]
+    }
+    ```
+
+    #### Member
+
+    | Field | Type | Description |
+    |---|---|---|
+    | createdTimestamp | string (date-time) | |
+    | modifiedTimestamp | string (date-time) | |
+    | id | string (UUID) | |
+    | bwId | number (int32) | The brokerWOLF Id of the member. This should not be used by third party systems as this value could go away in the future. |
+    | version | number (int32) | The version of the member in the database. Used for optimistic concurrency checking. |
+    | firstName | string | |
+    | middleName | string | |
+    | lastName | string | |
+    | number | string | The brokerage specified number. |
+    | officeId | string (UUID) | |
+    | bwOfficeId | number (int32) | The brokerWOLF Id of the office. This should not be used by third party systems as this value could go away in the future. |
+    | inactiveDate | string (date) | The date the member went inactive. If this is null, the member is active. |
+    | legalName | string | The legal name of member. |
+    | primaryEmailAddress | string | The primary email address of a member. |
+    | addressLine1 | string | The address of a member. |
+    | addressLine2 | string | The second address of a member. |
+    | addressCity | string | The city of a member. |
+    | addressPostalCode | string | The postal code of a member. |
+    | addressProvinceCode | string | The province code of a member. |
+    | addressCountryCode | string | The country code of a member. |
+    | birthDate | string | The birth date of a member. |
+    | typeId | string | The type id of a member. |
+    | lwaId | string | The lwaId of a member. |
+    | memberTypeCode | string | The member type of a member. |
+
+    #### Office
+
+    | Field | Type | Description |
+    |---|---|---|
+    | createdTimestamp | string (date-time) | |
+    | modifiedTimestamp | string (date-time) | |
+    | id | string (UUID) | |
+    | version | number (int32) | The version of the office in the database. Used for optimistic concurrency checking. |
+    | bwId | number (int32) | The brokerWOLF Id of the office. This should not be used by third party systems as this value could go away in the future. |
+    | name | string | Main name of the office. |
+    | shortName | string | Short name for the office. |
+    | inactiveDate | string (date) | The date the office went inactive. If this is null, the office is active. |
+
+    #### Brokerage
+
+    | Field | Type | Description |
+    |---|---|---|
+    | createdTimestamp | string (date-time) | |
+    | modifiedTimestamp | string (date-time) | |
+    | version | number (int32) | The version of the brokerage in the database. Used for optimistic concurrency checking. |
+    | name | string | Main name of the brokerage. |
+    | shortName | string | Short name for the brokerage. |
+    | id | string | |
+    | companyTypeCode | string | Company Type Code for the brokerage. |
+    | addressPostalCode | string | Address Postal Code for the brokerage. |
+    | addressCountryCode | string | Country Code for the brokerage. |
+
+    #### Member Type
+
+    | Field | Type | Description |
+    |---|---|---|
+    | createdTimestamp | string (date-time) | |
+    | modifiedTimestamp | string (date-time) | |
+    | id | string | |
+    | version | number (int32) | The version of the brokerage in the database. Used for optimistic concurrency checking. |
+    | code | string | Member type code. |
+    | name | string | Name of the member type. |
+
+    #### Office Summary
+
+    | Field | Type | Description |
+    |---|---|---|
+    | id | string (UUID) | |
+    | name | string | Main name of the office. |
+    | shortName | string | Short name for the office. |
+    | inactiveDate | string (date) | The date the office went inactive. If this is null, the office is active. |
+
+security:
+- BearerToken: []
+components:
+  securitySchemes:
+    BearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JSON Web Token obtained from the Authentication API (`POST /v1/login`).
+        Pass the token as `Authorization: Bearer <token>` in every request. Tokens
+        expire after the number of seconds specified in the `expiresIn` field of the
+        login response.'
+  schemas:
+    Address:
+      type: object
+    PhoneNumber:
+      type: object
+    Condition:
+      type: object
+    ExternalAgent:
+      type: object
+    ConditionType:
+      type: object
+    Deposit:
+      type: object
+    EmailAddress:
+      type: object
+    Commission:
+      type: object
+    Classification:
+      type: object
+    ContactType:
+      type: object
+    PropertyType:
+      type: object
+    ClientContact:
+      type: object
+    ExternalCommission:
+      type: object
+    DealSyncStatus:
+      type: object
+    BusinessContact:
+      type: object
+    Deal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          format: int32
+        createdTimestamp:
+          type: string
+          format: date-time
+        modifiedTimestamp:
+          type: string
+          format: date-time
+        culture:
+          type: string
+        number:
+          type: string
+        mlsNumber:
+          type: string
+        statusCode:
+          type: string
+        classCode:
+          type: string
+        name:
+          type: string
+        addressStreetNumber:
+          type: string
+        addressStreetName:
+          type: string
+        addressStreetDirection:
+          type: string
+        addressUnitNumber:
+          type: string
+        addressCity:
+          type: string
+        addressProvinceCode:
+          type: string
+        addressPostalCode:
+          type: string
+        addressCountryCode:
+          type: string
+        offerDate:
+          type: string
+          format: date
+        closeDate:
+          type: string
+          format: date
+        entryDate:
+          type: string
+          format: date
+        finalizeDate:
+          type: string
+          format: date
+        firmDate:
+          type: string
+          format: date
+        closePrice:
+          type: number
+          format: float
+        legalDescription:
+          type: string
+        classification:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            createdTimestamp:
+              type: string
+              format: date-time
+            modifiedTimestamp:
+              type: string
+              format: date-time
+            code:
+              type: string
+            name:
+              type: string
+            endTypeCode:
+              type: string
+            endCount:
+              type: string
+        propertyType:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            createdTimestamp:
+              type: string
+              format: date-time
+            modifiedTimestamp:
+              type: string
+              format: date-time
+            code:
+              type: string
+            name:
+              type: string
+            shortName:
+              type: string
+            classCode:
+              type: string
+        businessContacts:
+          type: array
+          items: {}
+        client-contacts:
+          type: array
+          items: {}
+        conditions:
+          type: array
+          items: {}
+        deposits:
+          type: array
+          items: {}
+        externalAgents:
+          type: array
+          items: {}
+        tiers:
+          type: array
+          items: {}
+    SourceOfBusiness:
+      type: object
+    Tier:
+      type: object
+    DealSummary:
+      type: object
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    Login:
+      type: object
+      required:
+      - emailAddress
+      - password
+      properties:
+        emailAddress:
+          type: string
+          format: email
+          description: The email address for the user's account.
+        password:
+          type: string
+          description: The user's password.
+        clientId:
+          type: string
+          description: Penderis code for brokerWOLF logins. Extranet or penderis code
+            for WOLFconnect logins. If not passed and the user belongs to only one
+            client, that client is returned in the JWT. If the user belongs to multiple
+            clients and this is not passed, no client information is included in the
+            JWT.
+    TokenInfo:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JSON Web Token to use in the Authorization header for all
+            requests to any API.
+        expiresIn:
+          type: integer
+          format: int32
+          description: The number of seconds in which the token will expire.
+paths:
+  "/business-contacts/{businessContactId}":
+    get:
+      summary: Get a business contact
+      description: Using the business contact guid in the request path, the method
+        requests a business contact.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved business contact successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a business contact
+      description: Using the business contact guid in the request path, the method
+        updates the list of changes specified in the request body.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated the business contact.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BusinessContact"
+            example:
+              id: string (UUID)
+              contactType: string
+              companyName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              addresses:
+              - typeCode: string
+                line1: string
+                line2: string
+                city: string
+                provinceCode: string
+                postalCode: string
+                countryCode: string
+              phoneNumbers:
+              - typeCode: string
+                ext: string
+                number: string
+              emailAddresses:
+              - typeCode: string
+                address: string
+    delete:
+      summary: Delete a business contact
+      description: Deletes the business contact specified using the business contact
+        guid path variable.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted the contact.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/business-contacts":
+    get:
+      summary: Get all business contacts
+      description: Using the deal guid in the request path, the method requests the
+        associated business contacts.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved business contacts successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a business contact
+      description: Using the dealId in the request path, the method creates a new
+        business contact object.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Created business contact.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Business contact already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BusinessContact"
+            example:
+              id: string (UUID)
+              contactType: string
+              companyName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              addresses:
+              - typeCode: string
+                line1: string
+                line2: string
+                city: string
+                provinceCode: string
+                postalCode: string
+                countryCode: string
+              phoneNumbers:
+              - typeCode: string
+                ext: string
+                number: string
+              emailAddresses:
+              - typeCode: string
+                address: string
+  "/business-contacts/{businessContactId}/phone-numbers":
+    post:
+      summary: Create business contact phone number
+      description: Using the business contact id in the request path, the method creates
+        the contact's phone number.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created phone number successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PhoneNumber"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Phone number already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PhoneNumber"
+            example:
+              typeCode: string
+              ext: string
+              number: string
+  "/business-contacts/{businessContactId}/email-addresses":
+    post:
+      summary: Create business contact email address
+      description: Using the business contact id in the request path, the method creates
+        the contact's email address.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created email address successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/EmailAddress"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EmailAddress"
+            example:
+              typeCode: string
+              address: string
+  "/business-contacts/{businessContactId}/addresses":
+    post:
+      summary: Create business contact address
+      description: Using the business contact id in the request path, the method creates
+        the contact's address.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created address successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Address"
+            example:
+              typeCode: string
+              line1: string
+              line2: string
+              city: string
+              provinceCode: string
+              postalCode: string
+              countryCode: string
+  "/business-contacts/{businessContactId}/email-addresses/{emailAddressTypeCode}":
+    patch:
+      summary: Update business contact email address
+      description: Using the business contact id and email address type code in the
+        request path, the method updates the email address fields specified in the
+        request body.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: emailAddressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully updated the email address
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact or email address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EmailAddress"
+            example:
+              typeCode: string
+              address: string
+    delete:
+      summary: Delete business contact email address.
+      description: Deletes the business contact's email address specified using the
+        business contact id and email address type code path variables.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: emailAddressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the email address.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact or email address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/business-contacts/{businessContactId}/phone-numbers/{phoneNumberTypeCode}":
+    patch:
+      summary: Update business contact phone number
+      description: Using the business contact id and phone number type code in the
+        request path, the method updates the phone number.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: phoneNumberTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully updated the phone number
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact or phone number not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Phone number already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PhoneNumber"
+            example:
+              typeCode: string
+              ext: string
+              number: string
+    delete:
+      summary: Delete business contact phone number
+      description: Deletes the business contact's phone number specified using the
+        business contact id and phone number type code path variables.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: phoneNumberTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the phone number.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact or phone number not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/business-contacts/{businessContactId}/addresses/{addressTypeCode}":
+    delete:
+      summary: Delete business contact address
+      description: Deletes the business contact address specified using the business
+        contact id and address type code path variables.
+      tags:
+      - Business Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: businessContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: addressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the contact's address.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BusinessContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Business contact or address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/client-contacts/{clientContactId}":
+    get:
+      summary: Get a client contact
+      description: Using the client contact guid in the request path, the method requests
+        a client contact.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved client contact successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a client contact.
+      description: Update a client contact
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated the client contact.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ClientContact"
+            example:
+              id: string (UUID)
+              type: string
+              companyName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              movingOut: boolean
+              occupation: string
+              principalBusiness: string
+              addresses:
+              - typeCode: string
+                line1: string
+                line2: string
+                city: string
+                provinceCode: string
+                postalCode: string
+                countryCode: string
+              phoneNumbers:
+              - typeCode: string
+                ext: string
+                number: string
+              emailAddresses:
+              - typeCode: string
+                address: string
+    delete:
+      summary: Delete a client contact
+      description: Deletes a contact based on their contact GUID.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted the contact.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/client-contacts":
+    get:
+      summary: Get a client contact
+      description: Using the deal guid in the request path, the method requests a
+        client contact.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved client contacts successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a client contact
+      description: Creates a client contact in the given deal.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully created the contact.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Client contact already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ClientContact"
+            example:
+              id: string (UUID)
+              type: string
+              companyName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              movingOut: boolean
+              occupation: string
+              principalBusiness: string
+              addresses:
+              - typeCode: string
+                line1: string
+                line2: string
+                city: string
+                provinceCode: string
+                postalCode: string
+                countryCode: string
+              phoneNumbers:
+              - typeCode: string
+                ext: string
+                number: string
+              emailAddresses:
+              - typeCode: string
+                address: string
+  "/client-contacts/{clientContactId}/phone-numbers":
+    post:
+      summary: Create client contact phone number
+      description: Using the client contact id in the request path, the method creates
+        the contact's phone number.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created phone number successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PhoneNumber"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Phone number already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PhoneNumber"
+            example:
+              typeCode: string
+              ext: string
+              number: string
+  "/client-contacts/{clientContactId}/email-addresses":
+    post:
+      summary: Create client contact email address
+      description: Using the client contact id in the request path, the method creates
+        the contact's email address.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created email address successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/EmailAddress"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EmailAddress"
+            example:
+              typeCode: string
+              address: string
+  "/client-contacts/{clientContactId}/addresses":
+    post:
+      summary: Create client contact address
+      description: Using the client contact id in the request path, the method creates
+        the contact's address.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created address successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Address"
+            example:
+              typeCode: string
+              line1: string
+              line2: string
+              city: string
+              provinceCode: string
+              postalCode: string
+              countryCode: string
+  "/client-contacts/{clientContactId}/email-addresses/{emailAddressTypeCode}":
+    patch:
+      summary: Update client contact email address
+      description: Using the client contact id and email address type code in the
+        request path, the method updates the email address fields specified in the
+        request body.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: emailAddressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully updated the email address
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact or email address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EmailAddress"
+            example:
+              typeCode: string
+              address: string
+    delete:
+      summary: Delete client contact email address.
+      description: Deletes the client contact's email address specified using the
+        client contact id and email address type code path variables.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: emailAddressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the email address.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact or email address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/client-contacts/{clientContactId}/phone-numbers/{phoneNumberTypeCode}":
+    patch:
+      summary: Update client contact phone number
+      description: Using the client contact id and phone number type code in the request
+        path, the method updates the phone number.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: phoneNumberTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully updated the phone number
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact or phone number not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Phone number already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PhoneNumber"
+            example:
+              typeCode: string
+              ext: string
+              number: string
+    delete:
+      summary: Delete client contact phone number
+      description: Deletes the client contact's phone number specified using the client
+        contact id and phone number type code path variables.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: phoneNumberTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the phone number.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact or phone number not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/client-contacts/{clientContactId}/addresses/{addressTypeCode}":
+    delete:
+      summary: Delete client contact address
+      description: Deletes the client contact address specified using the client contact
+        id and address type code path variables.
+      tags:
+      - Client Contact
+      security:
+      - BearerToken: []
+      parameters:
+      - name: clientContactId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: addressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the contact's address.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientContact"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Client contact or address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/tiers/{tierId}/commissions":
+    get:
+      summary: Get all commissions
+      description: Using the tier guid in the request path, the method requests the
+        associated commissions.
+      tags:
+      - Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved commission successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Commission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a commission
+      description: Creates a commission on a given tier.
+      tags:
+      - Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully upserted the commission.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Commission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Commission already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Commission"
+            example:
+              id: string (UUID)
+              agentId: string (UUID)
+              officeName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              endCount: number (float)
+              primary: boolean
+              amount: number (float)
+              percentage: number (float)
+              calculationMethod: string
+  "/commissions/{commissionId}":
+    get:
+      summary: Get a commission
+      description: Using the commission id guid in the request path, the method requests
+        a commission.
+      tags:
+      - Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: commissionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved commission successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Commission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Commission not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a commission
+      description: Updates a commission using its commission guid.
+      tags:
+      - Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: commissionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated the commission.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Commission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Commission not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Commission"
+            example:
+              id: string (UUID)
+              agentId: string (UUID)
+              officeName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              endCount: number (float)
+              primary: boolean
+              amount: number (float)
+              percentage: number (float)
+              calculationMethod: string
+    delete:
+      summary: Delete a commission
+      description: Deletes a commission using its guid.
+      tags:
+      - Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: commissionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted the commission.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Commission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Commission not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/conditions/{conditionId}":
+    get:
+      summary: Get a condition
+      description: Using the condition guid in the request path, the method requests
+        a condition.
+      tags:
+      - Condition
+      security:
+      - BearerToken: []
+      parameters:
+      - name: conditionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved condition successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Condition"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Condition not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a condition
+      description: Updates a condition based on its condition guid.
+      tags:
+      - Condition
+      security:
+      - BearerToken: []
+      parameters:
+      - name: conditionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully patched a condition.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Condition"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Condition not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Commission"
+    delete:
+      summary: Delete a condition
+      description: Deletes a condition based on its condition guid.
+      tags:
+      - Condition
+      security:
+      - BearerToken: []
+      parameters:
+      - name: conditionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted a condition.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Condition"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Condition not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/conditions":
+    get:
+      summary: Get all conditions
+      description: Using the deal guid in the request path, the method requests the
+        associated conditions.
+      tags:
+      - Condition
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved conditions successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Condition"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a condition
+      description: Creates a condition on a deal using a deal GUID.
+      tags:
+      - Condition
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully created a condition.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Condition"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Condition already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Condition"
+            example:
+              id: string (UUID)
+              description: string
+              completeDate: string (date)
+              dueDate: string (date)
+  "/deals/{dealId}":
+    get:
+      summary: Get a deal
+      description: Using the deal guid in the request path, the method requests a
+        deal.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deal"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a deal
+      description: Updates a deal based on its deal id.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully patched a deal.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deal"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Deal"
+            example:
+              id: string (UUID)
+              culture: string
+              number: string
+              mlsNumber: string
+              statusCode: string
+              classCode: string
+              name: string
+              addressStreetNumber: string
+              addressStreetName: string
+              addressStreetDirection: string
+              addressUnitNumber: string
+              addressCity: string
+              addressProvinceCode: string
+              addressPostalCode: string
+              addressCountryCode: string
+              offerDate: string (date)
+              closeDate: string (date)
+              entryDate: string (date)
+              finalizeDate: string (date)
+              firmDate: string (date)
+              closePrice: number (float)
+              legalDescription: string
+              classification:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                endTypeCode: string
+                endCount: string
+              propertyType:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                shortName: string
+                classCode: string
+              businessContacts: []
+              client-contacts: []
+              conditions: []
+              deposits: []
+              externalAgents: []
+              tiers: []
+    delete:
+      summary: Delete a deal
+      description: Deletes a deal based on its deal id.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted a deal.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deal"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals":
+    get:
+      summary: Get all deals
+      description: Requests all deals.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Retrieved deals successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Deal"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a deal
+      description: Creates a deal.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '201':
+          description: Successfully created a deal.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deal"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Deal already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Deal"
+            example:
+              id: string (UUID)
+              culture: string
+              number: string
+              mlsNumber: string
+              statusCode: string
+              classCode: string
+              name: string
+              addressStreetNumber: string
+              addressStreetName: string
+              addressStreetDirection: string
+              addressUnitNumber: string
+              addressCity: string
+              addressProvinceCode: string
+              addressPostalCode: string
+              addressCountryCode: string
+              offerDate: string (date)
+              closeDate: string (date)
+              entryDate: string (date)
+              finalizeDate: string (date)
+              firmDate: string (date)
+              closePrice: number (float)
+              legalDescription: string
+              classification:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                endTypeCode: string
+                endCount: string
+              propertyType:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                shortName: string
+                classCode: string
+              businessContacts: []
+              client-contacts: []
+              conditions: []
+              deposits: []
+              externalAgents: []
+              tiers: []
+  "/deals/{dealId}/submit":
+    post:
+      summary: Submit deal
+      description: Submits a deal with a deal id so that it will replicated in brokerWOLF
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully submitted a deal.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deal"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Deal"
+  "/deals/{dealId}/history":
+    get:
+      summary: Get deal history
+      description: Using the deal guid in the request path, the method requests a
+        deal's history. History is a list of log entries.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal history successfully.
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/search":
+    get:
+      summary: Search for deals
+      description: Using various request parameters, looks up a deal summary.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: entityPath
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: fieldName
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: searchText
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: typeCodes
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: orderBy
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: direction
+        in: in header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieved deal summary successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DealSummary"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/bw-sync-status":
+    get:
+      summary: Get the sync status of the deal with brokerWOLF
+      description: Using the deal guid in the request path, the method requests the
+        sync status with Broker Wolf
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal sync status successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DealSyncStatus"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal Sync Status not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/summary":
+    get:
+      summary: Get the summary of a deal
+      description: Using the deal guid in the request path, the method requests a
+        summary.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal summary successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DealSummary"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal Summary not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+  "/deposits/{depositId}":
+    get:
+      summary: Get a deposit
+      description: Using the deposit guid in the request path, the method requests
+        a deposit.
+      tags:
+      - Deposit
+      security:
+      - BearerToken: []
+      parameters:
+      - name: depositId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deposit successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deposit"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deposit not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a deposit
+      description: Updates a deposit based on deposit guid.
+      tags:
+      - Deposit
+      security:
+      - BearerToken: []
+      parameters:
+      - name: depositId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated a deposit.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deposit"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deposit not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Deposit"
+            example:
+              id: string (UUID)
+              date: string (date)
+              amount: number (float)
+              received: boolean
+              interest: boolean
+              held: boolean
+              heldBy: string
+              direct: boolean
+              reference: string
+    delete:
+      summary: Delete a deposit
+      description: Deletes a deposit based on its deposit guid.
+      tags:
+      - Deposit
+      security:
+      - BearerToken: []
+      parameters:
+      - name: depositId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted a deposit.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deposit"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deposit not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/deposits":
+    get:
+      summary: Get all deposits
+      description: Using the deal guid in the request path, the method requests the
+        associated deposits.
+      tags:
+      - Deposit
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deposits successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Deposit"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a deposit
+      description: Creates a deposit with a deal guid.
+      tags:
+      - Deposit
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully created a deposit.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Deposit"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Deposit already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Deposit"
+            example:
+              id: string (UUID)
+              date: string (date)
+              amount: number (float)
+              received: boolean
+              interest: boolean
+              held: boolean
+              heldBy: string
+              direct: boolean
+              reference: string
+  "/external-agents/{externalAgentId}":
+    get:
+      summary: Get an external agent
+      description: Using the external agent guid in the request path, the method requests
+        an external agent.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved external agent successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update an external agent
+      description: Updates an external agent based on their external agent guid.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated an external agent.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ExternalAgent"
+            example:
+              id: string (UUID)
+              typeCode: string
+              companyName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              payBroker: boolean
+              taxId: string
+              taxExempt: boolean
+              taxCharged: boolean
+              use1099: boolean
+              mlsId: string
+              addresses:
+              - typeCode: string
+                line1: string
+                line2: string
+                city: string
+                provinceCode: string
+                postalCode: string
+                countryCode: string
+              phoneNumbers:
+              - typeCode: string
+                ext: string
+                number: string
+              emailAddresses:
+              - typeCode: string
+                address: string
+    delete:
+      summary: Delete an external agent
+      description: Deletes an external agent using their external agent guid.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted an external agent.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/external-agents":
+    get:
+      summary: Get all external agents
+      description: Using the deal guid in the request path, the method requests the
+        associated external agents.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved external agents successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create an external agent
+      description: Creates an external agent with a deal guid.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully created an external agent.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: External agent already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ExternalAgent"
+            example:
+              id: string (UUID)
+              typeCode: string
+              companyName: string
+              prefix: string
+              firstName: string
+              middleName: string
+              lastName: string
+              suffix: string
+              endCode: string
+              payBroker: boolean
+              taxId: string
+              taxExempt: boolean
+              taxCharged: boolean
+              use1099: boolean
+              mlsId: string
+              addresses:
+              - typeCode: string
+                line1: string
+                line2: string
+                city: string
+                provinceCode: string
+                postalCode: string
+                countryCode: string
+              phoneNumbers:
+              - typeCode: string
+                ext: string
+                number: string
+              emailAddresses:
+              - typeCode: string
+                address: string
+  "/external-agents/{externalAgentId}/phone-numbers":
+    post:
+      summary: Create external agent phone number
+      description: Using the external agent id in the request path, the method creates
+        the contact's phone number.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created phone number successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PhoneNumber"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Phone number already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PhoneNumber"
+            example:
+              typeCode: string
+              ext: string
+              number: string
+  "/external-agents/{externalAgentId}/email-addresses":
+    post:
+      summary: Create external agent email address
+      description: Using the external agent id in the request path, the method creates
+        the contact's email address.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created email address successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/EmailAddress"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EmailAddress"
+            example:
+              typeCode: string
+              address: string
+  "/external-agents/{externalAgentId}/addresses":
+    post:
+      summary: Create external agent address
+      description: Using the external agent id in the request path, the method creates
+        the contact's address.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created address successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Address"
+            example:
+              typeCode: string
+              line1: string
+              line2: string
+              city: string
+              provinceCode: string
+              postalCode: string
+              countryCode: string
+  "/external-agents/{externalAgentId}/email-addresses/{emailAddressTypeCode}":
+    patch:
+      summary: Update external agent email address
+      description: Using the external agent id and email address type code in the
+        request path, the method updates the email address fields specified in the
+        request body.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: emailAddressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully updated the email address
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent or email address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EmailAddress"
+            example:
+              typeCode: string
+              address: string
+    delete:
+      summary: Delete external agent email address.
+      description: Deletes the external agent's email address specified using the
+        external agent id and email address type code path variables.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: emailAddressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the email address.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent or email address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/external-agents/{externalAgentId}/phone-numbers/{phoneNumberTypeCode}":
+    patch:
+      summary: Update external agent phone number
+      description: Using the external agent id and phone number type code in the request
+        path, the method updates the phone number.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: phoneNumberTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully updated the phone number
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent or phone number not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Phone number already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PhoneNumber"
+            example:
+              typeCode: string
+              ext: string
+              number: string
+    delete:
+      summary: Delete external agent phone number
+      description: Deletes the external agent's phone number specified using the external
+        agent id and phone number type code path variables.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: phoneNumberTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the phone number.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent or phone number not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/external-agents/{externalAgentId}/addresses/{addressTypeCode}":
+    delete:
+      summary: Delete external agent address
+      description: Deletes the external agent address specified using the external
+        agent id and address type code path variables.
+      tags:
+      - External Agent
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalAgentId
+        in: in path
+        required: true
+        schema:
+          type: string
+      - name: addressTypeCode
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the contact's address.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalAgent"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External agent or address not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/external-commissions/{externalCommissionId}":
+    get:
+      summary: Get an external commission.
+      description: Using the external commission guid in the request path, the method
+        requests an external commission.
+      tags:
+      - External Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalCommissionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved external commission successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalCommission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External commission not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update an external commission
+      description: Updates an external commission using its external commission guid.
+      tags:
+      - External Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalCommissionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated an external commission.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalCommission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External commission not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ExternalCommission"
+            example:
+              id: string (UUID)
+              externalAgentId: string (UUID)
+              endCode: string
+              payBroker: boolean
+              amount: number (float)
+              percentage: number (float)
+              calculationMethod: string
+    delete:
+      summary: Delete an external commission
+      description: Deletes an external commission using its external commission guid.
+      tags:
+      - External Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: externalCommissionId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted an external commission.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalCommission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: External commission not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/tiers/{tierId}/external-commissions":
+    get:
+      summary: Get all external commissions
+      description: Using the tier guid in the request path, the method requests the
+        associated external commissions.
+      tags:
+      - External Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved external commissions successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ExternalCommission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Tier not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create an external commission
+      description: Creates an external commission onto a tier using the tier guid.
+      tags:
+      - External Commission
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully created an external commission.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExternalCommission"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Tier not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: External commission already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ExternalCommission"
+            example:
+              id: string (UUID)
+              externalAgentId: string (UUID)
+              endCode: string
+              payBroker: boolean
+              amount: number (float)
+              percentage: number (float)
+              calculationMethod: string
+  "/tiers/{tierId}":
+    get:
+      summary: Get a tier
+      description: Using the tier guid in the request path, the method requests a
+        tier.
+      tags:
+      - Tier
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved tier successfully.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tier"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Tier not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a tier
+      description: Updates a tier using its tier guid.
+      tags:
+      - Tier
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully updated a tier.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tier"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Tier not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Tier"
+            example:
+              id: string (UUID)
+              name: string
+              closePrice: number (float)
+              closeDate: string (date)
+              statusCode: string
+              sellingCommissionAmount: number (float)
+              sellingCommissionPercentage: number (float)
+              sellingCommissionCalculationMethod: string
+              buyingCommissionAmount: number (float)
+              buyingCommissionPercentage: number (float)
+              buyingCommissionCalculationMethod: string
+              classificationId: string
+              commissions: []
+              externalCommissions: []
+    delete:
+      summary: Delete a tier
+      description: Deletes a tier using its tier guid.
+      tags:
+      - Tier
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully deleted a tier.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tier"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Tier not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/deals/{dealId}/tiers":
+    get:
+      summary: Get all tiers
+      description: Using the deal guid in the request path, the method requests the
+        associated tiers.
+      tags:
+      - Tier
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved tiers successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Tier"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a tier
+      description: Creates a tier onto a deal using a deal guid.
+      tags:
+      - Tier
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '201':
+          description: Successfully created a tier.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tier"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '409':
+          description: Tier already exists.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Tier"
+            example:
+              id: string (UUID)
+              name: string
+              closePrice: number (float)
+              closeDate: string (date)
+              statusCode: string
+              sellingCommissionAmount: number (float)
+              sellingCommissionPercentage: number (float)
+              sellingCommissionCalculationMethod: string
+              buyingCommissionAmount: number (float)
+              buyingCommissionPercentage: number (float)
+              buyingCommissionCalculationMethod: string
+              classificationId: string
+              commissions: []
+              externalCommissions: []
+  "/tiers/calculate-tier":
+    post:
+      summary: Calculate a tier
+      description: Calculate a tier's commissions.
+      tags:
+      - Tier
+      security:
+      - BearerToken: []
+      parameters:
+      - name: tierId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully calculate a tier.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tier"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Tier not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is
+            missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Tier"
+            example:
+              id: string (UUID)
+              name: string
+              closePrice: number (float)
+              closeDate: string (date)
+              statusCode: string
+              sellingCommissionAmount: number (float)
+              sellingCommissionPercentage: number (float)
+              sellingCommissionCalculationMethod: string
+              buyingCommissionAmount: number (float)
+              buyingCommissionPercentage: number (float)
+              buyingCommissionCalculationMethod: string
+              classificationId: string
+              commissions: []
+              externalCommissions: []
+  "/classifications":
+    get:
+      summary: Get all classifications for the brokerage.
+      description: Retrieves all classifications for the brokerage.
+      tags:
+      - Classification
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Classifications found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Classification"
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  "/classifications/{classificationId}":
+    get:
+      summary: Get a classification.
+      description: Retrieves a single classification.
+      tags:
+      - Classification
+      security:
+      - BearerToken: []
+      parameters:
+      - name: classificationId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Classification found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Classification"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Classification not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/property-types":
+    get:
+      summary: Get all property types for the brokerage.
+      description: Retrieves all property types for the brokerage.
+      tags:
+      - Property Type
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Property Types found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PropertyType"
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  "/property-types/{propertyTypeId}":
+    get:
+      summary: Get a property type.
+      description: Retrieves a single property type.
+      tags:
+      - Property Type
+      security:
+      - BearerToken: []
+      parameters:
+      - name: propertyTypeId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Property Type found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Classification"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Property Type not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/condition-types":
+    get:
+      summary: Get all condition types for the brokerage.
+      description: Retrieves all condition types for the brokerage.
+      tags:
+      - Condition Type
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Condition Types found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ConditionType"
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  "/condition-types/{conditionTypeId}":
+    get:
+      summary: Get a condition type.
+      description: Retrieves a single condition type.
+      tags:
+      - Condition Type
+      security:
+      - BearerToken: []
+      parameters:
+      - name: conditionTypeId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Condition Type found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConditionType"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Condition Type not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/contact-types":
+    get:
+      summary: Get all contact types for the brokerage.
+      description: Retrieves all contact types for the brokerage.
+      tags:
+      - Contact Type
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Contact Types found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ContactType"
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  "/contact-types/{contactTypeId}":
+    get:
+      summary: Get a contact type.
+      description: Retrieves a single contact type.
+      tags:
+      - Contact Type
+      security:
+      - BearerToken: []
+      parameters:
+      - name: contactTypeId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Contact Type found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactType"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Contact Type not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/sources-of-business":
+    get:
+      summary: Get all sources of business for the brokerage.
+      description: Retrieves all sources of business for the brokerage.
+      tags:
+      - Source of Business
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Sources of Business found.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/SourceOfBusiness"
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  "/sources-of-business/{sourceOfBusinessId}":
+    get:
+      summary: Get a source of business.
+      description: Retrieves a single source of business.
+      tags:
+      - Sources Of Business
+      security:
+      - BearerToken: []
+      parameters:
+      - name: sourceOfBusinessId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Source of Business found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SourceOfBusiness"
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Source of Business not found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+  "/v1/login":
+    post:
+      summary: Returns a JWT along with other information for use in successive calls
+        to our apps and APIs.
+      description: If the `clientId` property is not passed in, and the user is only
+        attached to one client, that client will be returned in the JWT. If it is
+        not passed in and the user is attached to multiple clients, then no client
+        information will be passed back in the JWT.
+      tags:
+      - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Login"
+            example:
+              emailAddress: user@example.com
+              password: string
+              clientId: string
+      responses:
+        '200':
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TokenInfo"
+              example:
+                token: string
+                expiresIn: 3600
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+        '500':
+          description: Unknown error. See response body for details.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApiError"
+...

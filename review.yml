@@ -1,0 +1,442 @@
+aid: lone-wolf
+name: Lone Wolf Technologies
+review:
+  question: >-
+    Does Lone Wolf Technologies publish a real, reachable public developer surface, and
+    what is its RESO posture?
+  answer: true
+  date: '2026-07-26'
+  reviewer: API Evangelist
+  summary: >-
+    Yes. Lone Wolf publishes a public API Portal at https://www.lwolf.com/api-portal and a
+    Bump.sh documentation hub at https://apidocs.lwolf.com/ that serves seven complete
+    OpenAPI 3.0 definitions, all anonymously downloadable and all confirmed to parse. This
+    is a genuine, machine-readable developer surface — but it is documentation-open and
+    credential-closed: API keys are issued only after a reviewed access-request form.
+    Separately, Lone Wolf has no RESO posture at all, which is the correct and expected
+    answer for its layer of the value chain.
+
+# ============================================================================
+# SECTOR BLOCK — certification is not reachability
+# ============================================================================
+sector_findings:
+  home_market: United States
+  headquarters: Dallas, Texas (per company press release dateline, 2026-02-02)
+  value_chain_position: >-
+    Transaction, forms, e-signature and brokerage back-office/accounting layer. Lone Wolf
+    sits BETWEEN the MLS layer and the brokerage — it consumes MLS data under MLS/broker
+    agreements but does not redistribute listing feeds. Its forms suites reach agents as
+    member benefits purchased by state REALTOR associations and MLSs.
+
+  reso_posture:
+    short_phrase: >-
+      No RESO reference found — not a RESO-certified data distributor; OData query syntax
+      only, no RESO Web API, no Data Dictionary, no $metadata, no UPI
+    reso_certified: false
+    web_api_certification: none found
+    data_dictionary_certification: none found
+    data_dictionary_version: n/a
+    universal_property_identifier: not present
+    odata_metadata_document: >-
+      None. https://api.lwolf.com/$metadata returned HTTP 404 and
+      https://api.lwolf.com/odata/$metadata returned HTTP 404 on 2026-07-26. No EDMX/CSDL
+      document is served anywhere on the Lone Wolf estate.
+    evidence:
+      - >-
+        Full-text search of all seven harvested OpenAPI definitions for
+        "RESO", "Data Dictionary", "UPI", "Universal Property Identifier" returned ZERO
+        matches. The only hits for "OData" are query-option documentation (see below) and
+        the only hits for "metadata" are TransactionDesk's own resource-attribute metadata
+        endpoints, unrelated to RESO.
+      - >-
+        None of the RESO Data Dictionary core resources (Property, Member, Office,
+        OpenHouse, Media, Lookup) appear as entity sets in any Lone Wolf definition. The
+        WolfConnect API exposes a "Members" tag, but these are brokerage staff/member
+        records in Lone Wolf's own model, not the RESO Member resource.
+      - >-
+        RESO's public certificates listing at https://www.reso.org/certificates/ (HTTP 200,
+        fetched 2026-07-26) contains no occurrence of "Lone Wolf", "lwolf", "zipForm" or
+        "TransactionDesk".
+      - >-
+        The canonical RESO certification directory at https://certification.reso.org/
+        returned HTTP 400 to non-browser clients on 2026-07-26 and could not be queried
+        programmatically. Recorded as not machine-reachable rather than as evidence of
+        absence.
+    odata_nuance: >-
+      IMPORTANT — do not mistake this for RESO. Two Lone Wolf APIs document OData support:
+      the Transact API states that "collection endpoints on the Transact Workflow service
+      support OData query options. Use $filter to restrict results and $expand to embed
+      related entities", and the WolfConnect API has an "OData Support" documentation
+      section. This is the OData QUERY GRAMMAR applied to Lone Wolf's own proprietary
+      entity model. It is not the RESO Web API, there is no $metadata service document,
+      and there is no Data Dictionary field alignment. OData syntax is a necessary but
+      wholly insufficient condition for RESO certification.
+    rets_adjacency: >-
+      The one genuine MLS-standards touchpoint is on the CONSUMPTION side: the Cloud CMA
+      developer documentation (https://cloudcma.com/developers, HTTP 200) carries "MLS
+      Security" and "RETS Live Queries" sections, showing Cloud CMA pulls comparable-sales
+      data from MLSs over RETS under MLS agreements. Lone Wolf is a licensee of MLS data,
+      not a publisher of it.
+    interpretation: >-
+      Lone Wolf is the clean control case for this sector's central question. RESO
+      certification is mandated by NAR for MLSs and governs listing-data feeds. Lone Wolf
+      does not operate that layer, so the absence of RESO here is honest and structural,
+      not a governance failure. The instructive contrast is the inverse of the MLS
+      providers: where a RESO-certified MLS endpoint is a standardized contract you cannot
+      reach without a licence, Lone Wolf offers a NON-standardized, entirely proprietary
+      contract that you can read completely and anonymously. Standardization and
+      reachability are independent axes, and this provider proves it.
+
+  access_gate:
+    classification: application-approval
+    what_a_developer_must_do: >-
+      Read the docs freely, then complete the access-request form at
+      https://www.lwolf.com/api-getting-started. The page states verbatim: "Complete the
+      access request form and a member of our integrations team will be in touch to get you
+      access to the APIs you need to integrate with the Lone Wolf Foundation Industry
+      Cloud." The API Portal repeats the flow as: "Review the docs → Request access: Tell
+      us about your project to get your secure API keys and credentials → Start building."
+      There is no self-serve key issuance and no instant sandbox signup anywhere on the
+      estate.
+    membership_or_licence_required: >-
+      No MLS membership, board membership, IDX/VOW agreement, or real-estate licence is
+      required to READ the documentation or download the specs — a material difference
+      from the MLS-feed providers in this sector. However the zipForm Partner API is
+      explicitly licensed: its OpenAPI description states the zipForm REST web service "is
+      made available on a licensed basis to third-party application partners." In practice
+      most production use also presupposes an underlying commercial relationship, since the
+      data behind these APIs is a brokerage's own transaction and accounting records.
+    documentation_is_open: true
+    credentials_are_open: false
+    note: >-
+      This is the distinction the sector study exists to capture. Lone Wolf's CONTRACT is
+      fully public and machine-readable; its CREDENTIALS are gated behind human review.
+      Classifying this provider as simply "gated" would understate a real and unusually
+      good developer surface; classifying it as "self-serve" would be false.
+
+  open_data:
+    exists: false
+    detail: >-
+      No open, unlicensed, publicly callable dataset. Every endpoint requires issued
+      credentials. Lone Wolf is a private US software vendor with no government or
+      open-data mandate; there is no US counterpart here to HM Land Registry Price Paid or
+      Ordnance Survey open products.
+
+  auth_model:
+    summary: >-
+      Multiple schemes across a partly-consolidated estate — the seams of an acquisition
+      roll-up are clearly visible.
+    openid_connect:
+      discovery_url: https://gateway.lwolf.com/.well-known/openid-configuration
+      http_status: 200
+      fetched: '2026-07-26'
+      issuer: https://gateway.lwolf.com/
+      authorization_endpoint: https://gateway.lwolf.com/authorize
+      token_endpoint: https://gateway.lwolf.com/oauth/token
+      jwks_uri: https://gateway.lwolf.com/.well-known/jwks.json
+      userinfo_endpoint: https://gateway.lwolf.com/userinfo
+      implementation: >-
+        Auth0-backed (auth0.com grant types present in grant_types_supported, and the login
+        path is the Auth0 universal-login /u/login/identifier).
+      grant_types_supported:
+        - client_credentials
+        - authorization_code
+        - refresh_token
+        - password
+        - implicit
+        - 'urn:ietf:params:oauth:grant-type:device_code'
+        - 'urn:ietf:params:oauth:grant-type:token-exchange'
+        - 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+      scopes_supported: >-
+        Standard OIDC identity scopes only (openid, profile, offline_access, email, phone,
+        address, etc). NO product- or resource-level API scopes are advertised at the
+        discovery endpoint, so fine-grained authorization is not publicly inspectable.
+    jwt_login: >-
+      The Deals API documents POST https://authentication.api.lwolf.com/v1/login with
+      emailAddress / password / clientId credentials, returning a JWT used as
+      "Authorization: Bearer {token}". The host's /.well-known/openid-configuration returned
+      HTTP 405 (Method Not Allowed), i.e. the host is live but serves no OIDC discovery
+      document.
+    per_api_schemes:
+      transact-api: bearerAuth + subscriptionKey
+      deals-api: BearerToken (JWT from the authentication API)
+      transactiondesk-api: >-
+        bearerAuth via a full OAuth 2.0 authorization-code flow — GET /oauth/authorize then
+        POST /oauth/token; the code is one-time-use with a 10-minute expiry
+      zipform-api: >-
+        contextAuth / sharedKey / externalIdAuth — X-Auth-ContextId + X-Auth-SharedKey
+        headers, or the same values via query string
+      wolfconnect-api: LoneWolfToken — a signed (HMAC signature) Authorization header
+      authentisign-api: >-
+        No securitySchemes block is declared in the published definition (a real gap)
+      back-office-online-api: >-
+        No securitySchemes block is declared in the published definition (a real gap)
+
+  webhooks_events_sdks:
+    webhooks: >-
+      Present but narrow, and genuine. The Authentisign API supports an optional
+      "CallbackUrl" on a signing and a PATCH /api/v1/signings/{id} endpoint documented as
+      "Update the callback URL for a signing ... for webhook events". The Transact API also
+      carries a CallbackUrl field "invoked on signing events". No top-level OpenAPI 3.1
+      `webhooks:` object exists in any definition, and there is no event catalog, no
+      delivery/retry policy, and no signature-verification documentation.
+    asyncapi: None found.
+    sdks_client_libraries: >-
+      None published. No first-party SDK, client library, or CLI was found on the API
+      Portal, the docs hub, or any product doc site.
+    postman: None found — no Postman collection or workspace is published.
+    github_organization: >-
+      None. github.com/lonewolf returns HTTP 200 but is an unrelated individual account,
+      not Lone Wolf Technologies; deliberately excluded from apis.yml.
+    mcp_server: >-
+      Notable. The docs hub advertises an MCP server at https://apidocs.lwolf.com/mcp
+      (HTTP 405 on GET, which is correct for a POST-only MCP HTTP transport), with
+      one-click install for Cursor and VS Code, plus a Markdown export of the whole hub at
+      https://apidocs.lwolf.com/?format=md for LLM ingestion. This is Bump.sh platform
+      functionality rather than something Lone Wolf hand-built, but it is live and it makes
+      the estate agent-consumable.
+
+# ============================================================================
+# PROBE LOG — every URL touched, with HTTP status, on 2026-07-26
+# ============================================================================
+probes:
+  - url: https://www.lwolf.com/
+    status: 200
+    note: Live corporate site (Next.js).
+  - url: https://lwolf.com/
+    status: 200
+    note: Redirects to www.
+  - url: https://www.lwolf.com/api-portal
+    status: 200
+    note: THE developer portal. Lists six product API doc destinations.
+  - url: https://www.lwolf.com/api-getting-started
+    status: 200
+    note: Access-request form page. Source of the verbatim access-gate language.
+  - url: https://www.lwolf.com/integrations
+    status: 200
+    note: 100+ partner integrations; links out to the API portal.
+  - url: https://www.lwolf.com/sitemap.xml
+    status: 200
+    note: How /api-portal and /api-getting-started were discovered.
+  - url: https://apidocs.lwolf.com/
+    status: 200
+    note: Bump.sh documentation hub listing seven APIs.
+  - url: https://apidocs.lwolf.com/changes
+    status: 200
+    note: Cross-API changelog.
+  - url: 'https://apidocs.lwolf.com/?format=md'
+    status: 200
+    note: Full-hub Markdown export for LLMs.
+  - url: https://apidocs.lwolf.com/mcp
+    status: 405
+    note: MCP endpoint; 405 on GET is expected for POST-only transport.
+  - url: https://gateway.lwolf.com/.well-known/openid-configuration
+    status: 200
+    note: Auth0-backed OIDC discovery document, fetched anonymously.
+  - url: https://authentication.api.lwolf.com/.well-known/openid-configuration
+    status: 405
+    note: Host live, serves no discovery document.
+  - url: https://api.lwolf.com/
+    status: 404
+    note: API host resolves and responds; no root document.
+  - url: 'https://api.lwolf.com/$metadata'
+    status: 404
+    note: No OData/RESO metadata document.
+  - url: 'https://api.lwolf.com/odata/$metadata'
+    status: 404
+    note: No OData/RESO metadata document.
+  - url: https://api.lwolf.com/openapi.json
+    status: 404
+  - url: https://api.lwolf.com/swagger.json
+    status: 404
+  - url: https://apidocs.lwolf.com/openapi.json
+    status: 404
+    note: Hub-level aggregate spec not served; per-doc specs are (see harvest).
+  - url: https://developer.lwolf.com/
+    status: 000
+    note: DNS does not resolve.
+  - url: https://developers.lwolf.com/
+    status: 000
+    note: DNS does not resolve.
+  - url: https://docs.lwolf.com/
+    status: 000
+    note: DNS does not resolve.
+  - url: https://www.lwolf.com/developers
+    status: 404
+  - url: https://www.lwolf.com/api
+    status: 404
+  - url: https://www.lwolf.com/docs
+    status: 404
+  - url: https://www.lwolf.com/marketplace
+    status: 404
+  - url: https://www.lwolf.com/partners
+    status: 404
+  - url: https://apidocs.lwolf.com/doc/back-office-api/
+    status: 404
+    note: >-
+      BROKEN LINK on the official API Portal — redirects to bump.sh/doc/back-office-api
+      which 404s. The working document is /doc/back-office-online-api. Reported as a real
+      defect in Lone Wolf's published portal.
+  - url: https://cloudcma.com/developers
+    status: 200
+    note: Cloud CMA docs; source of the RETS/MLS-security finding.
+  - url: https://docs.homespotter.com/
+    status: 200
+    note: Boost (HomeSpotter) Slate docs; base hosts api/rest/boost.homespotter.com.
+  - url: https://spac.io/docs/api/
+    status: 200
+    note: >-
+      Spacio docs; base https://ws.spac.io/api/v1/, apikey header, documented default
+      rate limit of 12,000 calls/hour on key creation.
+  - url: https://apidocs.propertybase.com/
+    status: 200
+    note: Propertybase / Front Office docs.
+  - url: https://docs.homespotter.com/openapi.json
+    status: 200
+    note: >-
+      REJECTED — returns the Slate HTML documentation page, not JSON. Confirmed
+      non-parsing (json.load raised "Expecting value: line 2 column 1"). A catch-all
+      route, not a specification. NOT saved.
+  - url: https://docs.homespotter.com/swagger.json
+    status: 200
+    note: REJECTED for the same reason — HTML catch-all, not a specification. NOT saved.
+  - url: https://www.reso.org/certificates/
+    status: 200
+    note: No Lone Wolf / zipForm / TransactionDesk occurrence.
+  - url: https://www.reso.org/certification/
+    status: 200
+    note: No Lone Wolf occurrence.
+  - url: https://certification.reso.org/
+    status: 400
+    note: Canonical RESO directory rejects non-browser clients; not machine-queryable.
+  - url: https://github.com/lonewolf
+    status: 200
+    note: Unrelated individual account, NOT the company. Excluded.
+
+# ============================================================================
+# HARVEST — every spec saved, with provenance
+# ============================================================================
+harvest:
+  source_pattern: >-
+    Lone Wolf's documentation hub runs on Bump.sh. Each rendered document exposes its raw
+    definition at <doc-url>.json and <doc-url>.yaml — linked from the page itself, not
+    guessed. All seven were fetched anonymously with no credentials, no signup and no
+    referer, and every one was confirmed to parse with yaml.safe_load before being kept.
+  fetch_date: '2026-07-26'
+  specs_saved: 7
+  total_operations: 348
+  specs:
+    - file: openapi/lone-wolf-transact-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/transact-api.yaml
+      http_status: 200
+      openapi_version: 3.0.3
+      title: Transact API
+      info_version: 1.0.0
+      servers:
+        - https://gateway.lwolf.com
+        - '{tw_host}'
+      paths: 37
+      operations: 53
+      parses: true
+    - file: openapi/lone-wolf-deals-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/deals-api.yaml
+      http_status: 200
+      openapi_version: 3.0.3
+      title: Deals API
+      info_version: 1.0.0
+      servers: []
+      paths: 53
+      operations: 86
+      parses: true
+      note: Largest surface; declares no servers block, so no baseURL is asserted.
+    - file: openapi/lone-wolf-back-office-online-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/back-office-online-api.yaml
+      http_status: 200
+      openapi_version: 3.0.1
+      title: Back Office API
+      info_version: '1.0'
+      servers:
+        - https://api.lwolf.com/backoffice
+      paths: 39
+      operations: 69
+      parses: true
+    - file: openapi/lone-wolf-authentisign-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/authentisign-api.yaml
+      http_status: 200
+      openapi_version: 3.0.1
+      title: Authentisign API
+      info_version: '1.0'
+      servers:
+        - https://api.lwolf.com/authentisign
+      paths: 41
+      operations: 46
+      parses: true
+    - file: openapi/lone-wolf-transactiondesk-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/transactiondesk-api.yaml
+      http_status: 200
+      openapi_version: 3.0.3
+      title: TransactionDesk Partner API
+      info_version: '2.0'
+      servers:
+        - https://api.pre.transactiondesk.com
+      paths: 25
+      operations: 44
+      parses: true
+      note: Only a preproduction host is published; no production base URL.
+    - file: openapi/lone-wolf-zipform-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/zipform-api.yaml
+      http_status: 200
+      openapi_version: 3.0.3
+      title: ZipForm Partner API
+      info_version: '5.1'
+      servers:
+        - https://ws.zipformplus.com/api
+        - https://api.pre.zipformplus.com/api
+      paths: 22
+      operations: 28
+      parses: true
+    - file: openapi/lone-wolf-wolfconnect-api-openapi.yml
+      source_url: https://apidocs.lwolf.com/doc/wolfconnect-api.yaml
+      http_status: 200
+      openapi_version: 3.0.3
+      title: WolfConnect API
+      info_version: 1.0.0
+      servers:
+        - https://api.globalwolfweb.com
+        - https://api-sb.globalwolfweb.com
+      paths: 15
+      operations: 22
+      parses: true
+      note: Publishes a real sandbox host.
+  rejected:
+    - url: https://docs.homespotter.com/openapi.json
+      reason: >-
+        HTTP 200 but the body is the Slate HTML docs page, not a specification. Failed
+        JSON parse. Not saved — recording the absence rather than a false artifact.
+    - url: https://docs.homespotter.com/swagger.json
+      reason: HTTP 200 HTML catch-all, not a specification. Not saved.
+
+quality_notes:
+  strengths:
+    - Seven complete OpenAPI 3.0 definitions, downloadable anonymously, all parsing.
+    - A real, branded, publicly reachable developer portal with a clear three-step onboarding path.
+    - Live OIDC discovery document and a documented OAuth 2.0 authorization-code flow on TransactionDesk.
+    - Per-API changelogs and a cross-API changelog.
+    - A live MCP server endpoint and a Markdown export, making the estate agent-consumable.
+    - Published sandbox/preproduction hosts for WolfConnect, zipForm and TransactionDesk.
+  gaps:
+    - The Authentisign and Back Office definitions declare no securitySchemes at all.
+    - The Deals API — the largest surface — declares no servers block.
+    - TransactionDesk publishes only a preproduction host.
+    - The official API Portal's "Back Office — Review API docs" link is broken (404).
+    - No SDKs, no client libraries, no CLI, no Postman collection, no GitHub organization.
+    - No AsyncAPI and no proper webhook catalog; callbacks are limited to signing events.
+    - No product/resource scopes exposed at the OIDC discovery endpoint.
+    - >-
+      The Transact API description still contains an unreplaced vendor placeholder — a
+      literal "<!-- TODO: replace with the real raw spec URL -->" and a
+      "https://bump.sh/<org>/doc/transact/download" template — shipped in production docs.
+    - >-
+      Six brands, six documentation systems (Bump.sh, Slate, Propertybase, Cloud CMA
+      custom) and five distinct auth schemes: the acquisition roll-up is not yet unified
+      behind the Foundation platform it markets.

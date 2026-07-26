@@ -1,0 +1,2953 @@
+---
+openapi: 3.0.3
+info:
+  title: WolfConnect API
+  version: 1.0.0
+  description: |-
+    The Lone Wolf WolfConnect API is a collection of RESTful web resources allowing third parties access to data.
+
+    ## Index
+
+    1. [Authentication](#authentication)
+    2. [Creating a Request](#creating-a-request)
+    3. [Creating the Signature for the Authorization Header](#creating-the-signature-for-the-authorization-header)
+    4. [Handling a Response](#handling-a-response)
+    5. [Handling Time Zones](#handling-time-zones)
+    6. [Supported Data Formats](#supported-data-formats)
+    7. [Compression](#compression)
+    8. [OData Support](#odata-support)
+    9. [Creating and Updating Data](#creating-and-updating-data)
+    10. [Concurrency Checking](#concurrency-checking)
+    11. [Permissions](#permissions)
+    12. [Error Codes](#error-codes)
+
+    **APIs in this documentation:** Members, Transactions, Classifications, Conditions, Contact Types, Property Types, Sources of Business.
+
+    The Lone Wolf API is a language independent resource and will work with such languages as Java, JavaScript, PHP and .NET.
+
+    The base URL for all calls to the production version of the API is `https://api.globalwolfweb.com`. The base URL for all calls to the test version of the API is `https://api-sb.globalwolfweb.com`.
+
+    ## Authentication
+
+    Authentication begins with a consumer key, secret key, and an API token key, which will be provided by Lone Wolf Technologies.
+
+    The secret key is a string of characters used to seed or salt the signature of all requests made to the API. The secret key should be guarded in the same way you would guard your bank account password.
+
+    ## Creating a Request
+
+    To properly authenticate an API request, there are 2 headers that must be added: `Authorization` and `Content-MD5`.
+
+    ### Authorization Header
+
+    The Authorization header will be of the form:
+
+    ```
+    Authorization: [Scheme] [Authorization String]
+    ```
+
+    The scheme portion of the Authorization header tells the API how it should authenticate the request by telling the API how to interpret the authorization string portion of the header. The authorization string is a series of strings separated by a colon.
+
+    ```
+    Authorization: LoneWolfKey [Consumer Key]:[Signature]:[Date]
+    ```
+
+    | Part | Description |
+    |---|---|
+    | Consumer Key | Your consumer key provided to you by Lone Wolf. |
+    | Signature | The signature for the request (detailed below). |
+    | Date | A string representing the **UTC** date and time of the request in the format specified below. |
+
+    The `LoneWolfKey` authorization scheme will be used when calling resources that deal with your API account.
+
+    ```
+    Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+    ```
+
+    | Part | Description |
+    |---|---|
+    | API Token | The API token is provided by Lone Wolf. |
+    | Client Code | The code given to the office or office family that the request will pertain to. |
+    | Signature | The signature for the request (detailed below). |
+    | Date | A string representing the **UTC** date and time of the request in the format specified below. |
+
+    The `LoneWolfToken` authorization scheme will be used when calling resources that access your actual data.
+
+    There is never a scenario where you would send more than one type of authorization scheme.
+
+    ### Authorization Header Date and Time Format
+
+    The date and time format for any date specified in the Authorization header is:
+
+    ```
+    [4 digit year]-[2 digit month starting at 01 for January]-[2 digit day of the month starting at 01]-[2 digit hour in 24 hour format from 00-23]-[2 digit minute from 00-59]-[2 digit second from 00-59]-[3 digit millisecond from 000-999][Single letter time zone for UTC]
+    ```
+
+    The actual string should all be on one line with a dash separating each part of the date/time. The Z at the end of the string represents the UTC time zone.
+
+    To format the date in .NET, use the string `yyyy-MM-dd-HH-mm-ss-fffK`.
+
+    To format the date in Java, use the string `yyyy-MM-dd-HH-mm-ss-SSSX`.
+
+    TIP: If the language you are working with does not support milliseconds, use 000 every time.
+
+    For example, the date *January 1st, 2014 at 3:45:33.554 PM EST* would be represented as:
+
+    ```
+    2014-01-01-20-45-33-554Z
+    ```
+
+    Notice that the hour portion of the string has been changed from Eastern to Greenwich Mean Time.
+
+    ### Content-MD5 Header
+
+    The Content-MD5 header holds the base 64 encoded MD5 hash of the body of the request as described by the HTTP specification for normal PUT and POST requests.
+
+    However not all requests will have a body: for instance, GET or DELETE requests. When this is the case the Content-MD5 header should only contain the base 64 encoded MD5 hash of an empty string:
+
+    ```
+    Content-MD5: 1B2M2Y8AsgTpgAmY7PhCfg==
+    ```
+
+    Another circumstance in which the value for the Content-MD5 header is different is when a multipart request is made. Multipart requests will be used when streaming files to the API. The base 64 encoded MD5 hash of an empty string should be used for multipart requests as well.
+
+    To ensure generation of the correct value for the Content-MD5 header it is good practice setting the body of the request then passing the body of the request into a function that will perform the hash. This will ensure that what you put in the request is the exact same thing you are using to create the hash.
+
+    ```csharp
+    private string CreateContentMD5Header(string bodyContent)
+    {
+        byte[] md5 = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(bodyContent));
+        return Convert.ToBase64String(md5);
+    }
+    ```
+
+    A common mistake when generating the Content-MD5 header is base 64 encoding a string representation of the MD5 hash. You must keep the MD5 hash as a byte array and then base 64 encode that byte array.
+
+    ## Creating the Signature for the Authorization Header
+
+    The signature portion of the Authorization header is the HMACSHA256 hash of the following string:
+
+    ```
+    [HTTP Method]:[Resource URI]:[Date]:[Content-MD5]
+    ```
+
+    | Part | Description |
+    |---|---|
+    | HTTP Method | The HTTP method. GET, PUT, POST, DELETE. |
+    | Resource URI | The non URL encoded resource URI without the host name. **This must start with a slash and does not include the `https://api.globalwolfweb.com` portion.** |
+    | Date | A string representing the **UTC** date and time of the request in the format specified above. This should be the same string that is used in the Authorization header. |
+    | Content-MD5 | The value in the Content-MD5 header. |
+
+    For example, to get the data for a transaction with id `WVnG90WFTSK2g9d_L7yd6g==` on *January 1st, 2014 at 3:45:33.554 PM EST*, the signature string to hash would be:
+
+    ```
+    GET:/wolfconnect/transactions/v1/WVnG90WFTSK2g9d_L7yd6g==:2014-01-01-20-45-33-554Z:1B2M2Y8AsgTpgAmY7PhCfg==
+    ```
+
+    Notice that the time string has been changed from EST to UTC. The Content-MD5 portion of the string to hash is the base 64 encoded MD5 hash of an empty string since this is a GET request.
+
+    You need to first create this string for the requested resource and then use your secret key to seed the HMACSHA256 hash function. The value that comes back would then be used as the signature for the Authorization header.
+
+    ```csharp
+    string stringToHash = "GET:/wolfconnect/transactions/v1/WVnG90WFTSK2g9d_L7yd6g==:2014-01-01-20-45-33-554Z:1B2M2Y8AsgTpgAmY7PhCfg==";
+    var hasher = new HMACSHA256(Encoding.UTF8.GetBytes([Your Secret Key]));
+    byte[] bytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
+    StringBuilder signature = new StringBuilder();
+    foreach(byte b in bytes)
+    {
+        signature.AppendFormat("{0:x2}", b);
+    }
+    // The signature variable now contains the value to use in the Authorization header.
+    ```
+
+    ### URL Encoding
+
+    If you URL encode the above resource URI, you would get:
+
+    ```
+    /wolfconnect/transactions/v1/WVnG90WFTSK2g9d%5fL7yd6g%3d%3d
+    ```
+
+    This is perfectly valid when making the request to the API. However, when constructing the string to hash for the signature, the Resource URI must **not** be URL encoded.
+
+    ### Using a different Hash Algorithm
+
+    The default hash algorithm is HMACSHA256. However, the API also supports the use of HMACSHA384 and HMACSHA512 if you wish to increase security. To tell the API that you wish to use a different hash algorithm simply append it to the authorization scheme portion of the Authorization header separated by a dash.
+
+    ```
+    Authorization: LoneWolfToken-HMACSHA512 [Authorization string]
+    ```
+
+    ### Hash Examples
+
+    The following tables list HMAC SHA hashes for the specified strings. The table is there for your convenience to make sure you have your hashing algorithm code correctly setup. All hashes were created with the seed (or secret key in the context of the API) `LoneWolf`.
+
+    Hash of the string `Lone Wolf Real Estate Technologies`:
+
+    | Algorithm | Hash |
+    |---|---|
+    | HMACSHA256 | cc62f4a577cd76277a97018bf7b476fc911823fac1cdc4ea3f672e8d4b84bac2 |
+    | HMACSHA384 | 95d1805b87daf9f6259cec06a20c8051dd5894a160e7af2d1a371569a6fa5fcb7a0be67e825486e27d42d6b2e71829c1 |
+    | HMACSHA512 | 814e10262e8bf47dcd103dabca0e44736e902beb15b1a10c561fcb3818d9d6b7c2eeb076b1c4d9a4f9d90909e406028066683a92ca2a6deec186aec456993342 |
+
+    Hash of the string `The Complete Enterprise Solution`:
+
+    | Algorithm | Hash |
+    |---|---|
+    | HMACSHA256 | 358cde6aeb0cfb0750665e9b54efbaca1665621a0d7c71a2184fcf6e5c022c8f |
+    | HMACSHA384 | 2936f83a7c1aff99fea0deefec6039c483834d74c7f3adf0e6e2854319b14592c588c7266dc2f4df5d8854a272ee59ba |
+    | HMACSHA512 | 0d1c669ddd64f5bb1bc1d8377f8297f0f8a32416e69f4943a7883ad6dc9582229ebbde6eac037dedce85e408ec8b006c58f57ebde7e71182bf7318da19e910d8 |
+
+    ## Handling a Response
+
+    Lone Wolf API responses use the standard HTTP status codes to tell you how you should handle the content of the response. In general, there are 2 types of responses. Success and Error responses. Success responses will use the HTTP status codes OK (200) and Created (201). All other status codes indicate an error.
+
+    Typically when a success message is received the response content will contain an object that relates to the accessed resource. When an error response is received it will contain a ClientError object. This object will contain its own Code value that will represent the problem that caused the error response. This means that you can use the standard HTTP response code to handle the error or ignore it all together and use the Lone Wolf Code to handle the error.
+
+    ## Handling Time Zones
+
+    Time zones must be handled correctly as the API can return and accept dates with times. To make it easy all dates with times returned from the API will be sent back in UTC time. As a corollary, all dates and times sent to the API must include the time zone offset. If the time zone is not specified, UTC time is assumed.
+
+    The individual resource documentation will specify the type of date the property is. You do not have to perform the UTC conversion if it is just a date; the time portion of the Date property will be ignored if specified.
+
+    ## Supported Data Formats
+
+    The API supports JSON and XML data formats. Each individual API section has the definitions for the objects that it supports. These object definitions can be used to create classes in any language that can then be serialized to JSON or XML and passed to the API. The response from the API can then be deserialized into these same objects.
+
+    ### Date and Timestamp Properties
+
+    Date and Timestamp properties have slight differences in how the API is expecting them. Dates are in the following format (all on one line) for both JSON and XML formats:
+
+    ```
+    [4 digit year]-[2 digit month starting at 01]-[2 digit day of the month starting at 01]
+    ```
+
+    .NET format string: `yyyy-MM-dd` — Java format string: `yyyy-MM-dd`
+
+    If you pass the time to the API during an update for a Date property it will be ignored when saving it to the database.
+
+    A Timestamp value should be in ISO 8601 or Round-trip format (all on one line):
+
+    ```
+    [4 digit year]-[2 digit month starting at 01]-[2 digit day of the month starting at 01]T[2 digit hour between 00-23]:[2 digit minute between 00-59]:[2 digit second between 00-59].[7 digit sub-second between 0000000-9999999]%2B00:00
+    ```
+
+    .NET format string: `yyyy-MM-dd'T'HH:mm:ss.fffffffK` — Java format string: `yyyy-MM-dd'T'HH:mm:ss.SSSXXX`
+
+    NOTE: The Java SimpleDateFormat class does not handle more than 3 sub-seconds. As of Java 7, you can use `javax.xml.bind.DatatypeConverter.parseDateTime(timestampString)` to get a Calendar object back. You do not need to specify the format in the `DatatypeConverter.parseDateTime()` function. If using Java 6 or earlier, you will have to write your own parser to handle the timestamp returned from the API. The above format should be used when sending a timestamp value to the API in any Java version.
+
+    Timestamp values will always be in UTC time when retrieved from the API and must always specify the time zone when updating a time. If no time zone is specified, the API will assume UTC time.
+
+    ## Compression
+
+    The API supports gzip and deflate compression of the request and response. If you plan to send compressed requests to the API, make sure that the Content-Encoding request header is included and holds the type of compression used. If you want compressed responses, include the Accept-Encoding request header for the type of compression you support.
+
+    NOTE: Compressed Multi-part requests are not supported at this time.
+
+    ## OData Support
+
+    The API supports OData style filtering for resources using the HTTP GET method. OData is a standard query string language used for filtering resources on REST APIs. Much more detailed information can be found at [www.odata.org](http://www.odata.org). The API currently supports the OData 4.0 specification for URL conventions but does not support the full range of query parameters.
+
+    ### Supported OData Parameters
+
+    If any parameter is not supported for a particular resource it will be noted in that resource's documentation. Otherwise it is safe to assume that all of these parameters are supported for all resources using the GET HTTP method.
+
+    | Parameter | Description |
+    |---|---|
+    | $filter | Filters data on properties related to the resource. NOTE: Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.). |
+    | $orderby | Orders the objects returned in the response by a property related to the resource. |
+    | $top | Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. |
+    | $skip | Skips the specified number of records before returning the results. $orderby must be specified for $top to be used. |
+    | $search | Allows for free form text to be searched. Each API will note which fields are included in the free form search when this parameter is available. |
+    | $expand | Instructs the API to include a child object or collection in the response. Please see the section below for more details on how to use this parameter. |
+
+    The maximum number of objects returned from any resource is 1,000. If the $top parameter is not passed in the query string, $top=1000 is assumed. If a value greater than 1,000 is specified an error will be thrown. If the response holds 1,000 objects, you must implement paging (described below) to make sure you retrieve all the records.
+
+    Only the $expand OData query parameter is supported for resources that return one specific object rather than allow you to filter many objects; all other OData query parameters will be ignored.
+
+    ### Usage of the $expand Query Parameter
+
+    The $expand parameter is used a little differently than the OData specification: if the $expand parameter is omitted from the query string then ALL child objects and collections will be returned. In the case of a Transaction object this would mean that the Tiers, ClientContacts, BusinessContacts, Classification, etc. child objects and collections will also be returned (provided you have permission to see those objects). If you want to return only the Transaction object pass in `$expand=` in the query string (the $expand parameter but with no values specified).
+
+    The reason for this difference is to maintain backward and forward compatibility. Before OData support, calls to the Transactions Resource had no way to tell the API to return only specific objects of a Transaction so the entire object including any child objects would be returned. Returning the full object maintains forward compatibility so if a new child object or collection is added to the Transaction object then not passing the $expand parameter will include the new child object or collection automatically. If you wish to only return the Transaction object and are already passing in `$expand=` in the query string then the new object or collection will still not be returned to you.
+
+    ### Implementing Paging
+
+    The $top and $skip query parameters can be used to implement paging for a given resource. However, each call to the API performs a new query so there is a chance that new records could be inserted or values updated between each API call.
+
+    ### Examples
+
+    The following URL returns transactions created on or after April 1st, 2014 (the full transaction object is returned because the $expand parameter is omitted):
+
+    ```
+    /wolfconnect/transactions/v1?$filter=CreatedTimestamp ge datetimeoffset'2014-04-01T00:00:00Z'
+    ```
+
+    The following URL returns the top 10 transactions with the highest sell price (only the Transaction objects are returned because the $expand parameter is specified but empty):
+
+    ```
+    /wolfconnect/transactions/v1?$top=10&$orderby=SellPrice desc&$expand=
+    ```
+
+    The following URL returns the transaction with id `98agdji99jasdof908==`. The Transaction object returned will include the ClientContacts and BusinessContacts. Classification, PropertyType, Tiers, etc. will all be null:
+
+    ```
+    /wolfconnect/transactions/v1/98agdji99jasdof908==?$expand=ClientContacts,BusinessContacts
+    ```
+
+    ## Creating and Updating Data
+
+    Creating and updating data with the API is pretty straight forward. If you set a property to a value the corresponding property in the database will be set to that value.
+
+    However NULL-valued properties are handled differently. When creating a new record with a NULL-valued property its default value will be saved in the database. The default value will be returned to you in the response. When updating an existing record its current value will NOT be updated in the database and the original value will be returned to you in the response.
+
+    The other way to use the default value when creating data is to not send the property in the request at all. This also works when attempting to not update the current value when updating. We allow the use of NULL for this scenario to ease creating classes that can be serialized to a request.
+
+    There is one caveat to this rule: if a NULL value is an acceptable value for a given property then the NULL value will be saved in the database. Get the API to use the default value when creating data by not sending that property in the request at all. This also works when attempting to not update the existing value when updating. This will occur most often with Date, DateTime and Numeric data but it is possible for String data as well.
+
+    An example of this would be the Member.InactiveDate property: having a NULL value for the InactiveDate is valid and indicates that the member is still active. If you were using the Members Resource to update data for a member that is **inactive**, you have two options: send the value currently stored for InactiveDate (effectively updating it to the same value) or do not include the InactiveDate property in the request at all.
+
+    These types of properties are noted in the object definitions by the word (Nullable) in the property description. If you see a property described as (Nullable) then you know you must handle the property in this special way.
+
+    ### Collection Properties (Lists and Arrays)
+
+    Collection properties will typically hold "child" records of a given parent object. If the property that holds a collection is null the current values for that collection are not changed. If the property is not sent in the request at all the current values are not updated. Send an empty collection to delete the collection for the given property. If the current state of the database had 3 items for a given collection but you only wanted to keep 1 of them, then you would send a collection containing only the one you wanted to keep; the other 2 items would be deleted.
+
+    For example, if you were updating a transaction but did not want to update the conditions associated to that transaction, simply set the Transaction.Conditions property to NULL or do not send that property in the request. If you wanted to delete all of the conditions from a transaction, you would set the Transaction.Conditions property to an empty collection. If the transaction had 3 conditions currently associated to it but you only wanted to keep the second one then you would set the Transaction.Conditions property to a collection containing only the second condition; conditions 1 and 3 would then be deleted.
+
+    ### Object Properties
+
+    Object properties will typically hold an associated "child" object. They will have 2 properties associated to them. One for the Id of the object and the other for the object itself. When creating or updating an Object property you only need to send the Id property. The object property will be returned to you in the response.
+
+    For example: ClientContact objects. The ClientContact object has 2 properties for source of business. The ClientContact.SourceOfBusinessId property is of type string and holds the Lone Wolf Id for the source of business. The ClientContact.SourceOfBusiness property is of type SourceOfBusiness and holds the source of business object.
+
+    When creating or updating a ClientContact object you only need to pass the SourceOfBusinessId value to the API. Whatever value is in ClientContact.SourceOfBusiness is ignored. However ClientContact.SourceOfBusiness will be available in the response and will reflect the source of business record for the sent SourceOfBusinessId. Set the SourceOfBusinessId value to NULL to leave the current source of business for a given ClientContact object. Send an empty string for SourceOfBusinessId to remove the source of business record from the ClientContact object.
+
+    ### String Properties
+
+    String properties are no different than any other property in how they behave but since NULL is such a common value for a string property they deserve their own section. Set the string property to NULL or do not pass the string property in the request to use the default value when creating or keep the current value when updating. You must send an empty string for the property if you wish to clear the corresponding value in the database.
+
+    For example, if you were updating data for a given member and did not want to change the current value for the middle name, send NULL for Member.MiddleName or leave it out of the request all together. If the current value was "Anne" and you wanted to clear it then you would set Member.MiddleName to an empty string.
+
+    ## Concurrency Checking
+
+    The API supports concurrency checking. It is strongly recommended that you implement concurrency checking whenever updating data through the API as it will eliminate the possibility of overwriting someone else's changes. Let's take the following scenario:
+
+    - A transaction is retrieved using the API and stored in a third party database. The close date for this transaction is 01/01/2015 and the price is $100,000.
+    - A user opens up that same transaction on the EDS page in WOLFconnect and changes the price to $110,000.
+    - The same transaction is then updated using the API. The API call changes the close date to 01/05/2015 but in doing so sends the price that it knows about which is $100,000. The user's change in WOLFconnect has just been overwritten.
+
+    There are 2 ways to avoid this scenario. The first is to only send the data that you want updated in the request. If you just want the close date updated, only set the Transaction.CloseDate property and leave the other properties as null or exclude them from the request all together.
+
+    The second way is to use the RowVersion property on the Transaction object. Any object that supports concurrency checking will have a RowVersion property associated to it. The RowVersion property holds the version of a particular record in the database. In the same scenario above, if the RowVersion was passed in the update in Step 3, it would not match the row version currently stored in the database. The API call would then fail with a Conflict HTTP Status.
+
+    NOTE: If the RowVersion property is passed to the API as NULL, no concurrency check will take place and the data passed in the API call will be updated in the database.
+
+    Concurrency checking may not need to be used in every scenario but there is no downside to implementing it. If there is even the slightest chance that data could be overwritten, it is strongly recommended that you implement concurrency checking.
+
+    ## Permissions
+
+    Lone Wolf has the ability to set read and edit permissions on a property-by-property basis for any object. Attempting to create or delete an object for which you do not have permission will return an error. Attempting to update a value for which you do not have permission will return an error. Retrieving an object without read permission for a given property will be NULL in the response.
+
+    Collection properties will contain an empty collection if you do have read permission but no objects exist. For example, if you do not have read permission for the Transaction.Conditions property it will always be passed back in the response as NULL.
+
+    If you have read permission for object properties but no object exists then the Id property will be an empty string and the object property will be NULL. For example, if you do not have read permission for the ClientContact.SourceOfBusiness property the ClientContact.SourceOfBusinessId and ClientContact.SourceOfBusiness properties will both be null in the response. If you have read permission but the source of business is not set for the ClientContact then ClientContact.SourceOfBusinessId will be set to an empty string and the ClientContact.SourceOfBusiness property will be null.
+
+    With this in mind, if you are retrieving data from the Lone Wolf API to update your own system and the data comes back as NULL DO NOT update your own system with a NULL value. A NULL value will typically mean that you do not have access to that property.
+
+    The same exception applies to this rule as when updating certain values: if you do have access to a given property but NULL is a valid value for that property then NULL will be returned in the response. If NULL is a valid value for a property but you do not have read permission to that property then the property will not be included in the response.
+
+    ## Error Codes
+
+    The ClientError object is used to give detailed information whenever an API request fails. This is the object that will be sent back in the response. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL.
+
+    | Code | Description |
+    |---|---|
+    | 1000 | Unknown error. This is typically accompanied with an Internal Server Error HTTP status code (500). Please contact Lone Wolf support if you receive this error. |
+    | 1001 | Invalid Parameter. |
+    | 1002 | Missing Parameter. |
+    | 1003 | The request must be a multipart request. |
+    | 1004 | No files were sent with the request. |
+    | 1005 | The maximum files allowed for the request was exceeded. |
+    | 1006 | Validation failed when trying to save a resource. This will occur when a requirement for the data passed to the API has not been met. |
+    | 1007 | Member authentication failed. This will occur when a member tries to log in but has been deactivated or they have not finished resetting their password. |
+    | 1008 | Invalid Operation. You most likely don't have access to perform said operation. |
+
+    Responses for the standard HTTP status codes of BadRequest (400), Unauthorized (401), NotFound (404) and Conflict (409) will all have an object of type ClientError sent back in the response. If they do not then that is a good indication that the URL you are accessing is invalid. For generic BadRequest, Unauthorized, NotFound and Conflict responses the ClientError Code property will be the same as the HTTP status code.
+servers:
+- url: https://api.globalwolfweb.com
+  description: Production
+- url: https://api-sb.globalwolfweb.com
+  description: Test
+security:
+- LoneWolfToken: []
+tags:
+- name: Members
+  description: |-
+    The Members resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access member data.
+
+    The following actions are currently supported:
+
+    - Retrieve a member or a collection of members
+    - Retrieve the profile image of a member
+    - Retrieve the public profile image of a member
+    - Set the In/Out status of a member
+    - Get the In/Out status of a member
+    - Get the In/Out status of all active members
+
+    Use of the above resource will require the appropriate authentication headers to be present. Construction of authentication headers is outlined in the Authentication section above.
+- name: Transactions
+  description: |-
+    The Transactions Resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access transaction data.
+
+    The following actions are currently supported:
+
+    - Create a Transaction
+    - Retrieve a Transaction or a collection of Transactions
+    - Update a Transaction
+    - Delete a Transaction
+    - Finalize a Transaction
+    - Search for Transactions
+
+    The sections on creating and updating data in the introduction should be read before using the create and update functions of the Transactions API.
+
+    ## Transactions and Offices
+
+    You will see a reference to "the primary office for the transaction" used throughout this documentation: transactions are not tied directly to an office but are associated to agents.
+
+    The primary office for a transaction is the office of the agent with the largest commission. It is possible for a transaction to have agents associated to it that are in different offices. However, there will never be an instance when a transaction is tied to agents that are in different Client Codes. If you attempt to add agents from different Client Codes to the same transaction, you will receive an error.
+
+    Within a Client Code there can also be multiple Company Codes relating to brokerWOLF installations. There will never be a case where 2 agents with different Company Codes are associated to a transaction. If you attempt to add agents from different Company Codes to the same transaction, you will receive an error.
+
+    ## OData and the MLSAddress Property
+
+    The Transaction.MLSAddress property is used to group address properties together for a transaction. A transaction without an address is pretty meaningless. For this reason, the $expand OData parameter will have no effect on the Transaction.MLSAddress property. It will always be returned with the transaction data regardless if it is listed in the $expand OData parameter or not.
+- name: Classifications
+  description: |-
+    The Classifications resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access classification data.
+
+    The following action is currently supported:
+
+    - Retrieve the list of all Classifications
+
+    ## Classifications and brokerWOLF
+
+    Classifications are used for describing the commission structure for transactions and transaction tiers. Since each brokerWOLF installation is allowed to create its own list of classifications, WOLFconnect must honor that list. Therefore, WOLFconnect stores a list of classifications for each office that is synced with brokerWOLF and a different list that all non-brokerWOLF synced offices share.
+
+    When attaching a classification to a transaction or transaction tier, you must first select the correct classification list from which to get the classification. Selecting the correct classification list requires checking the office containing a commission record that an agent used. If that office is synced with brokerWOLF (if it has a valid LWCompanyCode) you must use the classification list for that LWCompanyCode.
+- name: Conditions
+  description: |-
+    The Conditions resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access classification data.
+
+    The following action is currently supported:
+
+    - Retrieve the list of all Conditions
+- name: Contact Types
+  description: |-
+    The Contact Types resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access contact type data.
+
+    The following actions are currently supported:
+
+    - Retrieve the list of all Contact Types
+
+    ## Contact Types and brokerWOLF
+
+    Contact Types are used for organizing client contacts, business contacts and external agents. Since each brokerWOLF installation is allowed to create its own list of contact types, WOLFconnect must honor that list. Therefore WOLFconnect stores a list of contact types for each office that is synced with brokerWOLF and a different list that all non-brokerWOLF synced offices share.
+
+    When attaching a contact type to a client contact, business contact or external agent, you must first select the correct contact type list from which to get the contact type. Client contacts, business contacts and external agents are all associated with transactions. Selecting the correct contact type list requires checking the office of one of the agents that is associated to the transaction via the commission record. If that office is synced with brokerWOLF (if it has a valid LWCompanyCode) you must use the contact type list for that LWCompanyCode. If the office is not synced with brokerWOLF, you must use the contact type list for the blank LWCompanyCode.
+- name: Property Types
+  description: |-
+    The property types resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access property type data.
+
+    The following actions are currently supported:
+
+    - Retrieve the list of all Property Types
+
+    ## Property Types and brokerWOLF
+
+    Property Types are used for describing the property for a transaction. Since each brokerWOLF installation is allowed to create its own list of property types, WOLFconnect must honor that list. Therefore WOLFconnect stores a list of property types for each office that is synced with brokerWOLF and a different list that all non-brokerWOLF synced offices share.
+
+    When attaching a property type to a transaction, you must first select the correct property type list from which to get the property type. Selecting the correct property type list requires checking the office of one of the agents that is associated to the transaction via the commission record. If that office is synced with brokerWOLF (if it has a valid LWCompanyCode) you must use the property type list for that LWCompanyCode. If the office is not synced with brokerWOLF, you must use the property type list for the blank LWCompanyCode.
+- name: Sources of Business
+  description: |-
+    The Sources of Business resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access source of business data.
+
+    The following actions are currently supported:
+
+    - Retrieve the list of all Sources of Business
+
+    ## Sources of Business and brokerWOLF
+
+    Sources of Business are used for describing how a client contact (buyer, seller, etc.) was matched with an agent or office. Since each brokerWOLF installation is allowed to create its own sources of business list, WOLFconnect must honor that list. Therefore, WOLFconnect stores a sources of business list for each office that is synced with brokerWOLF and a different list that all non-brokerWOLF synced offices share.
+
+    When attaching a source of business to a client contact, you must first select the correct source of business list from which to get the source of business. Client contacts are associated with transactions. Selecting the correct source of business list requires checking the office of one of the agents that is associated to the transaction via the commission record. If that office is synced with brokerWOLF (if it has a valid LWCompanyCode) you must use the source of business list for that LWCompanyCode. If the office is not synced with brokerWOLF, you must use the source of business list for the blank LWCompanyCode.
+paths:
+  "/wolfconnect/classifications/v1/":
+    get:
+      tags:
+      - Classifications
+      summary: Retrieve the list of all Classifications
+      operationId: getClassifications
+      description: All of the classifications that are configured for the Client Code
+        used during the authentication process will be returned. The classifications
+        returned where LWCompanyCode is blank are for offices that are not synced
+        with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of Classification objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Classification"
+  "/wolfconnect/conditions/v1/":
+    get:
+      tags:
+      - Conditions
+      summary: Retrieve the list of all Conditions
+      operationId: getConditions
+      description: All of the conditions that are configured for the Client Code used
+        during the authentication process will be returned. The conditions returned
+        where LWCompanyCode is blank are for offices that are not synced with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of Condition objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Condition"
+  "/wolfconnect/contact-types/v1/":
+    get:
+      tags:
+      - Contact Types
+      summary: Retrieve the list of all Contact Types
+      operationId: getContactTypes
+      description: All of the contact types that are configured for the Client Code
+        used during the authentication process will be returned. The contact types
+        returned where LWCompanyCode is blank are for offices that are not synced
+        with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of ContactType objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ContactType"
+  "/wolfconnect/sources-of-business/v1/":
+    get:
+      tags:
+      - Sources of Business
+      summary: Retrieve the list of all Sources of Business
+      operationId: getSourcesOfBusiness
+      description: All of the sources of business that are configured for the Client
+        Code used during the authentication process will be returned. The sources
+        of business returned where LWCompanyCode is blank are for offices that are
+        not synced with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of SourceOfBusiness objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/SourceOfBusiness"
+  "/wolfconnect/property-types/v1/":
+    get:
+      tags:
+      - Property Types
+      summary: Retrieve the list of all Property Types
+      operationId: getPropertyTypes
+      description: All of the property types that are configured for the Client Code
+        used during the authentication process will be returned. The property types
+        returned where LWCompanyCode is blank are for offices that are not synced
+        with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of PropertyType objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PropertyType"
+  "/wolfconnect/members/v1":
+    get:
+      tags:
+      - Members
+      summary: Retrieve a Collection of Members
+      operationId: getMembers
+      description: |-
+        Retrieves a collection of members within the current client code. OData can be used to filter, order and page through the list.
+
+        **OData Support:** $expand, $filter, $orderby, $skip, $top
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      - "$ref": "#/components/parameters/ODataFilter"
+      - "$ref": "#/components/parameters/ODataOrderBy"
+      - "$ref": "#/components/parameters/ODataSkip"
+      - "$ref": "#/components/parameters/ODataTop"
+      responses:
+        '200':
+          description: A collection of Member objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Member"
+    post:
+      tags:
+      - Members
+      summary: Create a Member
+      operationId: createMember
+      description: |-
+        Creates a new member within the client code. The response will contain the newly created member object populated with all of the data to which you have read access. You can use the OData $expand parameter to limit the data that is returned.
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+        **OData Support:** $expand
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      requestBody:
+        required: true
+        description: A Member object.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Member"
+      responses:
+        '201':
+          description: The newly created Member object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Member"
+  "/wolfconnect/members/v1/{memberId}":
+    parameters:
+    - "$ref": "#/components/parameters/MemberId"
+    get:
+      tags:
+      - Members
+      summary: Retrieve a Member
+      operationId: getMember
+      description: |-
+        Retrieves a Member. The data in the response will contain all of the data to which you have read access. Properties with values of NULL typically mean that you do not have read access to that property. Please see the Permissions section of the introduction for more information.
+
+        HEAD is also supported for this resource.
+
+        **OData Support:** $expand
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      responses:
+        '200':
+          description: A Member object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Member"
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error
+            Code 404: The member could not be found.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+    put:
+      tags:
+      - Members
+      summary: Update a Member
+      operationId: updateMember
+      description: |-
+        It is best practice to only send data that you want updated as it will return a much faster response. For instance, if you only need to update the FirstName value, then you should set all other Member properties to null so that only the First Name update is attempted.
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+        The response will contain the updated member object populated with all of the data to which you have read access regardless of the properties sent in the request. For instance, if you sent a Member object with the EmailAddresses property set to null but the Member contained an email address, the Member.EmailAddresses property of the response will contain the email address. You can use the OData $expand parameter to limit the data that is returned.
+
+        The value for the Member.Id property in the Member object sent in the request is ignored.
+
+        **OData Support:** $expand
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      requestBody:
+        required: true
+        description: A Member object.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Member"
+      responses:
+        '200':
+          description: A Member object holding all the updated data.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Member"
+  "/wolfconnect/members/v1/{memberId}/profile-image":
+    parameters:
+    - "$ref": "#/components/parameters/MemberId"
+    get:
+      tags:
+      - Members
+      summary: Retrieve the Profile Image of a Member
+      operationId: getMemberProfileImage
+      description: |-
+        Retrieves the profile image for the member that was uploaded through the member profile page in WOLFconnect.
+
+        This resource supports the If-Modified-Since request header and will return a 304 Not Modified response if the image has not been modified since the time specified.
+
+        HEAD is also supported for this resource.
+
+        *NOTE: The size and width parameters should not be used at the same time.*
+      parameters:
+      - name: size
+        in: query
+        required: false
+        description: 'The size of the image returned. normal: 150 X 200 (Default),
+          small: 100 X 133, tiny: 70 X 93'
+        schema:
+          type: string
+          enum:
+          - normal
+          - small
+          - tiny
+          default: normal
+      - name: width
+        in: query
+        required: false
+        description: Specifies a custom width for the returned image. The height will
+          be adjusted to keep the same aspect ratio. The width can only be a number
+          less than or equal to 150 as that is the max width of any stored image.
+        schema:
+          type: integer
+          maximum: 150
+      responses:
+        '200':
+          description: An image file.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '304':
+          description: Not Modified. The image has not been modified since the time
+            specified in the If-Modified-Since request header.
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error
+            Code 404: The member or profile image for the member could not be found.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+    post:
+      tags:
+      - Members
+      summary: Set the Profile Image of a Member
+      operationId: setMemberProfileImage
+      description: |-
+        Sets the profile image for a member. The request must be a multi-part request containing the original image and the coordinates to use to crop the image. PUT is also supported for this resource.
+
+        The coordinates should be specified in an aspect ratio of 3:4. For instance, if you have an image that is 800 X 800, and you want the center of the image selected for the profile image, you would pass in the following for the coordinates:
+
+        - Left: 100
+        - Top: 0
+        - Width: 600
+        - Bottom: 800
+
+        This will set the profile image to start 100 pixels from the left and go 600 pixels wide. 600 X 800 is in the 3:4 ratio.
+
+        You can specify 0 for all the coordinates and the API will create the biggest possible image from the original image. It would save the same image as above if all parameters were set to 0. It will center the rectangle horizontally if the original image is too wide and it will use the top of the original image if it is too long.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                left:
+                  type: integer
+                  description: The left image coordinate of the cropping rectangle.
+                top:
+                  type: integer
+                  description: The top image coordinate of the cropping rectangle.
+                width:
+                  type: integer
+                  description: The width of the cropping rectangle.
+                height:
+                  type: integer
+                  description: The height of the cropping rectangle.
+                profileImage:
+                  type: string
+                  format: binary
+                  description: The original image file to use for the profile image.
+                    This is the image that will be cropped using the coordinates above.
+              required:
+              - left
+              - top
+              - width
+              - height
+              - profileImage
+      responses:
+        '200':
+          description: The profile image was set. No response content.
+        '400':
+          description: 'Error Code 1002: A parameter was missing.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error
+            Code 404: The member could not be found.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+    delete:
+      tags:
+      - Members
+      summary: Delete the Profile Image of a Member
+      operationId: deleteMemberProfileImage
+      description: |-
+        Deletes the profile image for the member.
+
+        NOTE: This resource returns OK even if the member does not have a profile image.
+      responses:
+        '200':
+          description: The profile image was deleted. No response content.
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error
+            Code 404: The member could not be found.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+  "/wolfconnect/members/v1/{memberId}/public-profile-image":
+    parameters:
+    - "$ref": "#/components/parameters/MemberId"
+    get:
+      tags:
+      - Members
+      summary: Retrieve the Public Profile Image of a Member
+      operationId: getMemberPublicProfileImage
+      description: |-
+        Retrieves the public profile image for the member that was uploaded through the public profile page in WOLFconnect. Members can have different images for their internal profile as opposed to their public profiles. By default, if no public profile image has been uploaded, then the member profile image is returned.
+
+        HEAD is also supported for this resource.
+
+        *NOTE: The size and width parameters should not be used at the same time.*
+      parameters:
+      - name: publicProfileOnly
+        in: query
+        required: false
+        description: 'Flag to tell the API whether or not to return the internal profile
+          image if the public profile image does not exist. true: Do not return the
+          internal profile image when no public profile image exists. false: Return
+          the internal profile image when no public profile image exists. (Default)'
+        schema:
+          type: boolean
+          default: false
+      - name: size
+        in: query
+        required: false
+        description: 'The size of the image returned. normal: 150 X 200 (Default)'
+        schema:
+          type: string
+          enum:
+          - normal
+          default: normal
+      - name: width
+        in: query
+        required: false
+        description: Specifies a custom width for the returned image. The height will
+          be adjusted to keep the same aspect ratio. The width can only be a number
+          less than or equal to 150 as that is the max width of any stored image.
+        schema:
+          type: integer
+          maximum: 150
+      responses:
+        '200':
+          description: An image file.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error
+            Code 404: The member or profile image for the member could not be found.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+  "/wolfconnect/members/v1/{memberId}/in-out-status":
+    parameters:
+    - "$ref": "#/components/parameters/MemberId"
+    get:
+      tags:
+      - Members
+      summary: Get the In/Out Status of a Member
+      operationId: getMemberInOutStatus
+      description: Gets the in/out status (displayed in the top-left corner of WOLFconnect)
+        and the notes and detailed notes for the member (if enabled, displayed on
+        the In/Out popup window that appears when first logging in).
+      responses:
+        '200':
+          description: A MemberInOutStatus object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/MemberInOutStatus"
+        '400':
+          description: 'Error Code 1001: The memberId parameter is invalid.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: The member could not be found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+    put:
+      tags:
+      - Members
+      summary: Set the In/Out Status of a Member
+      operationId: setMemberInOutStatus
+      description: Sets the in/out status (displayed in the top-left corner of WOLFconnect)
+        and updates the notes and detailed notes for the member (if enabled, displayed
+        on the In/Out popup window that appears when first logging in).
+      requestBody:
+        required: true
+        description: A MemberInOutStatus object.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/MemberInOutStatus"
+      responses:
+        '200':
+          description: The updated MemberInOutStatus object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/MemberInOutStatus"
+        '400':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error
+            Code 1006: Validation failed.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: The member could not be found.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+  "/wolfconnect/members/v1/in-out-status":
+    get:
+      tags:
+      - Members
+      summary: Get the In/Out Status of All the Members
+      operationId: getAllMembersInOutStatus
+      description: Returns the in/out statuses and the notes and detailed notes for
+        all *active* members for a given client code.
+      responses:
+        '200':
+          description: A collection of MemberInOutStatus objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/MemberInOutStatus"
+  "/wolfconnect/transactions/v1":
+    get:
+      tags:
+      - Transactions
+      summary: Retrieve a Collection of Transactions
+      operationId: getTransactions
+      description: |-
+        Retrieves a collection of transactions within the current client code. OData can be used to filter, order and page through the list.
+
+        **OData Support:** $expand, $filter, $orderby, $skip, $top
+
+        ### Common OData Queries
+
+        Find all transactions for a given office:
+
+        ```
+        $filter=Tiers/any(x:x/AgentCommissions/any(y:y/OfficeId eq '[Lone Wolf Office Id]'))
+        ```
+
+        Find all transactions for a given agent:
+
+        ```
+        $filter=Tiers/any(x:x/AgentCommissions/any(y:y/AgentId eq '[Lone Wolf Member Id]'))
+        ```
+
+        Find all transactions modified after January 1st, 2015 at 4:00 PM EST:
+
+        ```
+        $filter=TransactionChangedTimestamp lt datetimeoffset'2015-01-01T21:00:00.0000000%2B00:00'
+        ```
+
+        Note the time was changed to UTC time. Also, the plus sign separating the time zone has been changed to the URL encoded version of %2B. This is a requirement when specifying datetimeoffset OData values.
+
+        Find all contingent transactions (any conditions that have an approved date of null):
+
+        ```
+        $filter=Conditions/any(x:x/ApprovedDate eq null)
+        ```
+
+        Find all firm transactions (no conditions or all the conditions have a valid approved date):
+
+        ```
+        $filter=Conditions/any() eq false or Conditions/all(x:x/ApprovedDate ne null) eq true
+        ```
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      - "$ref": "#/components/parameters/ODataFilter"
+      - "$ref": "#/components/parameters/ODataOrderBy"
+      - "$ref": "#/components/parameters/ODataSkip"
+      - "$ref": "#/components/parameters/ODataTop"
+      responses:
+        '200':
+          description: A collection of Transaction objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Transaction"
+    post:
+      tags:
+      - Transactions
+      summary: Create a Transaction
+      operationId: createTransaction
+      description: |-
+        A new Transaction must have one Tier associated to it and that Tier must have at least one AgentCommission associated to it; you will receive a validation error if you send a Transaction object without that data.
+
+        Transaction.Number should be set to NULL unless the primary office for the transaction allows manual entry of a transaction number.
+
+        The response will contain the newly created transaction object populated with all of the data to which you have read access. You can use the OData $expand parameter to limit the data that is returned.
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+        **OData Support:** $expand
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      requestBody:
+        required: true
+        description: A Transaction object.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Transaction"
+      responses:
+        '201':
+          description: The newly created Transaction object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Transaction"
+        '400':
+          description: 'Error Code 1006: Validation failed. See the Details property
+            of the response for information on why the validation failed. Error Code
+            1008: Invalid operation. This typically happens when you are trying to
+            create an object without the required permission (eg. you don''t have
+            create permission for Conditions but you pass through a list of Conditions
+            in the Transaction.Conditions property). See the Details property of the
+            response for more information.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: A child object was not found (eg. you attempt to set the classification
+            of a transaction with a ClassificationId that does not exist).
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+  "/wolfconnect/transactions/v1/{transactionId}":
+    parameters:
+    - name: transactionId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the transaction. This will be the value in
+        the Transaction.Id property when the transaction was created.
+      schema:
+        type: string
+    get:
+      tags:
+      - Transactions
+      summary: Retrieve a Transaction
+      operationId: getTransaction
+      description: |-
+        Retrieves a transaction. The data in the response will contain all of the data to which you have read access. Properties with values of NULL typically mean that you do not have read access to that property. Please see the Permissions section of the introduction for more information.
+
+        **OData Support:** $expand
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      responses:
+        '200':
+          description: A Transaction object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Transaction"
+        '400':
+          description: 'Error Code 1001: The transaction Id is invalid.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: The transaction could not be found. The primary office for
+            the transaction must be an office with the Client Code used in the API
+            authentication.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+    put:
+      tags:
+      - Transactions
+      summary: Update a Transaction
+      operationId: updateTransaction
+      description: |-
+        It is best practice to only send data that you want updated as it will return a much faster response. For instance, if you only need to update the Transaction.CloseDate value, then you should set all other Transaction properties to null so that only a close date update is attempted.
+
+        Unless the primary office allows manual entry for a transaction number and you actually want to change the transaction number, it is best to always set the Transaction.Number property to NULL before sending the request. This will guarantee that the transaction number is not updated.
+
+        The status of a transaction cannot be updated using this resource. The status is a read only property. You must use the finalize resource to change the status.
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+        The response will contain the updated transaction object populated with all of the data to which you have read access regardless of the properties sent in the request. For instance, if you sent a Transaction object with the Conditions property set to null but the transaction contained 2 conditions, the Transaction.Conditions property of the response will contain those 2 conditions. You can use the OData $expand parameter to limit the data that is returned.
+
+        The value for the Transaction.Id property in the Transaction object sent in the request is ignored.
+
+        **OData Support:** $expand
+      parameters:
+      - "$ref": "#/components/parameters/ODataExpand"
+      requestBody:
+        required: true
+        description: A Transaction object.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Transaction"
+      responses:
+        '200':
+          description: A Transaction object holding all the updated data.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Transaction"
+        '400':
+          description: 'Error Code 1006: Validation failed. See the Details property
+            of the response for information on why the validation failed. Error Code
+            1008: Invalid operation. This occurs when attempting to update or create
+            an object without the required permission. For instance, if you don''t
+            have create permission for Conditions but you pass through a list of Conditions
+            in the Transaction.Conditions property or if you attempt to update the
+            Transaction.CloseDate but do not have edit permissions for that field.
+            See the Details property of the response for more information.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: Either the transaction or a child object was not found. For
+            instance, if you attempt to set the classification of a transaction with
+            a ClassificationId that does not exist. The primary office for the transaction
+            must be an office with the Client Code used in the API authentication.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+  "/wolfconnect/transactions/v1/{transactionId}/finalize":
+    parameters:
+    - name: transactionId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the transaction to update.
+      schema:
+        type: string
+    put:
+      tags:
+      - Transactions
+      summary: Finalize a Transaction
+      operationId: finalizeTransaction
+      description: |-
+        The status of a transaction cannot be updated through the normal update process as you must call this resource to change the status. This resource will finalize all of the associated transaction tiers with the specified status code as well.
+
+        The list of valid status codes is defined in the Transaction.StatusCode property in the schema definitions.
+      requestBody:
+        required: true
+        description: A string holding the status code for the finalized transaction.
+        content:
+          application/json:
+            schema:
+              type: string
+              description: The status code for the finalized transaction.
+      responses:
+        '200':
+          description: The transaction was finalized. No response content.
+        '400':
+          description: 'Error Code 1006: Validation failed. See the Details property
+            of the response for information on why the validation failed. Error Code
+            1008: Invalid operation. A common reason for this error is if the transaction
+            has been synched with brokerWOLF.'
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+        '404':
+          description: The transaction could not be found. The primary office for
+            the transaction must be an office with the Client Code used in the API
+            authentication.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ClientError"
+  "/wolfconnect/transactions/v1/search":
+    post:
+      tags:
+      - Transactions
+      summary: Search for Transactions
+      operationId: searchTransactions
+      deprecated: true
+      description: |-
+        **NOTE: This resource has been deprecated in favor of using OData with the `/wolfconnect/transactions/v1` resource. See Retrieve a Collection of Transactions for more information.**
+
+        This retrieves all of the transactions that meet the search criteria. The SearchRequest object's Criteria property should contain an instance of a TransactionSearchCriteria object.
+
+        You will only be able to filter search criteria on fields to which you have read access. For example, if you don't have read access to see the close date of a transaction and you set the close date range in the TransactionSearchCriteria object that range will be ignored.
+
+        The search could take longer to complete if the TransactionSearchCriteria.FullDetail flag is set to true as it has to completely populate the information in the Transaction object. If the flag is set to false, only a subset of the transaction data containing commonly used data is returned.
+
+        The SearchResult object's ResultSet property will contain a list of Transaction objects.
+      requestBody:
+        required: true
+        description: A SearchRequest object.
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/SearchRequest"
+      responses:
+        '200':
+          description: A SearchResult object.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SearchResult"
+components:
+  securitySchemes:
+    LoneWolfToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |-
+        Custom HMAC-signed authorization scheme used when calling resources that access your actual data:
+
+        ```
+        Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+        ```
+
+        A `Content-MD5` header is also required on every request (base 64 encoded MD5 hash of the request body, or of an empty string for requests without a body: `1B2M2Y8AsgTpgAmY7PhCfg==`).
+
+        The signature is the HMACSHA256 hash (seeded with your secret key) of `[HTTP Method]:[Resource URI]:[Date]:[Content-MD5]`. HMACSHA384 and HMACSHA512 are also supported by appending the algorithm to the scheme (e.g. `LoneWolfToken-HMACSHA512`).
+
+        See the Authentication, Creating a Request, and Creating the Signature sections of the introduction for full details, date format, and worked examples. A separate `LoneWolfKey` scheme exists for resources that deal with your API account; there is never a scenario where you would send more than one type of authorization scheme.
+  parameters:
+    MemberId:
+      name: memberId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the member.
+      schema:
+        type: string
+    ODataExpand:
+      name: "$expand"
+      in: query
+      required: false
+      description: Instructs the API to include a child object or collection in the
+        response. If omitted, ALL child objects and collections are returned. Pass
+        `$expand=` (empty) to return only the root object. See the OData Support section
+        of the introduction.
+      schema:
+        type: string
+    ODataFilter:
+      name: "$filter"
+      in: query
+      required: false
+      description: Filters data on properties related to the resource. Only Logical,
+        Arithmetic and Grouping operators are currently supported. No Canonical functions
+        are currently supported (contains, endswith, startswith, etc.).
+      schema:
+        type: string
+    ODataOrderBy:
+      name: "$orderby"
+      in: query
+      required: false
+      description: Orders the objects returned in the response by a property related
+        to the resource.
+      schema:
+        type: string
+    ODataSkip:
+      name: "$skip"
+      in: query
+      required: false
+      description: Skips the specified number of records before returning the results.
+        $orderby must be specified for $skip to be used.
+      schema:
+        type: integer
+    ODataTop:
+      name: "$top"
+      in: query
+      required: false
+      description: Returns the specified top number of records for the given query.
+        $orderby must be specified for $top to be used. The maximum number of objects
+        returned from any resource is 1,000. If not passed, $top=1000 is assumed.
+      schema:
+        type: integer
+        maximum: 1000
+  schemas:
+    Classification:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the classification.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF
+            installation. It will be blank for offices that are not synced with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this classification. This must be unique within
+            an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the classification (Listing, Selling, Agent Double
+            Ender, etc).
+        EndCount:
+          type: number
+          readOnly: true
+          description: The end count for the classification. For instance, if this
+            is an Agent Double Ender, the end count would be 2.0. If it's a Listing
+            classification, the end count would be 1.0.
+        InactiveDate:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+          description: The date the classification became inactive. (Nullable)
+    Condition:
+      type: object
+      description: 'A condition lookup value from the Conditions API. Note: transaction-level
+        conditions attached to a Transaction use the TransactionCondition schema.'
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the classification.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF
+            installation. It will be blank for offices that are not synced with brokerWOLF.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the condition.
+        InactiveDate:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+          description: The date the classification became inactive. (Nullable)
+    ContactType:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the contact type.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF
+            installation. It will be blank for offices that are not synced with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this contact type. This must be unique within an
+            LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the contact type (Buyer, Seller, Lawyer, Outside
+            Broker, etc).
+        CategoryCode:
+          type: string
+          readOnly: true
+          description: 'The category for the contact type. B: Business contact, C:
+            Client contact, E: External agent'
+        InactiveDate:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+          description: The date the contact type became inactive. (Nullable)
+    SourceOfBusiness:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the source of business.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF
+            installation. It will be blank for offices that are not synched with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this source of business. This must be unique within
+            an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the source of business (Newspaper, Referral, Website,
+            etc).
+        InactiveDate:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+          description: The date the source of business became inactive. (Nullable)
+    PropertyType:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the property type.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF
+            installation. It will be blank for offices that are not synced with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this property type. This must be unique within an
+            LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the property type (Duplex, Townhouse, Commercial,
+            etc).
+        Default:
+          type: boolean
+          readOnly: true
+          description: True if this should be the default property type for new transactions
+            and tiers.
+        ClassCode:
+          type: string
+          readOnly: true
+          description: 'The code for the class. R: Residential, C: Commercial'
+        Class:
+          type: string
+          readOnly: true
+          description: The name of the class (Commercial, Residential).
+        InactiveDate:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+          description: The date the property type became inactive. (Nullable)
+    Address:
+      type: object
+      required:
+      - City
+      - CountryCode
+      - Line1
+      - PostalCode
+      - ProvinceCode
+      - TypeCode
+      properties:
+        City:
+          type: string
+          maxLength: 50
+          description: The city.
+        Confidential:
+          type: boolean
+          description: True if the address is confidential.
+        Country:
+          type: string
+          readOnly: true
+          description: The name of the country. This field is read only.
+        CountryCode:
+          type: string
+          maxLength: 2
+          description: The two digit ISO code for the country.
+        Line1:
+          type: string
+          maxLength: 200
+          description: The first line for the address.
+        Line2:
+          type: string
+          maxLength: 200
+          description: The second line for the address.
+        Line3:
+          type: string
+          maxLength: 200
+          description: The third line for the address.
+        Line4:
+          type: string
+          maxLength: 200
+          description: The fourth line for the address.
+        PostalCode:
+          type: string
+          maxLength: 20
+          description: The unformatted postal or zip code.
+        Province:
+          type: string
+          readOnly: true
+          description: The name of the province or state. This field is read only.
+        ProvinceCode:
+          type: string
+          maxLength: 20
+          description: The province code or postal abbreviation of the province or
+            state.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of address. This field is read only.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of address. P: Physical, M: Mailing,
+            H: Home, B: Business, W: Work, O: Other'
+    EmailAddress:
+      type: object
+      required:
+      - Address
+      - TypeCode
+      properties:
+        Address:
+          type: string
+          maxLength: 100
+          description: The email address.
+        Confidential:
+          type: boolean
+          description: True if the email address is confidential.
+        Primary:
+          type: boolean
+          description: True if this is the primary email address.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of email address.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address. H: Home, B: Business,
+            W: Work, S: Secondary, O: Other'
+    PhoneNumber:
+      type: object
+      required:
+      - Number
+      - TypeCode
+      properties:
+        Confidential:
+          type: boolean
+          description: True if the phone number is confidential.
+        Extension:
+          type: string
+          maxLength: 5
+          description: The extension for the phone number.
+        Number:
+          type: string
+          maxLength: 20
+          description: The unformatted phone number.
+        Primary:
+          type: boolean
+          description: True if this is the primary phone number.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of phone number.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of phone number. A: Assistant, B: Business,
+            BF: Business Fax, CB: Callback, C: Company, X: Extension, H: Home, HF:
+            Home Fax, ISDN: ISDN, M: Mobile, P: Pager, R: Radio, T: Telex, TF: Toll
+            Free, TTY: TTY/TDD, O: Other, OF: Other Fax'
+    Website:
+      type: object
+      required:
+      - TypeCode
+      - Url
+      properties:
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of website.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of website. B: Blog, C: Community, FB:
+            Facebook, G: General, L: Linkedin, S: Sports, T: Tourism, TW: Twitter,
+            YT: YouTube'
+        Url:
+          type: string
+          maxLength: 100
+          description: The url of the website.
+    Integrations:
+      type: object
+      properties:
+        PartnerCode:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The code for the Partner. Usually the Partner's name.
+        Id:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The Id for the Partner's matching Member.
+    Office:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the office.
+        Name:
+          type: string
+          readOnly: true
+          description: The name.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF
+            installation. It will be blank for offices that are not synced with brokerWOLF.
+    MLSBoard:
+      type: object
+      properties:
+        MLSId:
+          type: string
+          readOnly: true
+          description: The MLS Id of the member for the MLS Board specified by the
+            MLSAreaId.
+        MLSAreaId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the MLS area.
+    PublicProfile:
+      type: object
+      properties:
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was modified.
+        Name:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The name of the public profile.
+        FirstName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The first name of the member.
+        MiddleName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The middle name of the member.
+        LastName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The last name of the member.
+        Title:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The title of the member.
+        Addresses:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/Address"
+          description: 'The collection of addresses for the member. Currently supported
+            address types: M: Mailing, P: Physical'
+        EmailAddresses:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/EmailAddress"
+          description: 'The collection of email addresses for the member. Currently
+            supported email address types: B: Business, S: Secondary'
+        PhoneNumbers:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/PhoneNumber"
+          description: The collection of phone numbers for the member.
+        Websites:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/Website"
+          description: The collection of websites for the member.
+    Member:
+      type: object
+      required:
+      - FirstName
+      - LastName
+      - Addresses
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The Lone Wolf Id of the member.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was modified.
+        MemberChangedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member or any associated record of the
+            member was modified.
+        FirstName:
+          type: string
+          maxLength: 50
+          description: The first name of the member.
+        MiddleName:
+          type: string
+          maxLength: 50
+          description: The middle name of the member.
+        LastName:
+          type: string
+          maxLength: 50
+          description: The last name of the member.
+        Number:
+          type: string
+          maxLength: 12
+          description: The number assigned to the member by its office.
+        Title:
+          type: string
+          maxLength: 100
+          description: The title of the member.
+        BirthDate:
+          type: string
+          format: date
+          description: The birth date of the member.
+        InactiveDate:
+          type: string
+          format: date
+          nullable: true
+          description: The date the member went inactive. (Nullable)
+        OfficeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the office to which the member belongs.
+            Required for creating only - it will be ignored when updating a member.
+        Office:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/Office"
+          description: The office object.
+        MLSBoards:
+          type: array
+          items:
+            "$ref": "#/components/schemas/MLSBoard"
+          description: A collection of the MLS boards to which the member belongs.
+        Addresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Address"
+          description: 'The collection of addresses for the member. Currently supported
+            address types: M: Mailing, P: Physical'
+        EmailAddresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/EmailAddress"
+          description: 'The collection of email addresses for the member. Currently
+            supported email address types: B: Business, S: Secondary'
+        PhoneNumbers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/PhoneNumber"
+          description: The collection of phone numbers for the member.
+        Websites:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Website"
+          description: The collection of websites for the member.
+        PublicProfiles:
+          type: array
+          items:
+            "$ref": "#/components/schemas/PublicProfile"
+          description: The collection of public profiles for the member.
+        MemberTypeId:
+          type: string
+          description: The Type of member (eg. Agent, Staff). Required for creating
+            only - it will be ignored when updating a member.
+        Suffix:
+          type: string
+          description: Suffix of the member.
+        Nickname:
+          type: string
+          description: The Nickname of the member.
+        LegalName:
+          type: string
+          description: Legal Name of the member.
+        Username:
+          type: string
+          description: The username of the member.
+        LoadingDocsUsername:
+          type: string
+          description: The loadingDOCS username of the member.
+        GenderCode:
+          type: string
+          description: The Gender of the member.
+        AnniversaryDate:
+          type: string
+          format: date
+          description: The Date of their Anniversary.
+        StartDate:
+          type: string
+          format: date
+          description: The Start Date of the member.
+        CommencementDate:
+          type: string
+          format: date
+          description: The Commencement Date of the member.
+        MovingWolfEnabled:
+          type: boolean
+          description: The movingWOLF subscription status of the member.
+        Integrations:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/Integrations"
+          description: The collection of partner integrations for the member.
+    MemberInOutStatus:
+      type: object
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The Lone Wolf Id of the member.
+        In:
+          type: boolean
+          description: True if the member is marked in. False otherwise. Required
+            when updating the In/Out status of a member.
+        Notes:
+          type: string
+          maxLength: 500
+          description: Quick notes about why the member is out.
+        DetailedNotes:
+          type: string
+          maxLength: 5000
+          description: More detailed notes about why the member is out.
+    Agent:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the agent.
+        OfficeId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the office the agent belongs to.
+        FirstName:
+          type: string
+          readOnly: true
+          description: The first name.
+        MiddleName:
+          type: string
+          readOnly: true
+          description: The middle name.
+        LastName:
+          type: string
+          readOnly: true
+          description: The last name.
+    AgentCommission:
+      type: object
+      required:
+      - AgentId
+      - EndCode
+      - EndCount
+      - Commission
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the agent commission. Required for updates
+            only. It will be ignored when creating a new agent commission.
+        AgentId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the agent to associate to this commission.
+            This is the same Id that would be used in the Members API.
+        TeamLeaderId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the agent's team leader. This is the same
+            Id that would be used in the Members API.
+        EndCode:
+          type: string
+          maxLength: 1
+          description: 'The code of the end or side for the commission. L: Listing,
+            S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        EndCount:
+          type: number
+          description: The end count for the tier.
+        CommissionPercentage:
+          type: number
+          readOnly: true
+          description: The percentage of the total commission for the tier. This is
+            a value between 0 and 1.
+        Commission:
+          type: number
+          description: The total commission for the agent for this tier.
+        Agent:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/Agent"
+          description: The agent getting this commission.
+        TeamLeader:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/Agent"
+          description: The team leader for this commission record.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the agent commission was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the agent commission was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    BusinessContact:
+      type: object
+      required:
+      - ContactTypeId
+      - EndCode
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the business contact for a specific transaction.
+            If you have the same business contact on different transactions, they
+            will have different Id values. Required for updates only. It will be ignored
+            when creating a new business contact.
+        CRMId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        CRMCompanyContactId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        FirstName:
+          type: string
+          maxLength: 200
+          description: The first name.
+        MiddleName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        LastName:
+          type: string
+          maxLength: 200
+          description: The last name.
+        ContactTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the contact type. This is an Id that is
+            retrieved from the contact types resource. Only ContactType objects with
+            TypeCode B should be used.
+        ContactType:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/ContactType"
+          description: The contact type. See the Contact Types API section for the
+            object definition.
+        EndCode:
+          type: string
+          maxLength: 1
+          description: 'The code of the end or side the business contact is used on.
+            L: Listing, S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        CompanyName:
+          type: string
+          maxLength: 200
+          description: The company for the business contact.
+        Addresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Address"
+          description: 'The list of addresses for the business contact. Currently
+            supported address types: B: Business (The contact''s business address).'
+        PhoneNumbers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/PhoneNumber"
+          description: 'The list of phone numbers for the business contact. Currently
+            supported phone number types: B: Business (The contact''s office phone
+            number), BF: Business Fax (The contact''s office fax number), H: Home
+            (The contact''s home number), M: Mobile (The contact''s mobile number)'
+        EmailAddresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/EmailAddress"
+          description: 'The list of email addresses for the business contact. Currently
+            supported email address types: B: Business (The contact''s business''s
+            email address), W: Work (The contact''s work email address)'
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the business contact was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the business contact was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    ClientContact:
+      type: object
+      required:
+      - ContactTypeId
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the client contact for a specific transaction.
+            If you have the same client contact on different transactions, they will
+            have different Id values. Required for updates only. This should be null
+            when creating a new client contact.
+        CRMId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        FirstName:
+          type: string
+          maxLength: 200
+          description: The first name.
+        MiddleName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        LastName:
+          type: string
+          maxLength: 200
+          description: The last name.
+        ContactTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the contact type. This is an Id that is
+            retrieved from the contact types resource. Only ContactType objects with
+            TypeCode C should be used.
+        ContactType:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/ContactType"
+          description: The contact type. See the Contact Types API section for the
+            object definition.
+        Title:
+          type: string
+          maxLength: 100
+          description: Not implemented yet.
+        Prefix:
+          type: string
+          maxLength: 20
+          description: Not implemented yet.
+        Suffix:
+          type: string
+          maxLength: 20
+          description: Not implemented yet.
+        CompanyName:
+          type: string
+          maxLength: 40
+          description: The name of the company for the client contact.
+        MarketingName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        NickName:
+          type: string
+          maxLength: 50
+          description: The nick name of the client contact.
+        LegalName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        FormerName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        GenderCode:
+          type: string
+          maxLength: 1
+          description: Not implemented yet.
+        Gender:
+          type: string
+          readOnly: true
+          description: Not implemented yet.
+        SourceOfBusinessId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the source of business. This is an Id that
+            is retrieved from the sources of business resource. Setting this value
+            to NULL will not clear the source of business for the client contact.
+            You must pass an empty string to clear the source of business.
+        SourceOfBusiness:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/SourceOfBusiness"
+          description: The source of business. See the Sources of Business API section
+            for the object definition.
+        Addresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Address"
+          description: 'The list of addresses for the client contact. Currently supported
+            address types: H: Home (The contact''s home address).'
+        PhoneNumbers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/PhoneNumber"
+          description: 'The list of phone numbers for the client contact. Currently
+            supported phone number types: B: Business (The contact''s work number),
+            H: Home (The contact''s home number), HF: Home Fax (The contact''s home
+            fax number), M: Mobile (The contact''s mobile number)'
+        EmailAddresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/EmailAddress"
+          description: 'The list of email addresses for the client contact. Currently
+            supported email address types: H: Home (The contact''s home email address).'
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the client contact was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the client contact was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+        SendMovingWolfEmails:
+          type: boolean
+          description: The movingWOLF status of the client contact.
+        ShouldReceiveMovingWolfEmails:
+          type: boolean
+          nullable: true
+          readOnly: true
+          description: The movingWOLF email subscription status of the client contact.
+            This field is not a database field and is calculated based on different
+            values. As such, it is not compatible with OData queries and will return
+            an error if an attempt is made to filter on it. (Nullable)
+        MovingWolfEmailsSendingAgentId:
+          type: integer
+          nullable: true
+          readOnly: true
+          description: The Agent ID of the Agent from which the movingWOLF emails
+            will be sent. This field is not a database field and is calculated based
+            on different values. As such, it is not compatible with OData queries
+            and will return an error if an attempt is made to filter on it. (Nullable)
+    TransactionCondition:
+      type: object
+      required:
+      - Description
+      description: |-
+        A condition attached to a transaction. Note: this differs from the Condition lookup object returned by the Conditions API.
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to handle the DueDate and ApprovedDate properties.
+      properties:
+        Id:
+          type: string
+          description: The Lone Wolf Id of the condition. Required for updates only.
+            It will be ignored when creating a new condition.
+        Description:
+          type: string
+          description: The description of the condition.
+        DueDate:
+          type: string
+          format: date
+          nullable: true
+          description: The date the condition must be met. (Nullable)
+        ApprovedDate:
+          type: string
+          format: date
+          nullable: true
+          description: The date the condition was approved. (Nullable)
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the condition was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the condition was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    ExternalAgent:
+      type: object
+      required:
+      - ContactTypeId
+      - EndCode
+      - AddressTypeCode
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the external agent for a specific transaction
+            tier. If you have the same external agent on different transaction tiers,
+            they will have different Id values. Please see ExternalAgentCommission.ExternalAgentId
+            for information on why this is not required.
+        CRMId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        CRMCompanyContactId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        FirstName:
+          type: string
+          maxLength: 200
+          description: The first name.
+        MiddleName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        LastName:
+          type: string
+          maxLength: 200
+          description: The last name.
+        ContactTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the contact type. This is an Id that is
+            retrieved from the contact types resource. Only ContactType objects with
+            TypeCode E should be used.
+        ContactType:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/ContactType"
+          description: The contact type. See the Contact Types API section for the
+            object definition.
+        EndCode:
+          type: string
+          maxLength: 1
+          description: 'The code of the end or side the external agent is used on.
+            L: Listing, S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        CompanyName:
+          type: string
+          maxLength: 200
+          description: The business contact's company.
+        Addresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Address"
+          description: 'The list of addresses for the external agent. Currently supported
+            address types: B: Business (The agent''s business address)'
+        PhoneNumbers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/PhoneNumber"
+          description: 'The list of phone numbers for the external agent. Currently
+            supported phone number types: B: Business (The agent''s office phone number),
+            BF: Business Fax (The agent''s office fax number), H: Home (The agent''s
+            home number), M: Mobile (The agent''s mobile number)'
+        EmailAddresses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/EmailAddress"
+          description: 'The list of email addresses for the external agent. Currently
+            supported email address types: B: Business (The agent''s office''s email
+            address), W: Work (The agent''s work email address)'
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+        AddressTypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address for the external agent.
+            B: Business'
+    ExternalAgentCommission:
+      type: object
+      required:
+      - EndCode
+      - Commission
+      - ExternalAgent
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the external agent commission record. Required
+            for updates only. It will be ignored when creating a new external agent
+            commission.
+        ExternalAgentId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the external agent. ExternalAgentCommission
+            objects can only have one ExternalAgent object associated to them making
+            the ExternalAgentId column irrelevant.
+        EndCode:
+          type: string
+          description: 'The code of the end or side for the commission. L: Listing,
+            S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        Commission:
+          type: number
+          description: The total commission for the external agent for the associated
+            transaction tier.
+        ExternalAgent:
+          allOf:
+          - "$ref": "#/components/schemas/ExternalAgent"
+          description: The external agent getting this commission. The ExternalAgent
+            property is required when creating a new external agent commission. If
+            changes need to be made to the external agent associated to the external
+            agent commission, then include the ExternalAgent property when updating
+            the ExternalAgentCommission object. If you do not need to update the external
+            agent leave the ExternalAgent property NULL as you normally would.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the commission was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the commission was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    MLSAddress:
+      type: object
+      required:
+      - StreetNumber
+      - StreetName
+      - City
+      - ProvinceCode
+      - PostalCode
+      - CountryCode
+      properties:
+        StreetNumber:
+          type: string
+          maxLength: 12
+          description: The street number.
+        StreetName:
+          type: string
+          maxLength: 50
+          description: The street name.
+        StreetDirection:
+          type: string
+          maxLength: 20
+          description: The street direction.
+        Unit:
+          type: string
+          maxLength: 50
+          description: The unit or building number.
+        City:
+          type: string
+          maxLength: 50
+          description: The city.
+        ProvinceCode:
+          type: string
+          maxLength: 20
+          description: The province code or postal abbreviation of the province or
+            state.
+        Province:
+          type: string
+          readOnly: true
+          description: The name of the province or state.
+        PostalCode:
+          type: string
+          maxLength: 15
+          description: The unformatted postal or zip code. If this is passed in to
+            the API with formatting, the formatting will be removed before saving
+            to the database. It will be returned unformatted.
+        CountryCode:
+          type: string
+          maxLength: 2
+          description: The two character ISO code for the country.
+        Country:
+          type: string
+          readOnly: true
+          description: The name of the country.
+    Task:
+      type: object
+      description: Tasks cannot currently be updated by the Transactions API. They
+        will be ignored in any resource call to create or update a transaction.
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the task.
+        LoadingDocsTaskId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the loadingDOCS task.
+        Title:
+          type: string
+          readOnly: true
+          description: The title of the task.
+        DueDate:
+          type: string
+          format: date
+          readOnly: true
+          description: The date the task must be completed by.
+        Reminder:
+          type: boolean
+          readOnly: true
+          description: True if a reminder has been setup for this task.
+        ReminderSentTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the reminder was sent.
+        CompletedDate:
+          type: string
+          format: date
+          readOnly: true
+          description: The date the task was completed.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the task was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the task was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    Tier:
+      type: object
+      required:
+      - ClassificationId
+      - SellPrice
+      - CloseDate
+      - AgentCommissions
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the tier. Required for updates only. It
+            will be ignored when creating a new tier.
+        Name:
+          type: string
+          maxLength: 1
+          description: The name of the tier.
+        ClassificationId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the classification. This is an Id that
+            is retrieved from the classifications resource.
+        Classification:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/Classification"
+          description: The classification. See the Classifications API section for
+            the object definition.
+        StatusCode:
+          type: string
+          readOnly: true
+          description: 'The code for the status. N: Open, A: Closed, B: Fallen through
+            because of a condition, C: Fallen through'
+        Status:
+          type: string
+          readOnly: true
+          description: The name of the status.
+        SellPrice:
+          type: number
+          description: The final sale price for the tier.
+        CloseDate:
+          type: string
+          format: date
+          description: The close date for the tier.
+        SellingCommission:
+          type: number
+          readOnly: true
+          description: The total selling commission for the tier.
+        BuyingCommission:
+          type: number
+          readOnly: true
+          description: The total buying commission for the tier.
+        TotalCommission:
+          type: number
+          readOnly: true
+          description: The total commission for the tier.
+        AgentCommissions:
+          type: array
+          items:
+            "$ref": "#/components/schemas/AgentCommission"
+          description: The list of commissions for the tier. At least 1 is required.
+        ExternalAgentCommissions:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ExternalAgentCommission"
+          description: The list of external agent commissions for the tier.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the tier was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the tier was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    Transaction:
+      type: object
+      required:
+      - PropertyTypeId
+      - ClassificationId
+      - CloseDate
+      - OfferDate
+      - SellPrice
+      - MLSAddress
+      - Tiers
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the transaction. Required for updates only.
+            It will be ignored when creating a new transaction.
+        Number:
+          type: string
+          maxLength: 15
+          description: The transaction number. In most cases, the transaction number
+            will be automatically generated. This is only required if the primary
+            office for the trade allows manual transaction number entry and it has
+            not setup a sequence for transaction numbers.
+        MLSNumber:
+          type: string
+          maxLength: 15
+          description: The MLS number for the listing associated to the transaction.
+        PropertyTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the property type. This is an Id that is
+            retrieved from the property types resource.
+        PropertyType:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/PropertyType"
+          description: The property type. See the Property Types API section for the
+            object definition.
+        ClassificationId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the classification. This is an Id that
+            is retrieved from the classifications resource.
+        Classification:
+          readOnly: true
+          allOf:
+          - "$ref": "#/components/schemas/Classification"
+          description: The classification. See the Classifications API section for
+            the object definition.
+        StatusCode:
+          type: string
+          readOnly: true
+          description: 'The code for the status. N: Open, A: Closed, P: Partially
+            closed (not all but at least one tier has been finalized), B: Fallen through
+            because of a condition, C: Fallen through'
+        Status:
+          type: string
+          readOnly: true
+          description: The name of the status. This field is read only.
+        EntryDate:
+          type: string
+          format: date
+          description: The date the transaction was entered. This is not the date
+            that the transaction record was created (though in most cases, it will
+            be the same value). This is a client specified date. If not specified,
+            then the current date is used.
+        CloseDate:
+          type: string
+          format: date
+          description: The date the transaction closed.
+        OfferDate:
+          type: string
+          format: date
+          description: The date an offer was made on the transaction.
+        SellPrice:
+          type: number
+          description: The final sale price.
+        LegalDescription:
+          type: string
+          maxLength: 100
+          description: Any legal notices for the transaction.
+        MLSAddress:
+          allOf:
+          - "$ref": "#/components/schemas/MLSAddress"
+          description: The MLS style address for the transaction. The $expand OData
+            parameter will have no effect on this property; it will always be returned
+            with the transaction data.
+        Tiers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Tier"
+          description: The list of different tiers for the transactions. At least
+            1 is required.
+        ClientContacts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ClientContact"
+          description: The list of client contacts for the transaction.
+        BusinessContacts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/BusinessContact"
+          description: The list of business contacts for the transaction.
+        Conditions:
+          type: array
+          items:
+            "$ref": "#/components/schemas/TransactionCondition"
+          description: The list of conditions for the transaction.
+        Task:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/Task"
+          description: The list of tasks for the transaction.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the transaction was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the transaction was last modified.
+        TransactionChangedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the transaction or any of its associated
+            objects were last changed. For instance, if a commission was added to
+            a tier, the TransactionChangedTimestamp would hold the time that the commission
+            was added. Any change to any object associated to the transaction will
+            update this field. It is very useful when querying for transactions that
+            have been modified since a particular date and time.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    TransactionSearchCriteria:
+      type: object
+      properties:
+        Numbers:
+          type: array
+          items:
+            type: string
+          description: The list of transaction numbers.
+        AgentIds:
+          type: array
+          items:
+            type: string
+          description: The collection of agentIds (memberIds) that are associated
+            to the commissions for the transaction.
+        OfficeIds:
+          type: array
+          items:
+            type: string
+          description: The collection of officeIds. If a transaction is associated
+            to an agent that is in an office with an Id in this collection, then the
+            transaction will be included in the result set.
+        MLSNumbers:
+          type: array
+          items:
+            type: string
+          description: The list of MLS numbers.
+        TransactionChangedTimestamp:
+          allOf:
+          - "$ref": "#/components/schemas/TimestampRange"
+          description: The timestamp range of transaction changed timestamps.
+        EntryDate:
+          allOf:
+          - "$ref": "#/components/schemas/DateRange"
+          description: The date range of entry dates.
+        CloseDate:
+          allOf:
+          - "$ref": "#/components/schemas/DateRange"
+          description: The date range of close dates.
+        OfferDate:
+          allOf:
+          - "$ref": "#/components/schemas/DateRange"
+          description: The date range of offer dates.
+        SellPrice:
+          allOf:
+          - "$ref": "#/components/schemas/NumericRange"
+          description: The numeric range of sell prices.
+        StatusCodes:
+          type: array
+          items:
+            type: string
+          description: The list of status codes.
+        ClassCodes:
+          type: array
+          items:
+            type: string
+          description: The list of class codes.
+        ClassificationIds:
+          type: array
+          items:
+            type: string
+          description: The list of classification codes.
+        PropertyTypeIds:
+          type: array
+          items:
+            type: string
+          description: The list of property type codes.
+        EndCode:
+          type: string
+          description: The end (or side). This doesn't have much use alone. It should
+            typically be used in conjunction with other criteria dealing with commission
+            records. For instance, AgentIds.
+        FullDetail:
+          type: boolean
+          default: false
+          description: True if the transaction should be fully populated when it is
+            returned. The default is False.
+        SearchOrders:
+          type: array
+          items:
+            "$ref": "#/components/schemas/SearchOrder"
+          description: 'The list of search order columns. This is used to order the
+            search results. The SearchOrder.Property property should be one of the
+            following. 1: Number, 2: MLS Number, 3: Entry Date, 4: Close Date, 5:
+            Offer Date, 6: Sell Price'
+    ClientError:
+      type: object
+      description: The ClientError object is used to give detailed information whenever
+        an API request fails. If you perform a request that returns with an error
+        and the response does not contain a ClientError object it is a good indication
+        that you are using the wrong URL. See the Error Codes section of the introduction
+        for the full list of Lone Wolf Error Codes.
+      properties:
+        Code:
+          type: integer
+          readOnly: true
+          description: The Lone Wolf Error Code. See the Error Codes section of the
+            introduction.
+        Message:
+          type: string
+          readOnly: true
+          description: The message that corresponds to the Code value.
+        Details:
+          type: string
+          readOnly: true
+          description: The exact problem that occurred to give this error response.
+    DateRange:
+      type: object
+      description: The DateRange object is used to compare Date fields, not Timestamp
+        fields. To compare Timestamp fields, use TimestampRange.
+      properties:
+        From:
+          type: string
+          format: date
+          nullable: true
+          description: The minimum date for the given range. If NULL then there is
+            no lower bound for the date range. (Nullable)
+        To:
+          type: string
+          format: date
+          nullable: true
+          description: The maximum date for the given range. If NULL then there is
+            no upper bound for the date range. (Nullable)
+    NumericRange:
+      type: object
+      properties:
+        From:
+          type: number
+          nullable: true
+          description: The minimum value for the given range. If NULL then there is
+            no lower bound for the numeric range. (Nullable)
+        To:
+          type: number
+          nullable: true
+          description: The maximum value for the given range. If NULL then there is
+            no upper bound for the numeric range. (Nullable)
+    TimestampRange:
+      type: object
+      description: The TimestampRange object is used to compare Timestamp fields,
+        not Date fields. To compare Date fields, use DateRange.
+      properties:
+        From:
+          type: string
+          format: date-time
+          nullable: true
+          description: The minimum value for the given range. If NULL then there is
+            no lower bound for the timestamp range. (Nullable)
+        To:
+          type: string
+          format: date-time
+          nullable: true
+          description: The maximum value for the given range. If NULL then there is
+            no upper bound for the timestamp range. (Nullable)
+    SearchOrder:
+      type: object
+      properties:
+        Property:
+          type: integer
+          description: The property within the Object contained in the SearchResult
+            ResultSet property to order the results on. This value will differ depending
+            on which resource is being searched. Please see the individual search
+            function documentation to set this value.
+        Ascending:
+          type: boolean
+          description: True if the results should be returned in ascending order.
+    SearchRequest:
+      type: object
+      required:
+      - Criteria
+      properties:
+        PageSize:
+          type: integer
+          description: 'The number of objects to return per page in the response.
+            The maximum value for PageSize is currently 1000. If you pass 0 in for
+            this parameter, the maximum PageSize value will be used. NOTE: The PageSize
+            returned in the SearchResponse object is not guaranteed to be equal to
+            this value even if it is less than or equal to the max page size. Please
+            use the PageSize value in the SearchResponse object when processing the
+            response. Paging is currently not implemented; therefore, the PageSize
+            value has no bearing on the response.'
+        Limit:
+          type: integer
+          description: The maximum number of objects to return in the results. This
+            value can go across pages. For instance, if you set PageSize to 10 and
+            Limit to 25 and the search finds 50 records, the top 25 will be returned
+            on 3 different pages.
+        Criteria:
+          allOf:
+          - "$ref": "#/components/schemas/TransactionSearchCriteria"
+          description: The object holding the criteria for the search. This object
+            will differ depending on the search resource that is being called. For
+            instance, a Transactions search request would set this property to a TransactionSearchCriteria
+            object.
+    SearchResult:
+      type: object
+      description: |-
+        Paging is currently not implemented. Therefore PageSize will always be the number of objects in the ResultSet and TotalPages will always be 1. Write your client application as if paging were implemented. Once it is implemented your application should work as if paging were implemented all along.
+
+        If the results all fit onto 1 page then the Id property will be NULL, PageNumber will be 1 and TotalPages will be 1. PageSize will still contain the value of the page size that would have been used if more pages were needed.
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Id of the search. This will be used when getting the next
+            page of results for a previous search.
+        PageSize:
+          type: integer
+          readOnly: true
+          description: The page size for the response. This can also be thought of
+            as the number of objects that will be returned in the ResultSet collection
+            if it requires a full page.
+        PageNumber:
+          type: integer
+          readOnly: true
+          description: The page number for the response.
+        TotalPages:
+          type: integer
+          readOnly: true
+          description: The total number of pages in the search results.
+        TotalResults:
+          type: integer
+          readOnly: true
+          description: The total number of results across all pages.
+        ResultSet:
+          type: array
+          readOnly: true
+          items:
+            "$ref": "#/components/schemas/Transaction"
+          description: The list of objects for the search result. The type of objects
+            returned depend on which search function was called. For instance, the
+            Transaction Search function will return Transaction objects.

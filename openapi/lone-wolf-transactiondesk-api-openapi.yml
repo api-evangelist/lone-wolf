@@ -1,0 +1,2091 @@
+---
+openapi: 3.0.3
+info:
+  title: TransactionDesk Partner API
+  description: |-
+    Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.
+
+    ## Authorization
+
+    ### Authorization Code Flow
+
+    1. Redirect the user to the OAuth authorization URL:
+       `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`
+    2. The user logs in via the Lonewolf Authentication system.
+    3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.
+    4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.
+    5. Include the access token in the `Authorization: Bearer <token>` header on every request.
+
+    ### Client Credentials Flow
+
+    For enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.
+
+    ## Universal Global Fields
+
+    Below is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.
+
+    ### 1. Property Information
+
+    #### Address
+    - `streetNumber`
+    - `streetName`
+    - `city`
+    - `county`
+    - `state`
+    - `zipCode`
+
+    #### Subdivision and Parcel Information
+    - `subDivision`
+    - `lotNumber`
+    - `block`
+    - `pageNumber`
+    - `platBook`
+
+    #### Property Characteristics
+    - `yearBuilt`
+    - `zoningClass`
+    - `schoolDistrict`
+
+    #### Tax and Legal Information
+    - `taxNumber`
+    - `township`
+    - `legalDescription`
+
+    ### 2. Listing Information
+
+    #### Listing Identification
+    - `mlsNumber`
+
+    #### Pricing
+    - `listPrice`
+
+    #### Listing Timeline
+    - `expirationDate`
+
+    #### Property Inclusions and Exclusions
+    - `propertyIncludes`
+    - `propertyExcludes`
+    - `leasedItems`
+
+    ### 3. Purchase Information
+
+    #### Pricing
+    - `purchasePrice`
+
+    #### Offer Timeline
+    - `offerDate`
+    - `offerExpirationDate`
+    - `offerAcceptanceDate`
+
+    #### Financing Timeline
+    - `applicationDate`
+    - `approvalDate`
+
+    #### Deposits
+    - `depositAmount`
+    - `additionalDepositAmount`
+    - `additionalDepositDate`
+
+    #### Transaction Milestones
+    - `fundingDate`
+    - `possessionDate`
+    - `closingDate`
+  version: '2.0'
+servers:
+- url: https://api.pre.transactiondesk.com
+security:
+- bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data:
+          nullable: true
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: TransactionGUID used to uniquely identify this specific Transaction
+        name:
+          type: string
+          example: 1916 Glenarbor Way
+          description: Name of the transaction file as it appears in the application
+        statusId:
+          type: string
+          format: uuid
+          example: 6d6d2bfe-b166-4f2c-9027-629f09a35b79
+          description: TransactionStatusGUID. See Glossary for values.
+        typeId:
+          type: string
+          format: uuid
+          example: 2d9d021d-beb7-456d-9cae-6ce5486ac3f5
+          description: TransactionTypeGUID. See Glossary for values.
+        ownerId:
+          type: string
+          format: uuid
+          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
+          description: OwnerID of this Transaction File
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:49.143+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:52.27+00:00'
+    TransactionDetails:
+      type: object
+      properties:
+        property:
+          type: object
+          properties:
+            streetName:
+              type: string
+              example: Wellington Rd.
+            streetNumber:
+              type: string
+              example: '200'
+            state:
+              type: string
+              example: 'ON'
+            city:
+              type: string
+              example: London
+            county:
+              type: string
+              example: Middlesex
+            zipCode:
+              type: string
+              example: N6E 38B
+            subDivision:
+              type: string
+              example: White Oaks
+            lotNumber:
+              type: string
+              example: '8'
+            block:
+              type: string
+              example: '20'
+            pageNumber:
+              type: string
+              example: '5'
+            platBook:
+              type: string
+              example: '33'
+            yearBuilt:
+              type: integer
+              example: 1980
+            schoolDistrict:
+              type: string
+              example: Aquinis School District
+            zoningClass:
+              type: string
+              example: Residential
+            taxNumber:
+              type: string
+              example: 112-1231-999
+            township:
+              type: string
+              example: Essex
+            legalDescription:
+              type: string
+              example: PL ; Lot ; Bl ; DL ; LD ; S ; Twn ; Rge ; M ; Lot A, Section
+                75, Victoria District, Plan 42316
+        listing:
+          type: object
+          properties:
+            mlsNumber:
+              type: string
+              example: '421126'
+            listPrice:
+              type: number
+              example: 200000
+            expirationDate:
+              type: string
+              format: date-time
+              example: '2012-04-23T18:25:43.51'
+            propertyIncludes:
+              type: string
+              example: Dishwasher, Stove, Fridge
+            propertyExcludes:
+              type: string
+              example: Washer, Dryer
+            leasedItems:
+              type: string
+              example: Hot Water Tank
+        purchase:
+          type: object
+          properties:
+            purchasePrice:
+              type: number
+              example: 190000
+            offerDate:
+              type: string
+              format: date-time
+            offerExpirationDate:
+              type: string
+              format: date-time
+            offerAcceptanceDate:
+              type: string
+              format: date-time
+            applicationDate:
+              type: string
+              format: date-time
+            approvalDate:
+              type: string
+              format: date-time
+            depositAmount:
+              type: number
+              example: 50000
+            additionalDepositAmount:
+              type: number
+              example: 10000
+            additionalDepositDate:
+              type: string
+              format: date-time
+            fundingDate:
+              type: string
+              format: date-time
+            possessionDate:
+              type: string
+              format: date-time
+            closingDate:
+              type: string
+              format: date-time
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: DocumentGUID
+        fileTypeId:
+          type: string
+          format: uuid
+          example: 6db4d39b-d96d-4cfd-b97e-0c9cd1a176f9
+          description: File type GUID. See Glossary for values.
+        documentName:
+          type: string
+          example: 1916 Glenarbor Way
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:49.143+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:52.27+00:00'
+    DocumentWithBinary:
+      allOf:
+      - "$ref": "#/components/schemas/Document"
+      - type: object
+        properties:
+          binary:
+            type: string
+            description: Base64 encoded document binary
+            example: JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9U....
+    TransactionContact:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: ContactGUID
+        transactionId:
+          type: string
+          format: uuid
+          example: 34bfff2a-d186-48c6-b09d-6c15232cfe26
+          description: TransactionGUID this contact is associated with
+        preferredName:
+          type: string
+          example: Bobby Jones
+          description: Preferred name; overrides firstName/lastName on real estate
+            forms
+        firstName:
+          type: string
+          example: Robert
+        middleName:
+          type: string
+          example: P
+        lastName:
+          type: string
+          example: Jones
+        fullAddress:
+          type: string
+          example: 100 Wellington St.
+          description: Street number and name
+        city:
+          type: string
+          example: London
+        state:
+          type: string
+          example: 'ON'
+        zipCode:
+          type: string
+          example: N6E B3B
+        phone:
+          type: string
+          example: 519-000-0000
+        fax:
+          type: string
+          example: 519-000-0001
+        cell:
+          type: string
+          example: 519-000-0002
+        email:
+          type: string
+          format: email
+          example: bobbyjones@fakeemail.com
+        company:
+          type: string
+          example: Bobby Jones Real Estate
+        typeId:
+          type: string
+          format: uuid
+          example: 918753cd-df9d-4a8c-b9c5-2d0115835ea0
+          description: Contact type GUID. See Glossary for values.
+    ContactType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 3820856a-faef-477d-8d6a-8a8e25fc9522
+          description: Unique identifier for this contact type
+        name:
+          type: string
+          example: Listing Agent
+        ownerId:
+          type: string
+          format: uuid
+          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
+          description: Owner of this type (Global, Association, Office, or Personal
+            level)
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2020-04-14T15:54:53.207'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2020-04-14T15:54:53.207'
+    TransactionType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 8bd47056-64b5-41dd-ad97-53f6a7debe80
+          description: Unique identifier for this transaction type
+        name:
+          type: string
+          example: Commercial Lease
+        ownerId:
+          type: string
+          format: uuid
+          example: 476ba212-d96d-49e5-82df-3f474d9e9188
+          description: Owner of this type (Global, Association, Office, or Personal
+            level)
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2012-01-18T20:42:38.737'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2012-01-18T20:42:38.737'
+    TransactionStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: ee349fd8-5842-420f-84a2-9b80b8d9632e
+          description: Unique identifier for this transaction status
+        name:
+          type: string
+          example: Active
+        ownerId:
+          type: string
+          format: uuid
+          example: 476ba212-d96d-49e5-82df-3f474d9e9188
+          description: Owner of this status (Global, Association, Office, or Personal
+            level)
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2008-03-02T04:26:50.607+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2008-03-02T04:26:50.607+00:00'
+    SSOLink:
+      type: object
+      properties:
+        link:
+          type: string
+          example: https://td2.transactiondesk.com/external/entry.ashx?i=28403062-47a4-4a7a-ae3d-b3f64decd32e
+          description: One-time-use single sign on link
+    Metadata:
+      type: object
+      properties:
+        defaultTake:
+          type: integer
+          example: 10
+          description: Default number of records returned when not using a filter
+        maxTake:
+          type: integer
+          example: 100
+          description: Maximum records returnable using the $take filter
+        defaultOrder:
+          type: string
+          example: Name
+          description: Default sort order
+    MetadataProperty:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Id
+          description: Attribute name returned in the payload
+        type:
+          type: string
+          example: Guid
+          description: Attribute type (Guid, String, DateTimeOffset, etc.)
+        canFilter:
+          type: boolean
+          example: true
+          description: Whether this attribute can be filtered
+        canSort:
+          type: boolean
+          example: true
+          description: Whether this attribute can be sorted
+        filterType:
+          type: string
+          example: Equals
+          description: Whether filtering does a contains search or exact match
+    FormLibrary:
+      type: object
+      properties:
+        folderId:
+          type: integer
+          example: 123
+          description: Form-library folder identifier
+        name:
+          type: string
+          example: State Forms
+          description: Name of the form library folder
+        description:
+          type: string
+          example: State form library
+          description: Description of the form library folder
+    FormLibraryForm:
+      type: object
+      properties:
+        formLib:
+          type: string
+          example: ABC123
+          description: Form identifier within the folder
+        name:
+          type: string
+          example: Purchase Agreement
+          description: Name of the form
+        description:
+          type: string
+          example: Purchase Agreement form
+          description: Description of the form
+    TransactionForm:
+      type: object
+      description: |-
+        Represents a form instance associated with a transaction.
+
+        **Fields:**
+
+        | Field | Type | Description |
+        |---|---|---|
+        | id | GUID | Transaction form instance identifier |
+        | formName | string | Name of the form |
+        | formLib | string | Form-library identifier |
+        | dateCreated | DateTimeOffset | Creation timestamp |
+        | lastModified | DateTimeOffset | Last modification timestamp |
+
+        **Expected Identifiers:**
+
+        | Identifier | Type | Description |
+        |---|---|---|
+        | transactionId | GUID | Transaction identifier |
+        | id | GUID | Transaction form instance identifier |
+        | formLib | string | Form-library identifier |
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 7f0f7fc1-8a2f-4e3d-b23f-3b6d2f1f9a11
+          description: Transaction form instance identifier
+        formName:
+          type: string
+          example: Purchase Agreement
+          description: Name of the form
+        formLib:
+          type: string
+          example: ABC123
+          description: Form-library identifier
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2026-05-26T12:00:00Z'
+          description: Creation timestamp
+        lastModified:
+          type: string
+          format: date-time
+          example: '2026-05-26T12:05:00Z'
+          description: Last modification timestamp
+paths:
+  "/oauth/token":
+    post:
+      summary: Exchange for Access Token
+      description: |-
+        Exchange an authorization code or client credentials for a bearer access token.
+
+        - Use `grant_type=authorization_code` along with the `code` and `redirect_uri` from the Authorization Code flow.
+        - Use `grant_type=client_credentials` for the Client Credentials flow (no user redirect required).
+      security: []
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - authorization_code
+                  - client_credentials
+                  example: authorization_code
+                client_id:
+                  type: string
+                  example: Lonewolf
+                  description: Client ID provided by Lonewolf
+                client_secret:
+                  type: string
+                  example: LonewolfSecret
+                  description: Client Secret provided by Lonewolf
+                code:
+                  type: string
+                  example: a29fc587-96f3-4fa2-a4ad-c42fef5141f7
+                  description: Authorization code from step 3 (authorization_code
+                    flow only). One-time use, expires in 10 minutes.
+                redirect_uri:
+                  type: string
+                  example: https://www.example.com
+                  description: Must match the redirect_uri used in step 1 (authorization_code
+                    flow only)
+      responses:
+        '200':
+          description: Access token issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  token_type:
+                    type: string
+                    example: bearer
+  "/v2/transactions":
+    get:
+      summary: Get All Transactions
+      description: Returns a full list of transactions owned by the authenticated
+        user. Supports filter params ($orderDir, $skip, $take, $orderBy).
+      tags:
+      - Transaction Summary
+      parameters:
+      - in: query
+        name: "$orderDir"
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+        description: Sort direction
+      - in: query
+        name: "$skip"
+        schema:
+          type: integer
+        description: Number of records to skip (pagination)
+      - in: query
+        name: "$take"
+        schema:
+          type: integer
+          maximum: 100
+        description: Number of records to return (max 100)
+      - in: query
+        name: "$orderBy"
+        schema:
+          type: string
+        description: Field to order by
+      responses:
+        '200':
+          description: List of transactions returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Transaction"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+    post:
+      summary: Create a Transaction
+      description: Creates a new transaction file in the authenticated user's account.
+      tags:
+      - Transaction Summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Name of Property
+                  description: Name of the transaction file
+                typeId:
+                  type: string
+                  format: uuid
+                  example: 805355ec-7f7d-413e-986a-c767ea0632da
+                  description: TransactionTypeGUID. See Glossary for values.
+                statusId:
+                  type: string
+                  format: uuid
+                  example: 805355ec-7f7d-413e-986a-c767ea0632da
+                  description: TransactionStatusGUID. See Glossary for values.
+      responses:
+        '200':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 805355ec-7f7d-413e-986a-c767ea0632da
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/{id}":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get a Specific Transaction
+      description: Returns a specific transaction file owned by the authenticated
+        user.
+      tags:
+      - Transaction Summary
+      responses:
+        '200':
+          description: Transaction returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Transaction"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update a Transaction
+      description: Updates part or all of a specific transaction file.
+      tags:
+      - Transaction Summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                statusId:
+                  type: string
+                  format: uuid
+                typeId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Transaction updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    delete:
+      summary: Delete a Transaction
+      description: Deletes a specific transaction file owned by the authenticated
+        user.
+      tags:
+      - Transaction Summary
+      responses:
+        '200':
+          description: Transaction deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/{id}/details":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get Transaction Details
+      description: 'Returns property details associated with a specified transaction
+        file. Details are divided into three sections: property information, listing
+        information, and sale/purchase information.'
+      tags:
+      - Transaction Summary
+      responses:
+        '200':
+          description: Transaction details returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TransactionDetails"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update Transaction Details
+      description: Updates part or all of the property details associated with a specified
+        transaction file. You can update any combination of property, listing, and
+        purchase fields.
+      tags:
+      - Transaction Summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TransactionDetails"
+      responses:
+        '200':
+          description: Transaction details updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/{id}/documents":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get All Documents
+      description: Returns a full list of documents associated with a specific transaction.
+      tags:
+      - Transaction Documents
+      parameters:
+      - in: query
+        name: "$orderDir"
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - in: query
+        name: "$skip"
+        schema:
+          type: integer
+      - in: query
+        name: "$take"
+        schema:
+          type: integer
+          maximum: 100
+      - in: query
+        name: "$orderBy"
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of documents returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Document"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+    post:
+      summary: Upload a Document
+      description: Uploads a new document to a specific transaction. The document
+        binary must be Base64 encoded.
+      tags:
+      - Transaction Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - documentName
+              - binary
+              - fileTypeId
+              properties:
+                documentName:
+                  type: string
+                  example: Purchase Agreement
+                binary:
+                  type: string
+                  description: Base64 encoded document binary
+                fileTypeId:
+                  type: string
+                  format: uuid
+                  description: File type GUID. See Glossary for values.
+      responses:
+        '200':
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/{transactionId}/documents/{documentId}":
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    - in: path
+      name: documentId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: DocumentGUID
+    get:
+      summary: Get a Specific Document
+      description: Returns the document binary of a specific file within a transaction.
+      tags:
+      - Transaction Documents
+      responses:
+        '200':
+          description: Document returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DocumentWithBinary"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update a Document
+      description: Updates the name of a specific document within a transaction.
+      tags:
+      - Transaction Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                documentName:
+                  type: string
+      responses:
+        '200':
+          description: Document updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    delete:
+      summary: Delete a Document
+      description: Deletes a specific document within a transaction.
+      tags:
+      - Transaction Documents
+      responses:
+        '200':
+          description: Document deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/{id}/contacts":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get All Transaction Contacts
+      description: Returns a list of all contacts associated with a specific transaction.
+      tags:
+      - Transaction Contacts
+      responses:
+        '200':
+          description: List of contacts returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TransactionContact"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+    post:
+      summary: Create a Transaction Contact
+      description: 'Creates a new contact associated with a specific transaction.
+        Required fields: `firstName`, `lastName`, `typeId`, `transactionId`.'
+      tags:
+      - Transaction Contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TransactionContact"
+      responses:
+        '200':
+          description: Contact created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: d70cf831-53ca-41b4-9214-aa6acce37718
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/{transactionId}/contacts/{contactId}":
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    - in: path
+      name: contactId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ContactGUID
+    get:
+      summary: Get a Specific Transaction Contact
+      description: Returns a specific contact associated with a transaction.
+      tags:
+      - Transaction Contacts
+      responses:
+        '200':
+          description: Contact returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TransactionContact"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update a Transaction Contact
+      description: Updates one or more attributes of a specific transaction contact.
+      tags:
+      - Transaction Contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TransactionContact"
+      responses:
+        '200':
+          description: Contact updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    delete:
+      summary: Delete a Transaction Contact
+      description: Deletes a specific contact from a transaction.
+      tags:
+      - Transaction Contacts
+      responses:
+        '200':
+          description: Contact deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/contacts/types":
+    get:
+      summary: Get All Transaction Contact Types
+      description: Returns all transaction contact types the authenticated user is
+        entitled to see. A user can see Global, Association, Office, and Personal
+        level types, but can only PATCH/DELETE their own.
+      tags:
+      - Transaction Contact Types
+      responses:
+        '200':
+          description: List of contact types returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ContactType"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+    post:
+      summary: Create a Transaction Contact Type
+      description: Creates a new transaction contact type for the authenticated user.
+      tags:
+      - Transaction Contact Types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Home Inspector
+      responses:
+        '200':
+          description: Contact type created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 908fcaab-5e43-4122-acd8-26777e9ae4dd
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/contacts/types/{id}":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Contact Type GUID
+    get:
+      summary: Get a Specific Transaction Contact Type
+      description: Returns a specific transaction contact type.
+      tags:
+      - Transaction Contact Types
+      responses:
+        '200':
+          description: Contact type returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ContactType"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Contact type not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update a Transaction Contact Type
+      description: Updates an existing transaction contact type. You can only update
+        types you own.
+      tags:
+      - Transaction Contact Types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Home Inspector
+      responses:
+        '200':
+          description: Contact type updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Contact type not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    delete:
+      summary: Delete a Transaction Contact Type
+      description: Deletes a specific transaction contact type. You can only delete
+        types you own.
+      tags:
+      - Transaction Contact Types
+      responses:
+        '200':
+          description: Contact type deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Contact type not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/types":
+    get:
+      summary: Get All Transaction Types
+      description: Returns all transaction types the authenticated user is entitled
+        to see. A user can see Global, Association, Office, and Personal level types,
+        but can only PATCH/DELETE their own.
+      tags:
+      - Transaction Types
+      responses:
+        '200':
+          description: List of transaction types returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TransactionType"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+    post:
+      summary: Create a Transaction Type
+      description: Creates a new transaction type for the authenticated user.
+      tags:
+      - Transaction Types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Rental Property
+      responses:
+        '200':
+          description: Transaction type created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: ee9d3620-9b2f-437d-b522-3c785dbbfacd
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/types/{id}":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction Type GUID
+    get:
+      summary: Get a Specific Transaction Type
+      description: Returns a specific transaction type the authenticated user is entitled
+        to see.
+      tags:
+      - Transaction Types
+      responses:
+        '200':
+          description: Transaction type returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TransactionType"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction type not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update a Transaction Type
+      description: Updates an existing transaction type. You can only update types
+        you own.
+      tags:
+      - Transaction Types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Rental Property
+      responses:
+        '200':
+          description: Transaction type updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction type not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    delete:
+      summary: Delete a Transaction Type
+      description: Deletes a specific transaction type. You can only delete types
+        you own.
+      tags:
+      - Transaction Types
+      responses:
+        '200':
+          description: Transaction type deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction type not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/statuses":
+    get:
+      summary: Get All Transaction Statuses
+      description: Returns all transaction statuses the authenticated user is entitled
+        to see.
+      tags:
+      - Transaction Statuses
+      responses:
+        '200':
+          description: List of transaction statuses returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TransactionStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+    post:
+      summary: Create a Transaction Status
+      description: Creates a new transaction status for the authenticated user.
+      tags:
+      - Transaction Statuses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Fallen-Through
+      responses:
+        '200':
+          description: Transaction status created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: ee9d3620-9b2f-437d-b522-3c785dbbfacd
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/statuses/{id}":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction Status GUID
+    get:
+      summary: Get a Specific Transaction Status
+      description: Returns a specific transaction status the authenticated user is
+        entitled to see.
+      tags:
+      - Transaction Statuses
+      responses:
+        '200':
+          description: Transaction status returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TransactionStatus"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction status not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    patch:
+      summary: Update a Transaction Status
+      description: Updates an existing transaction status. You can only update statuses
+        you own.
+      tags:
+      - Transaction Statuses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Fallen-Through
+      responses:
+        '200':
+          description: Transaction status updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction status not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+    delete:
+      summary: Delete a Transaction Status
+      description: Deletes a specific transaction status. You can only delete statuses
+        you own.
+      tags:
+      - Transaction Statuses
+      responses:
+        '200':
+          description: Transaction status deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBadRequest"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Transaction status not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/view-url":
+    get:
+      summary: Get Agent Dashboard SSO Link
+      description: Returns a one-time-use SSO link that lands the user directly on
+        their Agent Dashboard page.
+      tags:
+      - Single Sign On
+      responses:
+        '200':
+          description: SSO link returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SSOLink"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/view-url":
+    get:
+      summary: Get Transaction List SSO Link
+      description: Returns a one-time-use SSO link that lands the user directly on
+        their Transaction List page.
+      tags:
+      - Single Sign On
+      responses:
+        '200':
+          description: SSO link returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SSOLink"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/{id}/view-url":
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get Specific Transaction SSO Link
+      description: Returns a one-time-use SSO link that lands the user directly into
+        a specific transaction.
+      tags:
+      - Single Sign On
+      responses:
+        '200':
+          description: SSO link returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SSOLink"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/statuses/meta":
+    get:
+      summary: Get Metadata
+      description: Returns metadata for a GET request, including the default number
+        of records returned, the maximum, and the default sort order. Not available
+        on transaction details or transaction contacts endpoints.
+      tags:
+      - Metadata
+      responses:
+        '200':
+          description: Metadata returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Metadata"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Metadata not available for this resource
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/statuses/meta/properties":
+    get:
+      summary: Get Metadata Properties
+      description: Returns the attributes of a resource along with their sort, filter,
+        and type specifications.
+      tags:
+      - Metadata
+      responses:
+        '200':
+          description: Metadata properties returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/MetadataProperty"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Metadata not available for this resource
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/users":
+    get:
+      summary: Get All Users
+      description: |-
+        Returns users for the authenticated API client's owner scope.
+
+        **Authorization:** Requires OAuth client credentials token with a valid on-behalf-of user and an API client whose owner type is `Client`, `Company`, or `Office`.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: List of users returned successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/formlibraries":
+    get:
+      summary: Get All Libraries
+      description: Returns all form-library folders available to the authenticated
+        user.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: List of form libraries returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/FormLibrary"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/formlibraries/{folderId}":
+    parameters:
+    - in: path
+      name: folderId
+      required: true
+      schema:
+        type: integer
+      description: Form-library folder identifier
+    get:
+      summary: Get Library Details
+      description: Returns details for a specific form-library folder.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: Form library details returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FormLibrary"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/formlibraries/{folderId}/forms/{formLib}":
+    parameters:
+    - in: path
+      name: folderId
+      required: true
+      schema:
+        type: integer
+      description: Form-library folder identifier
+    - in: path
+      name: formLib
+      required: true
+      schema:
+        type: string
+      description: Form identifier within the folder. Matching is case-insensitive.
+    get:
+      summary: Get Forms Within a Library
+      description: Returns a specific form within a form-library folder.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: Form returned successfully
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FormLibraryForm"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorNotFound"
+  "/v2/transactions/{transactionId}/forms":
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction identifier
+    post:
+      summary: Add Form to a Transaction
+      description: |-
+        Adds a form to a transaction.
+
+        **Request Fields:**
+
+        | Field | Type | Description |
+        |---|---|---|
+        | formLib | string | Form-library identifier of the form to add |
+      tags:
+      - Other Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - formLib
+              properties:
+                formLib:
+                  type: string
+                  example: ABC123
+                  description: Form-library identifier of the form to add
+      responses:
+        '200':
+          description: Form added successfully. Returns the created transaction form
+            instance ID.
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: 7f0f7fc1-8a2f-4e3d-b23f-3b6d2f1f9a11
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+  "/v2/transactions/{transactionId}/forms/{id}":
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction identifier
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction form instance identifier
+    delete:
+      summary: Delete Form from Transaction
+      description: Removes a form from a transaction.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: Form removed successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorUnauthorized"
+tags:
+- name: Authentication
+  description: OAuth 2.0 token endpoints
+- name: Transaction Summary
+  description: Create, read, update, and delete transaction files and their property
+    details
+- name: Transaction Documents
+  description: Manage documents within transaction files
+- name: Transaction Contacts
+  description: Manage contacts associated with transaction files
+- name: Transaction Contact Types
+  description: Manage contact type definitions
+- name: Transaction Types
+  description: Manage transaction type definitions
+- name: Transaction Statuses
+  description: Manage transaction status definitions
+- name: Single Sign On
+  description: Generate one-time-use SSO links for the agent dashboard, transaction
+    list, or a specific transaction
+- name: Metadata
+  description: Retrieve metadata and property specifications for API resources
+- name: Other Endpoints
+  description: Additional endpoints including users, form libraries, and transaction
+    forms
