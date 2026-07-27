@@ -1,0 +1,150 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/*.yml (components.schemas $ref links and id-reference fields)
+summary: >-
+  The Transaction (called Deal in the Deals API) is the hub of every Lone Wolf data model. In
+  the accounting lineages — Back Office Online and WolfConnect — a Transaction owns Tiers, and
+  a Tier owns the Commissions: that is the shape of a real-estate deal's money, where a tier is
+  a side of the deal and each commission is one agent's cut of it. In the workflow lineages —
+  Transact, TransactionDesk, zipForm — the Transaction instead owns Documents, Folders, Forms,
+  Offers and Contacts: the paperwork. Both halves hang the same Client Contacts and Business
+  Contacts off the transaction, and both classify it with the same reference entities
+  (Classification, PropertyType, ContactType, ConditionType, SourceOfBusiness). Back Office and
+  WolfConnect model the same domain with near-identical entity names in different casing —
+  strong evidence they are two generations of one system rather than two products.
+core_entities:
+  - entity: Transaction
+    aka: [Deal, Transaction Summary]
+    apis: [Back Office Online API, WolfConnect API, Deals API, Transact API, TransactionDesk Partner API, zipForm Partner API]
+    role: the deal record; hub of every model
+  - entity: Tier
+    apis: [Back Office Online API, WolfConnect API, Deals API]
+    role: a side/leg of the transaction that carries commission splits
+  - entity: Commission
+    apis: [Back Office Online API, Deals API]
+    aka: [AgentCommission (WolfConnect)]
+  - entity: ClientContact
+    apis: [Back Office Online API, WolfConnect API, Deals API]
+  - entity: BusinessContact
+    apis: [Back Office Online API, WolfConnect API, Deals API]
+  - entity: ExternalAgent
+    apis: [Back Office Online API, WolfConnect API, Deals API]
+  - entity: Member
+    apis: [WolfConnect API]
+    role: the person record — agents, staff — with MLS board memberships and public profiles
+  - entity: Employee
+    apis: [Back Office Online API]
+  - entity: Office
+    apis: [Back Office Online API, Transact API]
+  - entity: Signing
+    apis: [Authentisign API]
+  - entity: Offer
+    apis: [Transact API]
+  - entity: Document
+    apis: [Transact API, TransactionDesk Partner API, zipForm Partner API, Authentisign API]
+  - entity: Folder
+    apis: [Transact API]
+  - entity: Form / FormPackage
+    apis: [Transact API, zipForm Partner API]
+  - entity: ShareGroup
+    apis: [Transact API]
+reference_entities:
+  - Classification
+  - PropertyType
+  - ContactType
+  - ConditionType
+  - SourceOfBusiness
+  - TransactionType
+  - TransactionStatus
+  - Fee
+  - MemberType
+relationships:
+  - {from: Transaction, to: Tier, kind: has_many, via: tiers, api: Back Office Online API}
+  - {from: Transaction, to: Condition, kind: has_many, via: conditions, api: Back Office Online API}
+  - {from: Transaction, to: Deposit, kind: has_many, via: deposits, api: Back Office Online API}
+  - {from: Transaction, to: ExternalAgent, kind: has_many, via: externalAgents, api: Back Office Online API}
+  - {from: Transaction, to: ClientContact, kind: has_many, via: clientContacts, api: Back Office Online API}
+  - {from: Transaction, to: BusinessContact, kind: has_many, via: businessContacts, api: Back Office Online API}
+  - {from: Transaction, to: Classification, kind: has_one, via: classification / classificationId, api: Back Office Online API}
+  - {from: Transaction, to: PropertyType, kind: has_one, via: propertyType / propertyTypeId, api: Back Office Online API}
+  - {from: Tier, to: Commission, kind: has_many, via: commissions, api: Back Office Online API}
+  - {from: Tier, to: ExternalCommission, kind: has_many, via: externalCommissions, api: Back Office Online API}
+  - {from: Tier, to: Classification, kind: has_one, via: classification / classificationId, api: Back Office Online API}
+  - {from: Commission, to: CommissionFee, kind: has_many, via: fees, api: Back Office Online API}
+  - {from: Commission, to: Employee, kind: has_one, via: agent / agentId, api: Back Office Online API}
+  - {from: Commission, to: Office, kind: has_one, via: office / officeId, api: Back Office Online API}
+  - {from: CommissionFee, to: Fee, kind: has_one, via: fee, api: Back Office Online API}
+  - {from: ExternalCommission, to: ExternalAgent, kind: has_one, via: externalAgent / externalAgentId, api: Back Office Online API}
+  - {from: Employee, to: Office, kind: has_one, via: office / officeId, api: Back Office Online API}
+  - {from: ClientContact, to: ContactType, kind: has_one, via: contactType / contactTypeId, api: Back Office Online API}
+  - {from: BusinessContact, to: ContactType, kind: has_one, via: contactType / contactTypeId, api: Back Office Online API}
+  - {from: Transaction, to: Tier, kind: has_many, via: Tiers, api: WolfConnect API}
+  - {from: Transaction, to: ClientContact, kind: has_many, via: ClientContacts, api: WolfConnect API}
+  - {from: Transaction, to: BusinessContact, kind: has_many, via: BusinessContacts, api: WolfConnect API}
+  - {from: Transaction, to: TransactionCondition, kind: has_many, via: Conditions, api: WolfConnect API}
+  - {from: Transaction, to: Task, kind: has_many, via: Task, api: WolfConnect API}
+  - {from: Transaction, to: PropertyType, kind: belongs_to, via: PropertyTypeId, api: WolfConnect API}
+  - {from: Transaction, to: Classification, kind: belongs_to, via: ClassificationId, api: WolfConnect API}
+  - {from: Tier, to: AgentCommission, kind: has_many, via: AgentCommissions, api: WolfConnect API}
+  - {from: Tier, to: ExternalAgentCommission, kind: has_many, via: ExternalAgentCommissions, api: WolfConnect API}
+  - {from: AgentCommission, to: Agent, kind: belongs_to, via: AgentId, api: WolfConnect API}
+  - {from: Member, to: MLSBoard, kind: has_many, via: MLSBoards, api: WolfConnect API}
+  - {from: Member, to: PublicProfile, kind: has_many, via: PublicProfiles, api: WolfConnect API}
+  - {from: Member, to: Address, kind: has_many, via: Addresses, api: WolfConnect API}
+  - {from: Member, to: EmailAddress, kind: has_many, via: EmailAddresses, api: WolfConnect API}
+  - {from: Member, to: PhoneNumber, kind: has_many, via: PhoneNumbers, api: WolfConnect API}
+  - {from: Member, to: Website, kind: has_many, via: Websites, api: WolfConnect API}
+  - {from: Member, to: Integrations, kind: has_many, via: Integrations, api: WolfConnect API}
+  - {from: Member, to: Office, kind: belongs_to, via: OfficeId, api: WolfConnect API}
+  - {from: Member, to: MemberType, kind: belongs_to, via: MemberTypeId, api: WolfConnect API}
+  - {from: Agent, to: Office, kind: belongs_to, via: OfficeId, api: WolfConnect API}
+  - {from: ClientContact, to: SourceOfBusiness, kind: belongs_to, via: SourceOfBusinessId, api: WolfConnect API}
+  - {from: SearchResult, to: Transaction, kind: has_many, via: ResultSet, api: WolfConnect API}
+  - {from: ShareGroup, to: ShareGroupMember, kind: has_many, via: members, api: Transact API}
+  - {from: ShareGroup, to: ShareGroupOpportunity, kind: has_many, via: opportunities, api: Transact API}
+  - {from: ShareGroupOpportunity, to: Transaction, kind: belongs_to, via: opportunityId, api: Transact API}
+  - {from: ShareGroupMember, to: User, kind: belongs_to, via: userId, api: Transact API}
+  - {from: Folder, to: Transaction, kind: belongs_to, via: transactionId, api: Transact API}
+  - {from: Folder, to: User, kind: belongs_to, via: userId, api: Transact API}
+  - {from: FormPackageForm, to: FormLibrary, kind: belongs_to, via: libraryId, api: Transact API}
+  - {from: Contact, to: Office, kind: belongs_to, via: officeId, api: Transact API}
+  - {from: SigningParticipant, to: Signing, kind: belongs_to, via: signingId, api: Transact API}
+  - {from: Participant, to: Signing, kind: belongs_to, via: signingId, api: Authentisign API}
+  - {from: Participant, to: Transaction, kind: belongs_to, via: transactionId, api: Authentisign API}
+  - {from: Cc, to: Signing, kind: belongs_to, via: signingId, api: Authentisign API}
+  - {from: DocumentLayout, to: Layout, kind: belongs_to, via: layoutId, api: Authentisign API}
+  - {from: TDLinkTransaction, to: TDDocumentMapChecklistItem, kind: has_many, via: documents, api: Authentisign API}
+  - {from: Transaction, to: TransactionStatus, kind: belongs_to, via: statusId, api: TransactionDesk Partner API}
+  - {from: Transaction, to: TransactionType, kind: belongs_to, via: typeId, api: TransactionDesk Partner API}
+  - {from: TransactionContact, to: Transaction, kind: belongs_to, via: transactionId, api: TransactionDesk Partner API}
+  - {from: TransactionContact, to: ContactType, kind: belongs_to, via: typeId, api: TransactionDesk Partner API}
+  - {from: FormLibrary, to: Folder, kind: belongs_to, via: folderId, api: TransactionDesk Partner API}
+  - {from: Transaction, to: Team, kind: belongs_to, via: teamId, api: zipForm Partner API}
+cross_api_joins:
+  - >-
+    Authentisign carries both signingId and transactionId on Participant and Cc, plus a
+    dedicated TransactionDesk link DTO (TDLinkTransactionDto with a documents checklist) —
+    the only explicit cross-product foreign key published anywhere in the estate.
+  - >-
+    Transact routes Authentisign under /authentisign/v3 on the same gateway, so a signing
+    created through Transact and a signing read through the Authentisign API are the same
+    record.
+  - >-
+    WolfConnect contacts carry CRMId / CRMCompanyContactId fields pointing at Lone Wolf's CRM
+    (Propertybase / Relationships), and Members carry MLS board identifiers (MLSId,
+    MLSAreaId) — the join points out to the MLS layer Lone Wolf consumes but does not
+    redistribute.
+identifier_conventions:
+  format: GUID (uuid) for most Foundation-era resources; opaque base64-ish strings in WolfConnect (e.g. 98agdji99jasdof908==)
+  prefixes: none — Lone Wolf uses no typed id prefixes
+  user_scoping: >-
+    Transact addresses nearly everything under /users/{userId}; TransactionDesk's
+    client_credentials flow uses an On-Behalf-Of header for the same purpose.
+gaps:
+  - >-
+    The Deals API — the largest surface at 86 operations — declares almost no schema
+    relationships: its components carry 22 schemas but only the Login object exposes reference
+    fields, so its entity graph is documented in prose (the Getting Started and Roster
+    sections) rather than in the spec.
+  - >-
+    No API publishes an ERD, an object reference with id prefixes, or a $metadata document.

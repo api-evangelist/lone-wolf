@@ -1,0 +1,130 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/*.yml + https://apidocs.lwolf.com/doc/*.md + well-known/lone-wolf-openid-configuration.json
+summary: >-
+  Lone Wolf conforms to the baseline web-API standards — OpenAPI 3.0 for all seven definitions,
+  OAuth 2.0 / OIDC at the identity gateway, an OData 4.0 URL-conventions subset for querying —
+  and to nothing beyond that. It is explicitly NOT a RESO-certified data distributor: no RESO
+  Web API, no Data Dictionary endpoint, no OData $metadata document and no Universal Property
+  Identifier, which is consistent with its position between the MLS layer and the brokerage
+  rather than as a listing-feed redistributor. It publishes no certifications, no trust center,
+  and no compliance program of any kind.
+standards:
+  - id: openapi-3.0
+    conforms: true
+    evidence: >-
+      All seven published definitions are OpenAPI 3.0.x (3.0.1 for Back Office and Authentisign,
+      3.0.3 for Transact, Deals, TransactionDesk, zipForm and WolfConnect), downloadable
+      anonymously from apidocs.lwolf.com.
+  - id: openapi-3.1
+    conforms: false
+    evidence: No definition declares openapi 3.1.x.
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      gateway.lwolf.com publishes RFC 8414 authorization-server metadata; the Transact API
+      documents the client_credentials flow and TransactionDesk documents authorization_code.
+  - id: oidc
+    conforms: true
+    evidence: >-
+      OpenID Connect Discovery 1.0 document served at
+      https://gateway.lwolf.com/.well-known/openid-configuration with jwks_uri, userinfo and
+      backchannel logout support.
+  - id: rfc8414-oauth-authorization-server-metadata
+    conforms: true
+    evidence: 200 at https://gateway.lwolf.com/.well-known/oauth-authorization-server
+  - id: rfc7517-jwks
+    conforms: true
+    evidence: 200 at https://gateway.lwolf.com/.well-known/jwks.json
+  - id: rfc7636-pkce
+    conforms: true
+    evidence: code_challenge_methods_supported [S256, plain]
+  - id: rfc9449-dpop
+    conforms: true
+    evidence: dpop_signing_alg_values_supported [ES256]
+  - id: rfc8628-device-authorization-grant
+    conforms: true
+    evidence: device_authorization_endpoint published and urn:ietf:params:oauth:grant-type:device_code in grant_types_supported
+  - id: rfc8693-token-exchange
+    conforms: true
+    evidence: urn:ietf:params:oauth:grant-type:token-exchange in grant_types_supported
+  - id: fapi
+    conforms: false
+    evidence: No FAPI profile, mTLS scheme or certificate-bound token claim is declared.
+  - id: odata-4.0
+    conforms: partial
+    evidence: >-
+      WolfConnect documents OData 4.0 URL conventions with $filter, $orderby, $top, $skip,
+      $search and $expand, but explicitly supports only logical, arithmetic and grouping
+      operators (no canonical functions) and inverts the $expand default. Transact supports
+      $filter/$expand; Deals supports $filter/$top/$skip/$limit on top-level fields only, with
+      no IN operator. No $metadata document is published by any API.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      No operation declares application/problem+json. The Authentisign definition includes a
+      Microsoft.AspNetCore.Mvc.ProblemDetails schema in components but never serves it.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: 404 on /.well-known/security.txt across all nine probed Lone Wolf hosts.
+  - id: rfc9727-api-catalog
+    conforms: false
+    evidence: 404 on /.well-known/api-catalog across all probed hosts.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: No Sunset or Deprecation response header is declared in any definition.
+  - id: json-api
+    conforms: false
+    evidence: Responses are plain JSON resource representations, not JSON:API documents.
+  - id: asyncapi
+    conforms: false
+    evidence: >-
+      No AsyncAPI document is published. The only event surface is the Authentisign signing
+      CallbackUrl (see asyncapi/lone-wolf-authentisign-webhooks.yml).
+  - id: mcp
+    conforms: true
+    evidence: >-
+      A live MCP JSON-RPC server at https://apidocs.lwolf.com/mcp answers tools/list
+      anonymously with five documentation tools (mcp/lone-wolf-mcp-tools.json).
+  - id: llms-txt
+    conforms: true
+    evidence: https://apidocs.lwolf.com/llms.txt returns a valid llms.txt catalog of all seven APIs.
+  - id: reso-web-api
+    conforms: false
+    evidence: >-
+      No RESO Web API endpoint, no OData $metadata, no Data Dictionary resource shapes in any
+      definition. Lone Wolf is not listed as a RESO-certified data distributor.
+  - id: reso-data-dictionary
+    conforms: false
+    evidence: >-
+      Field names across the transaction schemas (address1-address4, locality, region,
+      subRegion, mlsNumber, schoolDistrict, zoningClass) follow Lone Wolf's own vocabulary,
+      not RESO Data Dictionary naming.
+  - id: reso-upi
+    conforms: false
+    evidence: No Universal Property Identifier field appears in any schema.
+  - id: rets
+    conforms: partial
+    evidence: >-
+      Not part of the published API surface. Lone Wolf's Cloud CMA product documents RETS live
+      queries as an MLS data-consumption path, which is inbound consumption under MLS
+      agreement rather than redistribution.
+  - id: idempotency-key
+    conforms: false
+    evidence: No idempotency key header is documented or declared anywhere.
+  - id: optimistic-concurrency
+    conforms: true
+    evidence: >-
+      Deals uses the If-Match precondition header with a 412 failure; WolfConnect uses a
+      RowVersion property with a 409 failure.
+  - id: conditional-requests
+    conforms: partial
+    evidence: 304 Not Modified declared by the WolfConnect and zipForm definitions.
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or CSA STAR claim is published on lwolf.com,
+    and trust.lwolf.com does not resolve. Because no compliance program is published, no
+    Compliance pointer is wired into apis.yml.

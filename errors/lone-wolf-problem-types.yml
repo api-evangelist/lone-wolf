@@ -1,0 +1,137 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/*.yml
+format: proprietary
+rfc9457: false
+summary: >-
+  Derived from every 4xx/5xx response declared across Lone Wolf's seven published OpenAPI
+  definitions (348 operations). No API serves application/problem+json — each lineage ships its
+  own JSON error envelope (see conventions/lone-wolf-conventions.yml). Three distinct
+  behaviours are worth calling out: Deals uses 412 for optimistic-concurrency failure, Back
+  Office uses 422 for validation failure (everything else folds validation into 400), and
+  WolfConnect carries a numeric Lone Wolf error registry inside a 400/404 body (captured
+  separately in errors/lone-wolf-error-codes.yml).
+envelopes:
+  - api: Back Office Online API
+    schema: ApiError
+    fields: [id, code, message, details]
+  - api: Deals API
+    schema: ApiError
+    fields: [code, message, details]
+  - api: Authentisign API
+    schema: Authentisign.Services.Dtos.ErrorResponse
+    fields: [code, message, details]
+  - api: TransactionDesk Partner API
+    schemas: [ErrorBadRequest, ErrorUnauthorized, ErrorNotFound]
+    fields: [code, message, details, data]
+  - api: Transact API
+    schema: Error
+    fields: [error, message]
+  - api: WolfConnect API
+    schema: ClientError
+    fields: [Code, Message]
+  - api: zipForm Partner API
+    schema: null
+    note: HTTP status only.
+problems:
+  - status: 400
+    title: Bad request / invalid parameters
+    occurrences: 209
+    apis: [Transact API, Deals API, Back Office Online API, Authentisign API, TransactionDesk Partner API, WolfConnect API, zipForm Partner API]
+    description: >-
+      Invalid request. Every published API declares 400. WolfConnect narrows it to error codes
+      1001 (invalid parameter), 1002 (missing parameter), 1006 (validation failed) and 1008
+      (invalid operation).
+    remediation: >-
+      Inspect the details[] array of the error envelope; for WolfConnect read the numeric Code.
+    source_operations: openapi/*.yml
+  - status: 401
+    title: Unauthorized
+    occurrences: 282
+    apis: [Transact API, Deals API, Back Office Online API, Authentisign API, TransactionDesk Partner API, zipForm Partner API]
+    description: >-
+      Missing, expired or invalid credential. On Transact this means the bearer token is
+      missing or expired (a missing/invalid lw-subscription-key produces 403 instead). On
+      zipForm it splits into "invalid credentials" and "partner not recognized or user not
+      found".
+    remediation: Re-issue the access token (or Context Id) and retry once.
+  - status: 403
+    title: Forbidden / permission denied
+    occurrences: 210
+    apis: [Transact API, Deals API, Back Office Online API, zipForm Partner API]
+    description: >-
+      The caller is authenticated but not permitted. On Transact, a missing or invalid
+      lw-subscription-key surfaces here. zipForm also uses 403 for "Blank PDF Not Allowed —
+      form has no user-entered contents".
+    remediation: >-
+      Verify the subscription key and the permissions granted to the API account; WolfConnect
+      documents a Permissions section describing which resources an account can see.
+  - status: 404
+    title: Not found
+    occurrences: 214
+    apis: [Transact API, Deals API, Back Office Online API, Authentisign API, TransactionDesk Partner API, WolfConnect API, zipForm Partner API]
+    description: >-
+      The addressed resource does not exist. Deals, TransactionDesk and zipForm specialise the
+      message per entity (deal, client contact, business contact, transaction, document, form).
+    remediation: >-
+      WolfConnect documents that a failing response WITHOUT a ClientError body usually means
+      the URL itself is wrong rather than the resource being absent.
+  - status: 409
+    title: Conflict
+    occurrences: 26
+    apis: [Deals API, Back Office Online API, zipForm Partner API, WolfConnect API]
+    description: >-
+      Duplicate or conflicting state. Deals specialises it as "Email address already exists",
+      "Phone number already exists" and "Business contact already exists"; zipForm uses it for
+      "Account linking failed"; WolfConnect returns 409 when a RowVersion concurrency check
+      fails.
+    remediation: >-
+      For duplicates, look up the existing record first. For WolfConnect, re-read the resource
+      to obtain the current RowVersion before retrying the update.
+  - status: 412
+    title: Precondition failed (optimistic concurrency)
+    occurrences: 20
+    apis: [Deals API]
+    description: >-
+      Optimistic concurrency check failed. The If-Match header is missing or does not contain
+      the version currently in the database.
+    remediation: GET the record, take the current version, and resend the update with a matching If-Match.
+  - status: 415
+    title: Unsupported media type
+    occurrences: 1
+    apis: [zipForm Partner API]
+    description: The request body content type is not accepted by the endpoint.
+    remediation: Send application/json, or multipart/form-data for document upload.
+  - status: 422
+    title: Validation failed
+    occurrences: 24
+    apis: [Back Office Online API]
+    description: >-
+      Validation failed. See response body for details. Back Office is the only Lone Wolf API
+      that separates semantic validation (422) from malformed requests (400).
+    remediation: Read details[] for the failing field-level rules.
+  - status: 500
+    title: Internal server error
+    occurrences: 87
+    apis: [Deals API, zipForm Partner API]
+    description: >-
+      Unknown error. The Deals API declares 500 on every one of its 86 operations; WolfConnect
+      maps its own error code 1000 ("unknown error") to this class and instructs callers to
+      contact Lone Wolf support.
+    remediation: >-
+      Retry with backoff. Note that no Lone Wolf API supports idempotency keys, so retrying a
+      failed POST risks duplicate creation.
+coverage:
+  operations_analyzed: 348
+  operations_declaring_at_least_one_4xx: 310
+  specs_declaring_5xx: 2
+  gaps:
+    - >-
+      Only the Deals and zipForm definitions declare 5xx responses; the other five specs
+      document no server-error contract at all.
+    - >-
+      The Transact API declares no 5xx and its 4xx responses are all $ref-shared, so no
+      per-operation error semantics are published.
+    - >-
+      The Authentisign definition declares 400/401/404 on only a fraction of its 46
+      operations and relies on an undocumented `default` response for the rest.

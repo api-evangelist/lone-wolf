@@ -1,0 +1,53 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  npm registry search, PyPI, NuGet, https://www.lwolf.com/api-getting-started,
+  https://apidocs.lwolf.com/
+summary: >-
+  Lone Wolf Technologies publishes NO first-party client libraries. Nothing was found on npm,
+  PyPI, NuGet, Maven Central, RubyGems, Packagist or crates.io under lwolf, lone-wolf,
+  zipform, authentisign or transactiondesk that is maintained by Lone Wolf. The getting-started
+  page directs integrators to an access-request form and offers no SDK downloads, and the
+  documentation hub links no code libraries. Integration is raw HTTP against the seven
+  published OpenAPI definitions. Two community packages exist, both authored by the same
+  independent developer and both predating the current Foundation platform.
+official_sdks: false
+official_sdk_count: 0
+packages:
+  - language: javascript
+    registry: npm
+    name: lone-wolf
+    url: https://www.npmjs.com/package/lone-wolf
+    install: npm install lone-wolf
+    repository: https://github.com/bshamblen/lone-wolf
+    description: >-
+      Community Node.js client for the Lone Wolf (WolfConnect) API. Initialized with an API
+      token, client code and secret key and implements the LoneWolfToken HMAC signature scheme.
+    official: false
+    maintainer: bshamblen (independent)
+  - language: javascript
+    registry: npm
+    name: instanet
+    url: https://www.npmjs.com/package/instanet
+    install: npm install instanet
+    repository: https://github.com/bshamblen/instanet
+    description: >-
+      Community Node.js client for the Instanet / TransactionDesk third-party API — the
+      product line Lone Wolf acquired and now publishes as the TransactionDesk Partner API.
+    official: false
+    maintainer: bshamblen (independent)
+registries_probed:
+  - {registry: npm, queries: [lwolf, lone-wolf, zipform, authentisign, transactiondesk], first_party_hits: 0}
+  - {registry: pypi, queries: [lwolf, lone-wolf, zipform, authentisign, transactiondesk], first_party_hits: 0}
+  - {registry: nuget, queries: [lwolf, zipform], first_party_hits: 0}
+  - {registry: rubygems, queries: [lwolf, lone-wolf], first_party_hits: 0}
+  - {registry: packagist, queries: [lwolf, lone-wolf], first_party_hits: 0}
+notes:
+  - >-
+    Because no library is first-party, no SDKs pointer is wired into apis.yml — recording a
+    community package as a vendor SDK would misstate the provider's developer experience.
+  - >-
+    The WolfConnect API's HMAC signature scheme (Authorization: LoneWolfToken
+    [token]:[client code]:[signature]:[date] plus a Content-MD5 header) is the single strongest
+    argument for a first-party SDK: it is the kind of auth developers get wrong by hand, and it
+    is exactly what the one community library exists to wrap.

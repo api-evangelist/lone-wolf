@@ -1,0 +1,221 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  https://apidocs.lwolf.com/doc/wolfconnect-api.md, https://apidocs.lwolf.com/doc/transact-api.md,
+  https://apidocs.lwolf.com/doc/zipform-api.md, https://apidocs.lwolf.com/doc/deals-api.md,
+  https://apidocs.lwolf.com/doc/transactiondesk-api.md + openapi/*.yml
+summary: >-
+  Lone Wolf's seven published APIs are seven separate lineages, not one platform contract:
+  each was built by a different acquired product team and each carries its own authentication
+  scheme, query language, paging model and error envelope. The Foundation-era APIs (Transact,
+  Deals) converge on OAuth 2.0 bearer tokens plus OData-subset filtering; the older lineages
+  (WolfConnect HMAC, zipForm shared-key) keep their original conventions. There is no
+  provider-wide conventions document — what follows is captured per API from each
+  definition's own introduction.
+authentication:
+  provider_wide: false
+  by_api:
+    - api: Transact API
+      style: OAuth 2.0 client_credentials bearer token + API subscription key
+      headers: ['Authorization: Bearer <token>', 'lw-subscription-key: <key>']
+      token_endpoint: https://gateway.lwolf.com/oauth/token
+      token_request_body: {grant_type: client_credentials, client_id: '', client_secret: '', audience: 'https://api.lwolf.com', lwt_client_id: 'Lone Wolf client GUID'}
+      note: >-
+        Both credentials are required on every call. 401 means the token is missing/expired;
+        403 means lw-subscription-key is missing or invalid.
+    - api: Deals API
+      style: JWT bearer obtained from a login endpoint
+      headers: ['Authorization: Bearer <token>']
+      token_endpoint: https://authentication.api.lwolf.com/v1/login
+      token_request_body: {emailAddress: '', password: '', clientId: ''}
+      token_response: {token: '<JWT>', expiresIn: 86400}
+    - api: TransactionDesk Partner API
+      style: OAuth 2.0 authorization code (one-time code, 10-minute expiry) or client_credentials
+      headers: ['Authorization: Bearer <token>', 'On-Behalf-Of: <user GUID> (client_credentials only)']
+      authorize_endpoint: https://api.pre.transactiondesk.com/oauth/authorize
+      token_endpoint: POST /oauth/token
+    - api: zipForm Partner API
+      style: Shared Key + session Context Id (or partner External Id)
+      headers: ['X-Auth-SharedKey', 'X-Auth-ContextId', 'X-Auth-ExternalId']
+      note: All three may alternatively be passed on the query string.
+    - api: WolfConnect API
+      style: HMAC-signed custom scheme
+      headers: ['Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]', 'Content-MD5']
+      signature: >-
+        HMACSHA256 (seeded with the secret key) of
+        [HTTP Method]:[Resource URI]:[Date]:[Content-MD5]. HMACSHA384 and HMACSHA512 are
+        supported by appending the algorithm to the scheme (LoneWolfToken-HMACSHA512).
+        Content-MD5 is the base64 MD5 of the body, or 1B2M2Y8AsgTpgAmY7PhCfg== for an empty body.
+      account_scheme: 'LoneWolfKey [Consumer Key]:[Signature]:[Date]' # used for account-level resources
+    - api: Back Office Online API
+      style: not declared
+      note: The published OpenAPI 3.0.1 definition contains no securitySchemes block.
+    - api: Authentisign API
+      style: not declared
+      note: The published OpenAPI 3.0.1 definition contains no securitySchemes block.
+  cross_reference: authentication/lone-wolf-authentication.yml
+idempotency:
+  supported: false
+  idempotency_key_header: null
+  note: >-
+    No Lone Wolf API documents or declares an idempotency key. Retrying a POST is not safe by
+    contract. What Lone Wolf does provide instead is OPTIMISTIC CONCURRENCY on updates — a
+    different guarantee (it prevents lost updates, not duplicate creates). See the
+    concurrency block below. No Idempotency pointer is wired into apis.yml because the
+    provider ships no idempotency contract.
+concurrency:
+  supported: true
+  models:
+    - api: Deals API
+      mechanism: If-Match precondition header carrying the current record version
+      failure_status: 412
+      failure_meaning: >-
+        Optimistic concurrency check failed. The If-Match header is missing or does not
+        contain the version currently in the database.
+      operations_using_it: 20
+    - api: WolfConnect API
+      mechanism: RowVersion property on the resource body
+      failure_status: 409
+      failure_meaning: >-
+        The RowVersion sent does not match the version currently stored. If RowVersion is sent
+        as NULL no concurrency check is performed and the write proceeds.
+      guidance: >-
+        Lone Wolf explicitly recommends implementing concurrency checking on every update, and
+        also recommends sending only the fields being changed so unsent fields are not
+        overwritten.
+pagination:
+  provider_wide: false
+  styles:
+    - api: WolfConnect API
+      style: odata
+      params: [$top, $skip, $orderby, $filter, $search, $expand]
+      spec: OData 4.0 URL conventions (subset — logical, arithmetic and grouping operators only; no canonical functions such as contains/startswith/endswith)
+      max_page_size: 1000
+      default_page_size: 1000
+      note: >-
+        $orderby must be specified for $top/$skip to be used. If a response holds 1,000
+        objects, paging must be implemented to retrieve all records. Each page is a fresh
+        query, so records can be inserted or changed between calls.
+    - api: zipForm Partner API
+      style: page-number
+      params: [page, pagesize, orderby, sortorder]
+      sort_fields:
+        transactions: [name, created]
+        forms_documents: [name, ContentType]
+        libraries: [name, state]
+      sortorder_values: [asc, desc]
+      applies_to: [Get Transaction List, Get Document List, Get Library Documents, Get Agent Libraries]
+    - api: Transact API
+      style: odata
+      params: [$filter, $expand]
+      note: 'Collection endpoints on the Transact Workflow service only; e.g. $filter=opportunityId eq <guid>.'
+    - api: TransactionDesk Partner API
+      style: offset
+      params: [$skip, $take, $orderBy, $orderDir]
+    - api: Deals API
+      style: odata
+      params: [$filter, $top, $skip, $limit]
+      note: >-
+        Top-level fields only — nested-object fields are not queryable and the IN operator is
+        not supported (use repeated OR). A separate single-field search endpoint exists at
+        GET /v1/deals/search?entityPath=&fieldName=&searchText=.
+    - api: Back Office Online API
+      style: not documented
+    - api: Authentisign API
+      style: not documented
+field_expansion:
+  supported: true
+  param: $expand
+  apis: [WolfConnect API, Transact API]
+  semantics: >-
+    WolfConnect inverts the OData default: omitting $expand returns ALL child objects and
+    collections; passing an empty `$expand=` returns only the root object. This is deliberate
+    backward/forward compatibility — new child collections appear automatically for callers
+    that omit the parameter.
+null_and_partial_update_semantics:
+  - api: WolfConnect API
+    rule: >-
+      On create, a NULL-valued property is saved as the column default and the default is
+      returned in the response. On update, a NULL-valued property is NOT written — the current
+      value is kept and returned. Omitting the property entirely has the same effect. The
+      exception is properties for which NULL is itself a legal value, where NULL is persisted.
+  - api: Transact API
+    rule: PATCH accepts a partial representation; only the fields supplied are updated.
+metadata:
+  custom_fields: false
+  note: >-
+    No API documents a general-purpose metadata bag. TransactionDesk exposes a Metadata tag,
+    but it returns platform resource metadata (transaction types, statuses, contact types),
+    not caller-supplied key/values.
+request_tracing:
+  request_id_header: null
+  note: >-
+    No correlation/request-id header is documented or declared on any operation. The Back
+    Office ApiError body carries an `id` field described as "the unique identifier for the
+    error", which is the closest thing to a traceable handle for support.
+versioning:
+  scheme: uri-path
+  cross_reference: lifecycle/lone-wolf-lifecycle.yml
+  by_api:
+    transact: /transact-workflow/v1, /platform/v1, /forms-editor/api/v1, /authentisign/v3, /forms-design/api
+    deals: /v1
+    back_office: /v1
+    authentisign: /api/v1 and /api/v3
+    transactiondesk: OpenAPI info.version 2.0
+    zipform: OpenAPI info.version 5.1
+    wolfconnect: per-resource /v1 suffix (e.g. /wolfconnect/transactions/v1)
+error_envelope:
+  provider_wide: false
+  rfc9457: false
+  shapes:
+    - api: Back Office Online API
+      schema: ApiError
+      fields: [id, code, message, details]
+      note: code mirrors the HTTP status code.
+    - api: Deals API
+      schema: ApiError
+      fields: [code, message, details]
+    - api: Authentisign API
+      schema: Authentisign.Services.Dtos.ErrorResponse
+      fields: [code, message, details]
+      also: >-
+        Microsoft.AspNetCore.Mvc.ProblemDetails is present in components.schemas (type, title,
+        status, detail, instance) but is never served as application/problem+json.
+    - api: TransactionDesk Partner API
+      schemas: [ErrorBadRequest, ErrorUnauthorized, ErrorNotFound]
+      fields: [code, message, details, data]
+    - api: Transact API
+      schema: Error
+      fields: [error, message]
+      additional_properties: true
+    - api: WolfConnect API
+      schema: ClientError
+      fields: [Code, Message]
+      note: >-
+        Carries Lone Wolf's own numeric error registry (1000-1008) in Code. For generic 400 /
+        401 / 404 / 409 responses Code equals the HTTP status code. A failing response WITHOUT
+        a ClientError body is documented as a strong signal the URL itself is wrong.
+    - api: zipForm Partner API
+      schema: none
+      note: Errors are signalled by HTTP status only; the docs publish a status-code table.
+  cross_reference: [errors/lone-wolf-problem-types.yml, errors/lone-wolf-error-codes.yml]
+rate_limiting:
+  documented: false
+  headers: []
+  note: >-
+    No Lone Wolf API documents a rate limit, a quota, or any RateLimit/Retry-After response
+    header. The only published ceiling is WolfConnect's 1,000-object maximum response size.
+content_types:
+  request: application/json (multipart/form-data for document upload and signing creation)
+  response: application/json; binary responses use application/octet-stream, application/pdf or image/*
+compression:
+  supported: true
+  api: WolfConnect API
+  note: Documented under a dedicated Compression section of the WolfConnect introduction.
+time_and_dates:
+  note: >-
+    WolfConnect documents explicit time-zone handling and date/timestamp property formats, and
+    requires the Authorization header Date in a specified UTC format as part of the signature.
+conditional_requests:
+  supported: true
+  status: 304 Not Modified is declared by the WolfConnect and zipForm definitions.

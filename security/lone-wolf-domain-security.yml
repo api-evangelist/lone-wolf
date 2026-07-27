@@ -1,0 +1,29 @@
+generated: '2026-07-26'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.lwolf.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 27 06:25:57 2026 GMT
+  hsts: true
+  hsts_max_age: 63072000
+- host: apidocs.lwolf.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 13 06:14:18 2026 GMT
+  hsts: true
+  hsts_max_age: 0
+- host: gateway.lwolf.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 25 22:38:08 2026 GMT
+  hsts: true
+  hsts_max_age: 63072000
+domains:
+- domain: lwolf.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

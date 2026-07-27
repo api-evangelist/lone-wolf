@@ -1,0 +1,105 @@
+generated: '2026-07-26'
+method: derived
+source: mcp/lone-wolf-mcp-tools.json + openapi/*.yml
+summary: >-
+  Lone Wolf has both a live MCP server and seven published OpenAPI definitions, but the two
+  surfaces are completely disjoint. The MCP server (apidocs.lwolf.com/mcp) is a Bump.sh
+  documentation-portal server: every one of its five tools operates on documentation pages and
+  change records, and none of them invokes a Lone Wolf product operation. Conversely all 348
+  REST operations across the seven specs are REST-only — there is no agent-callable tool for
+  creating a transaction, filing a deal, posting a commission or sending a signing. This is a
+  documentation-agent surface, not an execution surface, and the crosswalk records that
+  honestly rather than implying a binding that does not exist.
+surfaces:
+  openapi:
+    - {file: openapi/lone-wolf-transact-api-openapi.yml, operations: 53, operation_ids: true}
+    - {file: openapi/lone-wolf-deals-api-openapi.yml, operations: 86, operation_ids: false}
+    - {file: openapi/lone-wolf-back-office-online-api-openapi.yml, operations: 69, operation_ids: true}
+    - {file: openapi/lone-wolf-authentisign-api-openapi.yml, operations: 46, operation_ids: true}
+    - {file: openapi/lone-wolf-transactiondesk-api-openapi.yml, operations: 44, operation_ids: false}
+    - {file: openapi/lone-wolf-zipform-api-openapi.yml, operations: 28, operation_ids: false}
+    - {file: openapi/lone-wolf-wolfconnect-api-openapi.yml, operations: 22, operation_ids: true}
+  graphql:
+    endpoint: null
+    note: Lone Wolf publishes no GraphQL surface.
+  mcp:
+    url: https://apidocs.lwolf.com/mcp
+    gated: false
+    note: >-
+      tools/list answered 200 anonymously on 2026-07-26; the real inputSchemas were captured
+      verbatim to mcp/lone-wolf-mcp-tools.json.
+crosswalk: []
+mcp_only:
+  - tool: search
+    reason: >-
+      Documentation-portal full-text search over apidocs.lwolf.com. Operates on Bump.sh page
+      objects (api, operation, schema, topic, authentication, webhook, group, response,
+      server), not on Lone Wolf business data. No REST equivalent is published.
+  - tool: get_pages
+    reason: >-
+      Fetches rendered documentation page content by URL. A docs-platform capability; there is
+      no Lone Wolf REST operation that returns documentation.
+  - tool: list_pages
+    reason: >-
+      Walks the documentation hierarchy of the hub. Docs-platform capability with no REST
+      counterpart.
+  - tool: list_changes
+    reason: >-
+      Lists dated documentation changes (the same feed rendered at
+      https://apidocs.lwolf.com/changes and captured in changelog/lone-wolf-changelog.yml).
+      Lone Wolf publishes no REST changelog endpoint.
+  - tool: get_change
+    reason: >-
+      Returns one documentation change record including its markdown diff. Docs-platform
+      capability with no REST counterpart.
+rest_only:
+  - capability: Transaction lifecycle (Transact API)
+    file: openapi/lone-wolf-transact-api-openapi.yml
+    operations: 53
+    examples: [GetTransactions, CreateTransaction, PatchTransaction, DeleteTransaction, GetOffers, CreateOffer]
+    note: Bearer token + lw-subscription-key; user-scoped under /users/{userId}.
+  - capability: Deals, commissions, conditions and contacts (Deals API)
+    file: openapi/lone-wolf-deals-api-openapi.yml
+    operations: 86
+    note: >-
+      The largest Lone Wolf surface. The published definition declares no operationIds, so
+      operations are addressed by method + path only.
+  - capability: Brokerage accounting (Back Office Online API)
+    file: openapi/lone-wolf-back-office-online-api-openapi.yml
+    operations: 69
+    examples: [GetTransactions, GetCommissions, GetDeposits, GetEmployees, GetOffices, GetTiers]
+  - capability: E-signature (Authentisign API)
+    file: openapi/lone-wolf-authentisign-api-openapi.yml
+    operations: 46
+    examples: [CreateSigning, UpdateSigningCallback, GetSignings, GetSigningDocuments]
+  - capability: TransactionDesk partner integration
+    file: openapi/lone-wolf-transactiondesk-api-openapi.yml
+    operations: 44
+    note: OAuth 2.0 authorization-code and client-credentials flows; no operationIds declared.
+  - capability: zipForm forms and transactions
+    file: openapi/lone-wolf-zipform-api-openapi.yml
+    operations: 28
+    note: Shared Key + Context Id / External Id header auth; no operationIds declared.
+  - capability: WolfConnect member and transaction data
+    file: openapi/lone-wolf-wolfconnect-api-openapi.yml
+    operations: 22
+    examples: [getMembers, createMember, getTransactions, getClassifications]
+coverage:
+  tools_named: 5
+  tools_bound_to_rest: 0
+  mcp_only: 5
+  rest_operations_total: 348
+  rest_operations_with_a_tool: 0
+  rest_only_operations: 348
+  binding_rate: 0.0
+observations:
+  - >-
+    An MCP client pointed at Lone Wolf can read the entire contract (all seven specs, every
+    operation, schema and authentication topic) and track changes over time, but cannot take
+    any action against Lone Wolf systems.
+  - >-
+    The gap is the interesting artifact: Lone Wolf's REST surface is large, well-tagged and
+    fully documented, so a product MCP server derived from these specs is a short step —
+    the operationIds already exist for Transact, Back Office, Authentisign and WolfConnect
+    (190 of 348 operations); Deals, TransactionDesk and zipForm would need operationIds added
+    first.

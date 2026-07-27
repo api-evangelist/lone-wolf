@@ -1,0 +1,87 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  openapi/*.yml servers blocks, https://apidocs.lwolf.com/doc/wolfconnect-api.md,
+  https://apidocs.lwolf.com/doc/transact-api.md, https://apidocs.lwolf.com/doc/transactiondesk-api.md
+summary: >-
+  Lone Wolf publishes named non-production hosts for four of its seven APIs, but no sandbox
+  credentials, no self-service test account, and no magic test values of any kind. There is no
+  test/live key-prefix convention, no test clock, and no fixture or trigger tooling. Access to
+  every environment — production and preproduction alike — runs through the same
+  human-reviewed access-request form, so a developer cannot try any Lone Wolf API before a
+  partnership exists. The documentation is open; the sandbox is not.
+self_service: false
+test_credentials_published: false
+test_values_published: false
+key_prefix_convention: null
+test_clock: false
+fixture_tooling: false
+environments:
+  - api: WolfConnect API
+    production: https://api.globalwolfweb.com
+    test: https://api-sb.globalwolfweb.com
+    label_in_docs: Test
+    source: https://apidocs.lwolf.com/doc/wolfconnect-api.md
+    probe: {url: 'https://api-sb.globalwolfweb.com/', result: 'no TLS response from the bare host root (curl exit 000) — the host serves API routes, not a landing page'}
+  - api: zipForm Partner API
+    production: https://ws.zipformplus.com/api
+    test: https://api.pre.zipformplus.com/api
+    label_in_docs: Staging
+    source: openapi/lone-wolf-zipform-api-openapi.yml
+    probe: {url: 'https://api.pre.zipformplus.com/', status: 403}
+  - api: TransactionDesk Partner API
+    production: null
+    test: https://api.pre.transactiondesk.com
+    label_in_docs: preproduction
+    source: openapi/lone-wolf-transactiondesk-api-openapi.yml
+    probe: {url: 'https://api.pre.transactiondesk.com/', status: 404}
+    note: >-
+      The preproduction host is the ONLY server declared in the TransactionDesk definition —
+      no production base URL is published anywhere, including in the OAuth authorize example
+      which also points at api.pre.transactiondesk.com.
+  - api: Transact API
+    production: https://gateway.lwolf.com
+    test: https://api.pre.lwolf.com
+    label_in_docs: Environment-specific host (e.g. pre-production)
+    source: https://apidocs.lwolf.com/doc/transact-api.md
+    probe: {url: 'https://api.pre.lwolf.com/', status: 303}
+    note: >-
+      The Transact OpenAPI declares the second server as a templated `{tw_host}` variable; the
+      rendered documentation names api.pre.lwolf.com as the example environment host.
+  - api: Deals API
+    production: https://deals.api.lwolf.com
+    test: null
+    source: https://apidocs.lwolf.com/doc/deals-api.md
+  - api: Back Office Online API
+    production: https://api.lwolf.com/backoffice
+    test: null
+  - api: Authentisign API
+    production: https://api.lwolf.com/authentisign
+    test: null
+access:
+  process: >-
+    Complete the access request form at https://www.lwolf.com/api-getting-started; a member of
+    the Lone Wolf integrations team follows up to provision access.
+  self_service_signup: false
+  license_note: >-
+    The zipForm API is explicitly made available on a licensed basis to third-party
+    application partners, so even a sandbox key implies a commercial relationship.
+documented_placeholder_values:
+  - api: Deals API
+    context: login request example
+    values: {emailAddress: 'api-aaaa111@apps.lwolf.com', clientId: 'AAAA111'}
+    note: >-
+      Obvious documentation placeholders, not working credentials. The docs example transposes
+      clientId and password between the JSON and cURL samples.
+  - api: WolfConnect API
+    context: Content-MD5 header
+    value: 1B2M2Y8AsgTpgAmY7PhCfg==
+    note: >-
+      The base64 MD5 of an empty string — a real constant every caller needs for bodyless
+      requests, not a secret.
+gaps:
+  - No test card / test identifier / magic value range of any kind is published.
+  - No sandbox data reset, seeding or scenario-trigger tooling is documented.
+  - >-
+    Three of the seven APIs (Deals, Back Office, Authentisign) publish no non-production host
+    at all.

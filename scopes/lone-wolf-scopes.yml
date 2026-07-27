@@ -1,0 +1,105 @@
+generated: '2026-07-26'
+method: searched
+source: https://gateway.lwolf.com/.well-known/openid-configuration
+docs: https://apidocs.lwolf.com/doc/transact-api.md#authentication
+summary: >-
+  None of Lone Wolf's seven OpenAPI definitions declares an oauth2 securityScheme, so no scopes
+  are derivable from the specs (derive-oauth-scopes.py found zero). The real OAuth surface is
+  published one layer below the specs: the Lone Wolf identity gateway at gateway.lwolf.com is
+  an Auth0 tenant whose OIDC discovery document advertises a scope set. Those scopes are the
+  standard OIDC identity scopes — Lone Wolf publishes NO API-permission scopes (nothing of the
+  form transactions:read, deals:write). Authorization for the product APIs is carried by the
+  lw-subscription-key, the client GUID (lwt_client_id) and account-level permissions granted
+  by the integrations team, not by OAuth scope.
+authorization_server:
+  issuer: https://gateway.lwolf.com/
+  platform: Auth0
+  authorization_endpoint: https://gateway.lwolf.com/authorize
+  token_endpoint: https://gateway.lwolf.com/oauth/token
+  device_authorization_endpoint: https://gateway.lwolf.com/oauth/device/code
+  userinfo_endpoint: https://gateway.lwolf.com/userinfo
+  revocation_endpoint: https://gateway.lwolf.com/oauth/revoke
+  registration_endpoint: https://gateway.lwolf.com/oidc/register
+  jwks_uri: https://gateway.lwolf.com/.well-known/jwks.json
+  backchannel_authentication_endpoint: https://gateway.lwolf.com/bc-authorize
+  pkce: [S256, plain]
+  dpop_signing_alg_values_supported: [ES256]
+  token_endpoint_auth_methods_supported: [client_secret_basic, client_secret_post, private_key_jwt, none]
+  grant_types_supported:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+    - password
+    - implicit
+    - 'urn:ietf:params:oauth:grant-type:device_code'
+    - 'urn:ietf:params:oauth:grant-type:token-exchange'
+    - 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+  audience_used_by_lone_wolf: https://api.lwolf.com
+  well_known: well-known/lone-wolf-openid-configuration.json
+scopes:
+  - scope: openid
+    description: Request an ID token (OIDC).
+    kind: oidc
+  - scope: profile
+    description: Basic profile claims.
+    kind: oidc
+  - scope: offline_access
+    description: Issue a refresh token.
+    kind: oidc
+  - scope: name
+    description: name claim.
+    kind: oidc
+  - scope: given_name
+    description: given_name claim.
+    kind: oidc
+  - scope: family_name
+    description: family_name claim.
+    kind: oidc
+  - scope: nickname
+    description: nickname claim.
+    kind: oidc
+  - scope: email
+    description: email claim.
+    kind: oidc
+  - scope: email_verified
+    description: email_verified claim.
+    kind: oidc
+  - scope: picture
+    description: picture claim.
+    kind: oidc
+  - scope: created_at
+    description: created_at claim.
+    kind: oidc
+  - scope: identities
+    description: Linked identity records.
+    kind: oidc
+  - scope: phone
+    description: phone_number claim.
+    kind: oidc
+  - scope: address
+    description: address claim.
+    kind: oidc
+api_permission_scopes:
+  published: false
+  note: >-
+    No resource scopes are published. The Transact API's documented token request sends
+    grant_type=client_credentials with an audience and a client GUID and no scope parameter at
+    all; per-tenant and per-resource authorization is enforced by the subscription key and by
+    account permissions (WolfConnect documents a Permissions section describing what an API
+    account may see). An agent cannot request least-privilege access to a Lone Wolf API,
+    because least privilege is not expressible in the published contract.
+other_authorization_servers:
+  - api: TransactionDesk Partner API
+    authorize: https://api.pre.transactiondesk.com/oauth/authorize
+    token: POST /oauth/token
+    flows: [authorization_code, client_credentials]
+    scopes_published: false
+    note: >-
+      A separate OAuth surface from gateway.lwolf.com, documented only against the
+      preproduction host. The authorization-code flow uses a one-time code with a 10-minute
+      expiry; client_credentials requires an On-Behalf-Of header carrying the target user GUID.
+  - api: Deals API
+    token: https://authentication.api.lwolf.com/v1/login
+    flows: [password-style login returning a JWT]
+    scopes_published: false
+    note: Not an OAuth 2.0 server — a bespoke login endpoint returning {token, expiresIn}.

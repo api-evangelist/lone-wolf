@@ -1,0 +1,76 @@
+generated: '2026-07-26'
+method: searched
+source: https://apidocs.lwolf.com/doc/wolfconnect-api.md#error-codes
+summary: >-
+  Lone Wolf publishes exactly one numeric error registry across its whole surface: the
+  WolfConnect API's ClientError codes. They are returned inside the ClientError object on
+  400 / 401 / 404 / 409 responses. For generic responses that have no specific Lone Wolf code,
+  the Code property simply repeats the HTTP status. Lone Wolf documents that a failing
+  response WITHOUT a ClientError body is a strong indication the caller is using the wrong
+  URL rather than hitting a real error. This is the non-payments sibling of a decline-code
+  catalog; Lone Wolf is not a payments provider and publishes no decline codes.
+api: WolfConnect API
+envelope:
+  schema: ClientError
+  fields: [Code, Message]
+  returned_on: [400, 401, 404, 409]
+error_codes:
+  - code: 1000
+    meaning: Unknown error.
+    http_status: 500
+    action: Contact Lone Wolf support if you receive this error.
+  - code: 1001
+    meaning: Invalid Parameter.
+    action: Correct the offending parameter; the response Message names it.
+  - code: 1002
+    meaning: Missing Parameter.
+    action: Supply the required parameter.
+  - code: 1003
+    meaning: The request must be a multipart request.
+    action: Resend as multipart/form-data.
+  - code: 1004
+    meaning: No files were sent with the request.
+    action: Attach at least one file part.
+  - code: 1005
+    meaning: The maximum files allowed for the request was exceeded.
+    action: Split the upload across multiple requests.
+  - code: 1006
+    meaning: >-
+      Validation failed when trying to save a resource. Occurs when a requirement for the data
+      passed to the API has not been met.
+    action: Read the Details property for the specific validation failures.
+  - code: 1007
+    meaning: >-
+      Member authentication failed. Occurs when a member tries to log in but has been
+      deactivated or has not finished resetting their password.
+    action: Reactivate the member or complete the password reset in WOLFconnect.
+  - code: 1008
+    meaning: Invalid Operation. You most likely do not have access to perform said operation.
+    action: >-
+      Check the account's permissions — WolfConnect documents a Permissions section describing
+      what an API account can see and do.
+other_apis:
+  - api: zipForm Partner API
+    registry: none
+    published_status_table:
+      200: OK
+      201: Created
+      204: No Content — success but resource has no content
+      304: Not Modified
+      400: Bad Request
+      401: Unauthorized
+      403: Forbidden / Blank PDF Not Allowed
+      404: Not Found
+      409: Account Linking Failed
+      415: Unsupported Media Type
+      500: Internal Server Error
+      503: Service Unavailable
+    source: https://apidocs.lwolf.com/doc/zipform-api.md#response-codes
+  - api: Deals API
+    registry: none
+    note: >-
+      The Deals API documentation publishes per-endpoint status tables (400/401/403/404/412/500)
+      but no numeric application error codes; the ApiError `code` field carries the HTTP status.
+  - api: Back Office Online API
+    registry: none
+    note: ApiError.code is documented as "typically set to the same value as the http status code".

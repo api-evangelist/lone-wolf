@@ -73,6 +73,8 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-transact-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-transact-api-overlay.yaml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/transact-api
       - type: APIReference
@@ -87,10 +89,14 @@ apis:
       Partner-integration API (release 25.01.00) covering deal records across the Lone Wolf
       Foundation platform. All requests require an Authorization header carrying a Bearer
       JWT obtained by POSTing credentials to https://authentication.api.lwolf.com/v1/login.
-      The largest operation surface published by Lone Wolf — 53 paths / 86 operations — but
-      the OpenAPI definition declares no servers block, so no production base URL is
-      asserted here.
+      The largest operation surface published by Lone Wolf — 53 paths / 86 operations. The
+      OpenAPI definition declares no servers block; the production base URL recorded here
+      (https://deals.api.lwolf.com) comes from the Getting Started and Searching Deals
+      sections of the published documentation, which show GET https://deals.api.lwolf.com/v1
+      and /v1/deals/search. The definition also declares no operationIds, so its operations
+      cannot be addressed by name from workflows, MCP tool bindings or agent skills.
     humanURL: https://apidocs.lwolf.com/doc/deals-api
+    baseURL: https://deals.api.lwolf.com
     tags:
       - Deals
       - Transactions
@@ -98,6 +104,8 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-deals-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-deals-api-overlay.yaml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/deals-api
       - type: Changelog
@@ -126,6 +134,8 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-back-office-online-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-back-office-online-api-overlay.yaml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/back-office-online-api
       - type: DeveloperPortal
@@ -149,6 +159,10 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-authentisign-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-authentisign-api-overlay.yaml
+      - type: Webhooks
+        url: asyncapi/lone-wolf-authentisign-webhooks.yml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/authentisign-api
       - type: DeveloperPortal
@@ -174,6 +188,8 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-transactiondesk-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-transactiondesk-api-overlay.yaml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/transactiondesk-api
       - type: DeveloperPortal
@@ -198,6 +214,8 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-zipform-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-zipform-api-overlay.yaml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/zipform-api
       - type: Changelog
@@ -222,6 +240,10 @@ apis:
     properties:
       - type: OpenAPI
         url: openapi/lone-wolf-wolfconnect-api-openapi.yml
+      - type: Overlay
+        url: overlays/lone-wolf-wolfconnect-api-overlay.yaml
+      - type: ErrorCatalog
+        url: errors/lone-wolf-error-codes.yml
       - type: Documentation
         url: https://apidocs.lwolf.com/doc/wolfconnect-api
       - type: Changelog
@@ -231,22 +253,88 @@ apis:
       - type: DeveloperPortal
         url: https://www.lwolf.com/api-portal
 common:
+  - type: AgenticAccess
+    url: agentic-access/lone-wolf-agentic-access.yml
+  - type: DomainSecurity
+    url: security/lone-wolf-domain-security.yml
+  - type: Authentication
+    url: authentication/lone-wolf-authentication.yml
+  - type: OAuthScopes
+    url: scopes/lone-wolf-scopes.yml
+  - type: WellKnown
+    url: well-known/lone-wolf-well-known.yml
+  - type: Conventions
+    url: conventions/lone-wolf-conventions.yml
+  - type: Conformance
+    url: conformance/lone-wolf-conformance.yml
+  - type: ErrorCatalog
+    name: Problem types derived from the published OpenAPIs
+    url: errors/lone-wolf-problem-types.yml
+  - type: ErrorCatalog
+    name: WolfConnect ClientError code registry
+    url: errors/lone-wolf-error-codes.yml
+  - type: Lifecycle
+    url: lifecycle/lone-wolf-lifecycle.yml
+  - type: DataModel
+    url: data-model/lone-wolf-data-model.yml
+  - type: Packages
+    url: packages/lone-wolf-packages.yml
+  - type: Webhooks
+    name: Authentisign signing callbacks
+    url: asyncapi/lone-wolf-authentisign-webhooks.yml
+  - type: ToolCrosswalk
+    url: mcp/lone-wolf-tool-crosswalk.yml
+  - type: AgentSkill
+    name: Lone Wolf agent skills index
+    url: skills/_index.yml
+  - type: AgentSkill
+    name: Open a Lone Wolf transaction
+    url: skills/lone-wolf-open-a-transaction.md
+  - type: AgentSkill
+    name: Attach forms to a transaction and send them for signature
+    url: skills/lone-wolf-attach-forms-and-sign.md
+  - type: AgentSkill
+    name: Record a brokerage transaction and its commission splits
+    url: skills/lone-wolf-back-office-commissions.md
+  - type: AgentSkill
+    name: Sync brokerage members and transactions from WolfConnect
+    url: skills/lone-wolf-wolfconnect-sync-members.md
+  - type: AgentSkill
+    name: Run an Authentisign signing end to end
+    url: skills/lone-wolf-authentisign-signing-lifecycle.md
   - type: Website
     url: https://www.lwolf.com/
   - type: DeveloperPortal
     url: https://www.lwolf.com/api-portal
   - type: Documentation
     url: https://apidocs.lwolf.com/
+  - type: APIReference
+    url: https://apidocs.lwolf.com/
   - type: GettingStarted
     url: https://www.lwolf.com/api-getting-started
   - type: Signup
     url: https://www.lwolf.com/api-getting-started
+  - type: SignUp
+    url: https://www.lwolf.com/api-getting-started
+  - type: Blog
+    url: https://www.lwolf.com/blog
   - type: Changelog
     url: https://apidocs.lwolf.com/changes
+  - type: ChangeLog
+    name: Structured recent change entries
+    url: changelog/lone-wolf-changelog.yml
+  - type: Sandbox
+    name: Published non-production hosts and access model
+    url: sandbox/lone-wolf-sandbox.yml
   - type: MCPServer
     url: https://apidocs.lwolf.com/mcp
+  - type: MCPServer
+    name: MCP server manifest and captured tools/list
+    url: mcp/lone-wolf-mcp.yml
   - type: LlmsText
     url: https://apidocs.lwolf.com/?format=md
+  - type: LLMsTxt
+    url: llms/lone-wolf-llms.txt
   - type: Authentication
     url: https://authentication.api.lwolf.com/v1/login
   - type: OpenIDConnectDiscovery

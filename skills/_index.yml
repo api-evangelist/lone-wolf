@@ -1,0 +1,41 @@
+generated: '2026-07-26'
+method: generated
+source: openapi/*.yml + conventions/lone-wolf-conventions.yml + errors/lone-wolf-error-codes.yml
+note: >-
+  Every step in every skill is grounded in an operationId that exists verbatim in the referenced
+  OpenAPI. Skills are published only for the four Lone Wolf APIs that declare operationIds —
+  Transact, Back Office Online, Authentisign and WolfConnect (190 of 348 published operations).
+  The Deals, TransactionDesk and zipForm definitions declare no operationIds, so their
+  operations cannot be addressed by name and no skill is grounded in them.
+skills:
+  - file: lone-wolf-open-a-transaction.md
+    name: Open a Lone Wolf transaction
+    api: openapi/lone-wolf-transact-api-openapi.yml
+    operations: [getToken, getUsers, getOffices, createTransaction, getTransactions, getTransactionByKey, updateTransaction, deleteTransaction]
+  - file: lone-wolf-attach-forms-and-sign.md
+    name: Attach forms to a transaction and send them for signature
+    api: openapi/lone-wolf-transact-api-openapi.yml
+    operations: [getLibraries, getForms, getLibraryForm, addFormsToTransaction, getTransactionForms, getTransactionFormPdf, moveTransactionForm, createDocumentForUser, createSigning, addSigningParticipants, getSignings, getSigningSsoLink, getSigningDocuments, getSignedDocuments, getSigningCertificates]
+  - file: lone-wolf-back-office-commissions.md
+    name: Record a brokerage transaction and its commission splits
+    api: openapi/lone-wolf-back-office-online-api-openapi.yml
+    operations: [get-v1-transactions, post-v1-transactions, get-v1-transactions-transactionid, patch-v1-transactions-transactionid, get-v1-classifications, get-v1-property-types, post-v1-transactions-transactionid-tiers, post-v1-tiers-calculate-tier, post-v1-transactions-transactionid-tiers-tierid-commissions, post-v1-transactions-transactionid-tiers-tierid-external-commissions, get-v1-employees, get-v1-offices]
+  - file: lone-wolf-wolfconnect-sync-members.md
+    name: Sync brokerage members and transactions from WolfConnect
+    api: openapi/lone-wolf-wolfconnect-api-openapi.yml
+    operations: [getMembers, getMember, createMember, updateMember, setMemberProfileImage, getMemberInOutStatus, setMemberInOutStatus, getTransactions, getTransaction, createTransaction, updateTransaction, finalizeTransaction, getClassifications, getPropertyTypes]
+  - file: lone-wolf-authentisign-signing-lifecycle.md
+    name: Run an Authentisign signing end to end
+    api: openapi/lone-wolf-authentisign-api-openapi.yml
+    operations: [CreateSigning, GetSigning, GetSignings, AddParticipants, AddCCs, ApplyLayout, UpdateSigningCallback, SendSigning, ResendInvitation, GetSigningHistory, RejectSigning, ForceCompleteSigning, ResetSigning, CopySigning, SendFinalDocuments, GetFinalSigningDocument, GetSigningCertificate, LinkTransaction, GetDeletedSignings, RecoverDeletedSigning]
+cross_cutting_rules:
+  - >-
+    No Lone Wolf API supports idempotency keys. Never blind-retry a POST — read back and match on
+    a caller-controlled reference first.
+  - >-
+    No rate limits are documented anywhere. Keep concurrency low, back off on any non-2xx.
+  - Credentials are never self-service; every environment requires a reviewed access request.
+  - >-
+    Destructive or legally significant operations (ForceCompleteSigning, ResetSigning,
+    finalizeTransaction, deleteTransaction, commission deletes) require explicit human
+    authorization.

@@ -1,0 +1,133 @@
+generated: '2026-07-26'
+method: searched
+source: openapi/lone-wolf-deals-api-openapi.yml, openapi/lone-wolf-transact-api-openapi.yml,
+  openapi/lone-wolf-transactiondesk-api-openapi.yml, openapi/lone-wolf-wolfconnect-api-openapi.yml,
+  openapi/lone-wolf-zipform-api-openapi.yml
+docs:
+- https://apidocs.lwolf.com/doc/transact-api.md#authentication
+- https://apidocs.lwolf.com/doc/deals-api.md#getting-started
+- https://apidocs.lwolf.com/doc/transactiondesk-api.md#authorization
+- https://apidocs.lwolf.com/doc/zipform-api.md#authentication
+- https://apidocs.lwolf.com/doc/wolfconnect-api.md#authentication
+- https://gateway.lwolf.com/.well-known/openid-configuration
+overview: >-
+  Five different authentication models across seven APIs — the clearest evidence that Lone
+  Wolf's API estate is an assembled portfolio rather than one platform. The specs declare six
+  schemes; two definitions (Back Office Online and Authentisign) declare none at all, and the
+  gateway's OAuth 2.0 / OIDC layer is published only through the identity discovery document,
+  not through any spec.
+summary:
+  types:
+  - apiKey
+  - http
+  - oauth2
+  api_key_in:
+  - header
+  - query
+  oauth2_flows:
+  - clientCredentials
+  - authorizationCode
+  specs_without_security_schemes:
+  - openapi/lone-wolf-back-office-online-api-openapi.yml
+  - openapi/lone-wolf-authentisign-api-openapi.yml
+credential_issuance:
+  self_service: false
+  process: >-
+    Credentials are issued only after the access-request form at
+    https://www.lwolf.com/api-getting-started is reviewed by the Lone Wolf integrations team.
+    Documentation is fully open; credentials are not.
+oauth2:
+  issuer: https://gateway.lwolf.com/
+  platform: Auth0
+  discovery: well-known/lone-wolf-openid-configuration.json
+  token_endpoint: https://gateway.lwolf.com/oauth/token
+  documented_grant: client_credentials
+  documented_token_request:
+    grant_type: client_credentials
+    client_id: <your client id>
+    client_secret: <your client secret>
+    audience: https://api.lwolf.com
+    lwt_client_id: <your Lone Wolf client GUID>
+  scopes: scopes/lone-wolf-scopes.yml
+  note: >-
+    The Transact API requires BOTH the bearer token and the lw-subscription-key header on every
+    call. A 401 means the token is missing or expired; a 403 means the subscription key is
+    missing or invalid.
+other_endpoints:
+- api: Deals API
+  kind: bespoke login
+  endpoint: POST https://authentication.api.lwolf.com/v1/login
+  request_fields: [emailAddress, password, clientId]
+  response_fields: [token, expiresIn]
+  note: expiresIn is documented as 86400 seconds in the published example.
+- api: TransactionDesk Partner API
+  kind: oauth2
+  authorize: https://api.pre.transactiondesk.com/oauth/authorize
+  token: POST /oauth/token
+  flows: [authorizationCode, clientCredentials]
+  note: >-
+    The authorization code is one-time-use and expires in 10 minutes. The client_credentials
+    flow requires an On-Behalf-Of header carrying the target user's GUID.
+- api: zipForm Partner API
+  kind: shared key + session context
+  note: >-
+    X-Auth-SharedKey plus either X-Auth-ContextId or X-Auth-ExternalId; all three may
+    alternatively be supplied on the query string, which is documented explicitly.
+schemes:
+- name: BearerToken
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: 'JSON Web Token obtained from the Authentication API (`POST /v1/login`). Pass
+    the token as `Authorization: Bearer <token>` in every request. Tokens expire after the number
+    of seconds specified in the `expiresIn` field of the login response.'
+  sources:
+  - openapi/lone-wolf-deals-api-openapi.yml
+  - openapi/lone-wolf-transact-api-openapi.yml
+  - openapi/lone-wolf-transactiondesk-api-openapi.yml
+- name: subscriptionKey
+  type: apiKey
+  in: header
+  parameter: lw-subscription-key
+  description: API subscription key issued by Lone Wolf, sent on every request.
+  sources:
+  - openapi/lone-wolf-transact-api-openapi.yml
+- name: LoneWolfToken
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: |-
+    Custom HMAC-signed authorization scheme used when calling resources that access your actual data:
+
+    ```
+    Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+    ```
+
+    A `Content-MD5` header is also required on every request (base 64 encoded MD5 hash of the request body, or of an empty string for requests without a body: `1B2M2Y8AsgTpgAmY7PhCfg==`).
+
+    The signature is the HMACSHA256 h
+  sources:
+  - openapi/lone-wolf-wolfconnect-api-openapi.yml
+- name: contextAuth
+  type: apiKey
+  in: header
+  parameter: X-Auth-ContextId
+  description: Context Id obtained from an authentication endpoint. Must be used together with
+    X-Auth-SharedKey.
+  sources:
+  - openapi/lone-wolf-zipform-api-openapi.yml
+- name: sharedKey
+  type: apiKey
+  in: header
+  parameter: X-Auth-SharedKey
+  description: Shared Key provided by zipLogix to authenticate the partner application.
+  sources:
+  - openapi/lone-wolf-zipform-api-openapi.yml
+- name: externalIdAuth
+  type: apiKey
+  in: header
+  parameter: X-Auth-ExternalId
+  description: External Id for partners authorized to use the External Id authentication scheme.
+    Must be used together with X-Auth-SharedKey.
+  sources:
+  - openapi/lone-wolf-zipform-api-openapi.yml

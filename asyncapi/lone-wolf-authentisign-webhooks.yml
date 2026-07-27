@@ -1,0 +1,75 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  openapi/lone-wolf-authentisign-api-openapi.yml (CreateSigning, UpdateSigningCallback),
+  https://apidocs.lwolf.com/doc/authentisign-api.md
+spec_type: Webhooks
+asyncapi_published: false
+summary: >-
+  Lone Wolf publishes no AsyncAPI document and no event catalog. Across all 348 published
+  operations there is exactly ONE outbound event mechanism: a per-signing CallbackUrl on the
+  Authentisign e-signature API. A partner sets the URL when creating a signing, or updates it
+  afterwards on an existing signing, and Lone Wolf posts callbacks for that signing's events to
+  it. There is no account-level webhook subscription, no event-type catalog, no published
+  payload schema, no signature/verification scheme, and no retry or delivery policy — the
+  contract is the string field and the phrase "webhook events" in the operation summaries.
+  Nothing comparable exists for transactions, deals, commissions or forms: every other Lone
+  Wolf API is poll-only.
+api: Lone Wolf Authentisign API
+surface:
+  model: per-resource callback URL (not a subscription registry)
+  scope: one signing
+  transport: HTTPS POST to the caller-supplied URL
+  field: CallbackUrl
+  schema: 'Authentisign.Services.Dtos.SigningUpdateDto — {callbackUrl: string, nullable}'
+operations:
+  - operationId: CreateSigning
+    method: POST
+    summary: >-
+      Create a signing. This endpoint allows for the creation of a new signing, including the
+      ability to add a webhook callback URL.
+    callback_field: CallbackUrl
+    encoding: multipart/form-data (form style)
+    sample_value_in_docs: https://yourcallbackurl.com
+  - operationId: UpdateSigningCallback
+    method: PATCH
+    path_template: /api/v1/signings/{id}
+    summary: >-
+      Update the callback URL for a signing. This endpoint allows you to update the callback
+      URL on the signing for webhook events.
+    callback_field: CallbackUrl
+    note: >-
+      CallbackUrl may be supplied either as a query parameter or in the request body
+      ({"CallbackUrl": "https://newcallbackurl.com"}).
+events:
+  published_catalog: false
+  note: >-
+    Lone Wolf does not publish the list of signing events that trigger a callback, nor the
+    payload shape. The signing lifecycle that an integrator can infer from the operation set —
+    signing sent (SendSigning), invitation resent (ResendInvitation), signing rejected
+    (RejectSigning), signing force-completed (ForceCompleteSigning), final documents sent
+    (SendFinalDocuments), signing reset (ResetSigning), signing deleted (DeleteSigning) — is
+    NOT asserted here as an event catalog, because Lone Wolf does not document it as one.
+    GetSigningHistory is the documented way to read what actually happened to a signing.
+delivery:
+  signature_verification: not documented
+  retry_policy: not documented
+  timeout: not documented
+  ip_allowlist: not documented
+  replay_protection: not documented
+polling_alternative:
+  - operationId: GetSigningHistory
+    api: Authentisign API
+    note: Returns the history of a signing — the documented way to reconcile state.
+  - operationId: GetSignings
+    api: Authentisign API
+  - note: >-
+      Deals, WolfConnect and zipForm expose modified-since style filters ($filter on
+      CreatedTimestamp, `since` / `modifiedSince` query parameters) which are the practical
+      change-detection mechanism for the non-signing APIs.
+gaps:
+  - No AsyncAPI 2.x/3.x document is published for any Lone Wolf surface.
+  - No streaming, queue or pub/sub surface exists.
+  - >-
+    Six of seven APIs — including the two that move money (Back Office, Deals) — have no event
+    or callback mechanism at all.

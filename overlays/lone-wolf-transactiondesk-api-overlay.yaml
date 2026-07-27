@@ -1,0 +1,35 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Lone Wolf TransactionDesk Partner API
+  version: 1.0.0
+extends: openapi/lone-wolf-transactiondesk-api-openapi.yml
+x-generated: '2026-07-26'
+x-method: generated
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: lone-wolf
+    x-apievangelist-api-key: transactiondesk-api
+    x-apievangelist-documentation: https://apidocs.lwolf.com/doc/transactiondesk-api
+    x-apievangelist-operation-count: 44
+    x-apievangelist-artifacts:
+      authentication: authentication/lone-wolf-authentication.yml
+      conventions: conventions/lone-wolf-conventions.yml
+      errors: errors/lone-wolf-problem-types.yml
+      lifecycle: lifecycle/lone-wolf-lifecycle.yml
+      changelog: changelog/lone-wolf-changelog.yml
+      sandbox: sandbox/lone-wolf-sandbox.yml
+      data_model: data-model/lone-wolf-data-model.yml
+      conformance: conformance/lone-wolf-conformance.yml
+      scopes: scopes/lone-wolf-scopes.yml
+      security: security/lone-wolf-domain-security.yml
+    x-apievangelist-idempotency:
+      supported: false
+      note: No idempotency key is documented for any Lone Wolf API; retrying a POST is not safe by contract.
+    x-apievangelist-rate-limits:
+      documented: false
+    x-apievangelist-operation-ids-declared: false
+- target: $.info
+  update:
+    x-apievangelist-gap: This definition declares no operationIds, so operations cannot be addressed by
+      name from Arazzo workflows, MCP tool bindings or agent skills.

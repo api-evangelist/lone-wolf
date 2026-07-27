@@ -1,0 +1,120 @@
+generated: '2026-07-26'
+method: searched
+source: https://gateway.lwolf.com/.well-known/openid-configuration
+summary: >-
+  Only the Lone Wolf identity gateway (gateway.lwolf.com, an Auth0-backed tenant) publishes a
+  /.well-known/ discovery surface. It serves both OIDC discovery and RFC 8414 OAuth
+  authorization-server metadata (identical documents) plus a JWKS. No other Lone Wolf API host
+  — api.lwolf.com, deals.api.lwolf.com, authentication.api.lwolf.com, ws.zipformplus.com,
+  api.globalwolfweb.com, api.pre.transactiondesk.com — nor the docs host or the marketing site
+  publishes any /.well-known/ document. No RFC 9116 security.txt anywhere. No RFC 9727
+  /.well-known/api-catalog. deals.api and authentication.api return 405 (method/route not
+  served) rather than 404.
+hosts:
+  - host: https://gateway.lwolf.com
+    role: identity gateway (OAuth 2.0 / OIDC, Auth0-backed) and Transact API gateway
+    documents:
+      - path: /.well-known/openid-configuration
+        standard: OpenID Connect Discovery 1.0
+        status: 200
+        file: lone-wolf-openid-configuration.json
+      - path: /.well-known/oauth-authorization-server
+        standard: RFC 8414
+        status: 200
+        file: lone-wolf-oauth-authorization-server.json
+        note: byte-identical to the openid-configuration document
+      - path: /.well-known/jwks.json
+        standard: RFC 7517
+        status: 200
+        file: lone-wolf-jwks.json
+      - path: /.well-known/security.txt
+        standard: RFC 9116
+        status: 404
+      - path: /.well-known/api-catalog
+        standard: RFC 9727
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        standard: RFC 9728
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: https://api.lwolf.com
+    role: Back Office Online + Authentisign API host
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+  - host: https://deals.api.lwolf.com
+    role: Deals API host (base URL documented in the Deals API getting-started guide)
+    documents:
+      - {path: /.well-known/security.txt, status: 405}
+      - {path: /.well-known/openid-configuration, status: 405}
+      - {path: /.well-known/oauth-authorization-server, status: 405}
+      - {path: /.well-known/api-catalog, status: 405}
+      - {path: /.well-known/oauth-protected-resource, status: 405}
+      - {path: /.well-known/ai-plugin.json, status: 405}
+  - host: https://authentication.api.lwolf.com
+    role: Deals/Foundation login endpoint (POST /v1/login issues the JWT)
+    documents:
+      - {path: /.well-known/security.txt, status: 405}
+      - {path: /.well-known/openid-configuration, status: 405}
+      - {path: /.well-known/oauth-authorization-server, status: 405}
+      - {path: /.well-known/api-catalog, status: 405}
+      - {path: /.well-known/oauth-protected-resource, status: 405}
+      - {path: /.well-known/ai-plugin.json, status: 405}
+  - host: https://ws.zipformplus.com
+    role: zipForm Partner API production host
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+  - host: https://api.globalwolfweb.com
+    role: WolfConnect API production host
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+  - host: https://api.pre.transactiondesk.com
+    role: TransactionDesk Partner API preproduction host (the only host declared in its OpenAPI)
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+  - host: https://apidocs.lwolf.com
+    role: documentation hub (Bump.sh) and MCP endpoint
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+    note: >-
+      The MCP endpoint at https://apidocs.lwolf.com/mcp answers tools/list anonymously, so no
+      OAuth protected-resource metadata is required or published.
+  - host: https://www.lwolf.com
+    role: corporate site and API Portal
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+security_txt:
+  present: false
+  note: >-
+    No RFC 9116 security.txt was found on any Lone Wolf host, and no /security,
+    /responsible-disclosure or trust.lwolf.com page resolves. Lone Wolf publishes no
+    coordinated vulnerability-disclosure contact.

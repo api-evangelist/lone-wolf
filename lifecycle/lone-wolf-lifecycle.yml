@@ -1,0 +1,77 @@
+generated: '2026-07-26'
+method: searched
+source: >-
+  https://apidocs.lwolf.com/changes, https://apidocs.lwolf.com/doc/*.md, openapi/*.yml,
+  https://www.lwolf.com/api-getting-started
+summary: >-
+  Lone Wolf versions its APIs in the URI path and publishes a dated, machine-readable change
+  feed for every definition through its Bump.sh hub — including explicit [Breaking] markers on
+  removals. What it does not publish is a policy: there is no deprecation policy page, no
+  Sunset/Deprecation header support, no SLA, and no status page anywhere on lwolf.com,
+  status.lwolf.com or trust.lwolf.com. Change is documented after the fact rather than
+  governed in advance.
+versioning:
+  scheme: uri-path
+  docs: https://apidocs.lwolf.com/
+  current:
+    transact_api:
+      services:
+        platform: /platform/v1
+        transact_workflow: /transact-workflow/v1
+        forms_design: /forms-design/api
+        forms_editor: /forms-editor/api/v1
+        authentisign: /authentisign/v3
+    deals_api: {version: 25.01.00, path: /v1}
+    back_office_online_api: {version: '1.0', path: /v1}
+    authentisign_api: {version: '1.0', paths: [/api/v1, /api/v3]}
+    transactiondesk_api: {version: '2.0'}
+    zipform_api: {version: '5.1'}
+    wolfconnect_api: {version: 1.0.0, path: per-resource /v1 suffix}
+  multi_version_docs:
+    - api: Authentisign API
+      versions: [v2, v3]
+      note: >-
+        The hub carries separate v2 and v3 documentation, both created 2025-09-17 — the only
+        Lone Wolf API with side-by-side documented versions.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No deprecation or sunset policy is published on lwolf.com or apidocs.lwolf.com, and no
+    Sunset or Deprecation response header is declared in any of the seven definitions. Breaking
+    changes are visible only retroactively in the change feed, which does mark removals
+    [Breaking] — for example the 2026-07-06 Transact API entry removed 32 resources, all flagged
+    breaking, while adding 54.
+deprecated_operations:
+  - operation: openapi/lone-wolf-wolfconnect-api-openapi.yml#searchTransactions
+    api: WolfConnect API
+    note: The only operation carrying deprecated:true across all 348 published operations.
+sla:
+  url: null
+  uptime_target: null
+  published: false
+status_page:
+  url: null
+  published: false
+  probed:
+    - {url: 'https://status.lwolf.com/', result: DNS did not resolve}
+    - {url: 'https://www.lwolf.com/status', status: 404}
+  note: >-
+    Lone Wolf publishes no public status page for its API platform. For a vendor that runs
+    brokerage accounting and transaction closing for a large share of North American
+    residential real estate, this is the most conspicuous operational-transparency gap.
+support:
+  url: https://www.lwolf.com/support
+  phone: 1-888-349-0628
+  access_request: https://www.lwolf.com/api-getting-started
+  note: >-
+    API credentials are not self-service — an access-request form is reviewed by the Lone Wolf
+    integrations team before keys are issued.
+change_feed:
+  url: https://apidocs.lwolf.com/changes
+  machine_readable: true
+  mcp_tools: [list_changes, get_change]
+  cross_reference: changelog/lone-wolf-changelog.yml
