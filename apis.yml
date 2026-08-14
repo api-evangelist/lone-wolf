@@ -47,7 +47,7 @@ tags:
   - Real Estate Agents
   - Brokers
 created: '2026-07-26'
-modified: '2026-07-26'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 apis:
   - aid: lone-wolf:lone-wolf-transact-api
@@ -279,6 +279,12 @@ common:
     url: data-model/lone-wolf-data-model.yml
   - type: Packages
     url: packages/lone-wolf-packages.yml
+  - type: RateLimits
+    name: Rate limits — none published (searched, evidenced)
+    url: rate-limits/lone-wolf-rate-limits.yml
+  - type: Plans
+    name: Plans and pricing — none published (searched, evidenced)
+    url: plans/lone-wolf-plans-pricing.yml
   - type: Webhooks
     name: Authentisign signing callbacks
     url: asyncapi/lone-wolf-authentisign-webhooks.yml
@@ -387,3 +393,18 @@ common:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 2
+  pass: local-v1
+x-coverage:
+  state: covered
+  reason: null
+  detail: >-
+    Seven anonymously downloadable OpenAPI 3.0 definitions, a live anonymous MCP server, a
+    published llms.txt and an OIDC/RFC 8414 discovery surface are all captured; the remaining
+    gaps (no plans, no rate limits, no status page, no deprecation policy, no security.txt, no
+    agent card, no first-party SDKs) are provider absences recorded with evidence, not
+    coverage failures.
+  checked: '2026-08-13'
