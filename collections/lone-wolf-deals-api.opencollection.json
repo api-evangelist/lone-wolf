@@ -1,0 +1,1574 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Deals API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Business Contact",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a business contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact guid in the request path, the method requests a business contact."
+        },
+        {
+          "info": {
+            "name": "Update a business contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact guid in the request path, the method updates the list of changes specified in the request body."
+        },
+        {
+          "info": {
+            "name": "Delete a business contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the business contact specified using the business contact guid path variable."
+        },
+        {
+          "info": {
+            "name": "Get all business contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/business-contacts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests the associated business contacts."
+        },
+        {
+          "info": {
+            "name": "Create a business contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/business-contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the dealId in the request path, the method creates a new business contact object."
+        },
+        {
+          "info": {
+            "name": "Create business contact phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/phone-numbers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact id in the request path, the method creates the contact's phone number."
+        },
+        {
+          "info": {
+            "name": "Create business contact email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/email-addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact id in the request path, the method creates the contact's email address."
+        },
+        {
+          "info": {
+            "name": "Create business contact address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact id in the request path, the method creates the contact's address."
+        },
+        {
+          "info": {
+            "name": "Update business contact email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/email-addresses/:emailAddressTypeCode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact id and email address type code in the request path, the method updates the email address fields specified in the request body."
+        },
+        {
+          "info": {
+            "name": "Delete business contact email address.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/email-addresses/:emailAddressTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the business contact's email address specified using the business contact id and email address type code path variables."
+        },
+        {
+          "info": {
+            "name": "Update business contact phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/phone-numbers/:phoneNumberTypeCode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the business contact id and phone number type code in the request path, the method updates the phone number."
+        },
+        {
+          "info": {
+            "name": "Delete business contact phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/phone-numbers/:phoneNumberTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the business contact's phone number specified using the business contact id and phone number type code path variables."
+        },
+        {
+          "info": {
+            "name": "Delete business contact address",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/business-contacts/:businessContactId/addresses/:addressTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the business contact address specified using the business contact id and address type code path variables."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Client Contact",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a client contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the client contact guid in the request path, the method requests a client contact."
+        },
+        {
+          "info": {
+            "name": "Update a client contact.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a client contact"
+        },
+        {
+          "info": {
+            "name": "Delete a client contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes a contact based on their contact GUID."
+        },
+        {
+          "info": {
+            "name": "Get a client contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/client-contacts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests a client contact."
+        },
+        {
+          "info": {
+            "name": "Create a client contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/client-contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a client contact in the given deal."
+        },
+        {
+          "info": {
+            "name": "Create client contact phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/phone-numbers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the client contact id in the request path, the method creates the contact's phone number."
+        },
+        {
+          "info": {
+            "name": "Create client contact email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/email-addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the client contact id in the request path, the method creates the contact's email address."
+        },
+        {
+          "info": {
+            "name": "Create client contact address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the client contact id in the request path, the method creates the contact's address."
+        },
+        {
+          "info": {
+            "name": "Update client contact email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/email-addresses/:emailAddressTypeCode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the client contact id and email address type code in the request path, the method updates the email address fields specified in the request body."
+        },
+        {
+          "info": {
+            "name": "Delete client contact email address.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/email-addresses/:emailAddressTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the client contact's email address specified using the client contact id and email address type code path variables."
+        },
+        {
+          "info": {
+            "name": "Update client contact phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/phone-numbers/:phoneNumberTypeCode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the client contact id and phone number type code in the request path, the method updates the phone number."
+        },
+        {
+          "info": {
+            "name": "Delete client contact phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/phone-numbers/:phoneNumberTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the client contact's phone number specified using the client contact id and phone number type code path variables."
+        },
+        {
+          "info": {
+            "name": "Delete client contact address",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/client-contacts/:clientContactId/addresses/:addressTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the client contact address specified using the client contact id and address type code path variables."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Commission",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all commissions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tiers/:tierId/commissions",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the tier guid in the request path, the method requests the associated commissions."
+        },
+        {
+          "info": {
+            "name": "Create a commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tiers/:tierId/commissions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a commission on a given tier."
+        },
+        {
+          "info": {
+            "name": "Get a commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/commissions/:commissionId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the commission id guid in the request path, the method requests a commission."
+        },
+        {
+          "info": {
+            "name": "Update a commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/commissions/:commissionId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates a commission using its commission guid."
+        },
+        {
+          "info": {
+            "name": "Delete a commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/commissions/:commissionId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes a commission using its guid."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Condition",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/conditions/:conditionId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the condition guid in the request path, the method requests a condition."
+        },
+        {
+          "info": {
+            "name": "Update a condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/conditions/:conditionId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates a condition based on its condition guid."
+        },
+        {
+          "info": {
+            "name": "Delete a condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/conditions/:conditionId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes a condition based on its condition guid."
+        },
+        {
+          "info": {
+            "name": "Get all conditions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/conditions",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests the associated conditions."
+        },
+        {
+          "info": {
+            "name": "Create a condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/conditions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a condition on a deal using a deal GUID."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Deal",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a deal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests a deal."
+        },
+        {
+          "info": {
+            "name": "Update a deal",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/deals/:dealId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates a deal based on its deal id."
+        },
+        {
+          "info": {
+            "name": "Delete a deal",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/deals/:dealId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes a deal based on its deal id."
+        },
+        {
+          "info": {
+            "name": "Get all deals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Requests all deals."
+        },
+        {
+          "info": {
+            "name": "Create a deal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a deal."
+        },
+        {
+          "info": {
+            "name": "Submit deal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/submit",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Submits a deal with a deal id so that it will replicated in brokerWOLF"
+        },
+        {
+          "info": {
+            "name": "Get deal history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/history",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests a deal's history. History is a list of log entries."
+        },
+        {
+          "info": {
+            "name": "Search for deals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/search",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using various request parameters, looks up a deal summary."
+        },
+        {
+          "info": {
+            "name": "Get the sync status of the deal with brokerWOLF",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/bw-sync-status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests the sync status with Broker Wolf"
+        },
+        {
+          "info": {
+            "name": "Get the summary of a deal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/summary",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests a summary."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Deposit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deposits/:depositId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deposit guid in the request path, the method requests a deposit."
+        },
+        {
+          "info": {
+            "name": "Update a deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/deposits/:depositId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates a deposit based on deposit guid."
+        },
+        {
+          "info": {
+            "name": "Delete a deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/deposits/:depositId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes a deposit based on its deposit guid."
+        },
+        {
+          "info": {
+            "name": "Get all deposits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/deposits",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests the associated deposits."
+        },
+        {
+          "info": {
+            "name": "Create a deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/deposits",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a deposit with a deal guid."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "External Agent",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an external agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external agent guid in the request path, the method requests an external agent."
+        },
+        {
+          "info": {
+            "name": "Update an external agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates an external agent based on their external agent guid."
+        },
+        {
+          "info": {
+            "name": "Delete an external agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes an external agent using their external agent guid."
+        },
+        {
+          "info": {
+            "name": "Get all external agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/external-agents",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests the associated external agents."
+        },
+        {
+          "info": {
+            "name": "Create an external agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/external-agents",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates an external agent with a deal guid."
+        },
+        {
+          "info": {
+            "name": "Create external agent phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/phone-numbers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external agent id in the request path, the method creates the contact's phone number."
+        },
+        {
+          "info": {
+            "name": "Create external agent email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/email-addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external agent id in the request path, the method creates the contact's email address."
+        },
+        {
+          "info": {
+            "name": "Create external agent address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external agent id in the request path, the method creates the contact's address."
+        },
+        {
+          "info": {
+            "name": "Update external agent email address",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/email-addresses/:emailAddressTypeCode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external agent id and email address type code in the request path, the method updates the email address fields specified in the request body."
+        },
+        {
+          "info": {
+            "name": "Delete external agent email address.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/email-addresses/:emailAddressTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the external agent's email address specified using the external agent id and email address type code path variables."
+        },
+        {
+          "info": {
+            "name": "Update external agent phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/phone-numbers/:phoneNumberTypeCode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external agent id and phone number type code in the request path, the method updates the phone number."
+        },
+        {
+          "info": {
+            "name": "Delete external agent phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/phone-numbers/:phoneNumberTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the external agent's phone number specified using the external agent id and phone number type code path variables."
+        },
+        {
+          "info": {
+            "name": "Delete external agent address",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/external-agents/:externalAgentId/addresses/:addressTypeCode",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes the external agent address specified using the external agent id and address type code path variables."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "External Commission",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an external commission.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/external-commissions/:externalCommissionId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the external commission guid in the request path, the method requests an external commission."
+        },
+        {
+          "info": {
+            "name": "Update an external commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/external-commissions/:externalCommissionId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates an external commission using its external commission guid."
+        },
+        {
+          "info": {
+            "name": "Delete an external commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/external-commissions/:externalCommissionId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes an external commission using its external commission guid."
+        },
+        {
+          "info": {
+            "name": "Get all external commissions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tiers/:tierId/external-commissions",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the tier guid in the request path, the method requests the associated external commissions."
+        },
+        {
+          "info": {
+            "name": "Create an external commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tiers/:tierId/external-commissions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates an external commission onto a tier using the tier guid."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tier",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tiers/:tierId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the tier guid in the request path, the method requests a tier."
+        },
+        {
+          "info": {
+            "name": "Update a tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/tiers/:tierId",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates a tier using its tier guid."
+        },
+        {
+          "info": {
+            "name": "Delete a tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tiers/:tierId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Deletes a tier using its tier guid."
+        },
+        {
+          "info": {
+            "name": "Get all tiers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/deals/:dealId/tiers",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Using the deal guid in the request path, the method requests the associated tiers."
+        },
+        {
+          "info": {
+            "name": "Create a tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/deals/:dealId/tiers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Creates a tier onto a deal using a deal guid."
+        },
+        {
+          "info": {
+            "name": "Calculate a tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tiers/calculate-tier",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Calculate a tier's commissions."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Classification",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all classifications for the brokerage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/classifications",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all classifications for the brokerage."
+        },
+        {
+          "info": {
+            "name": "Get a classification.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/classifications/:classificationId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single classification."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Property Type",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all property types for the brokerage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/property-types",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all property types for the brokerage."
+        },
+        {
+          "info": {
+            "name": "Get a property type.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/property-types/:propertyTypeId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single property type."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Condition Type",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all condition types for the brokerage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/condition-types",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all condition types for the brokerage."
+        },
+        {
+          "info": {
+            "name": "Get a condition type.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/condition-types/:conditionTypeId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single condition type."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contact Type",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all contact types for the brokerage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/contact-types",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all contact types for the brokerage."
+        },
+        {
+          "info": {
+            "name": "Get a contact type.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/contact-types/:contactTypeId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single contact type."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Source of Business",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all sources of business for the brokerage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/sources-of-business",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves all sources of business for the brokerage."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sources Of Business",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a source of business.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/sources-of-business/:sourceOfBusinessId",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a single source of business."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Returns a JWT along with other information for use in successive calls to our apps and APIs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/login",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "If the `clientId` property is not passed in, and the user is only attached to one client, that client will be returned in the JWT. If it is not passed in and the user is attached to multiple clients, then no client information will be passed back in the JWT."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

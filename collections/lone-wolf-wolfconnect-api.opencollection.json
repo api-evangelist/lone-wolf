@@ -1,0 +1,596 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "WolfConnect API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Classifications",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of all Classifications",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/classifications/v1/"
+          },
+          "docs": "All of the classifications that are configured for the Client Code used during the authentication process will be returned. The classifications returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Conditions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of all Conditions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/conditions/v1/"
+          },
+          "docs": "All of the conditions that are configured for the Client Code used during the authentication process will be returned. The conditions returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contact Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of all Contact Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/contact-types/v1/"
+          },
+          "docs": "All of the contact types that are configured for the Client Code used during the authentication process will be returned. The contact types returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sources of Business",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of all Sources of Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/sources-of-business/v1/"
+          },
+          "docs": "All of the sources of business that are configured for the Client Code used during the authentication process will be returned. The sources of business returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Property Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of all Property Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/property-types/v1/"
+          },
+          "docs": "All of the property types that are configured for the Client Code used during the authentication process will be returned. The property types returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Members",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a Collection of Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1",
+            "params": [
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              },
+              {
+                "name": "$filter",
+                "value": "",
+                "type": "query",
+                "description": "Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.)."
+              },
+              {
+                "name": "$orderby",
+                "value": "",
+                "type": "query",
+                "description": "Orders the objects returned in the response by a property related to the resource."
+              },
+              {
+                "name": "$skip",
+                "value": "",
+                "type": "query",
+                "description": "Skips the specified number of records before returning the results. $orderby must be specified for $skip to be used."
+              },
+              {
+                "name": "$top",
+                "value": "",
+                "type": "query",
+                "description": "Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. The maximum number of objects returned from any resource is 1,000. If not passed, $top=1000 is assumed."
+              }
+            ]
+          },
+          "docs": "Retrieves a collection of members within the current client code. OData can be used to filter, order and page through the list.\n\n**OData Support:** $expand, $filter, $orderby, $skip, $top"
+        },
+        {
+          "info": {
+            "name": "Create a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1",
+            "params": [
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new member within the client code. The response will contain the newly created member object populated with all of the data to which you have read access. You can use the OData $expand parameter to limit the data that is returned.\n\nPlease see the Creating and Updating Data section of the introduction for more information on how to set property values.\n\n**OData Support:** $expand"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              },
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              }
+            ]
+          },
+          "docs": "Retrieves a Member. The data in the response will contain all of the data to which you have read access. Properties with values of NULL typically mean that you do not have read access to that property. Please see the Permissions section of the introduction for more information.\n\nHEAD is also supported for this resource.\n\n**OData Support:** $expand"
+        },
+        {
+          "info": {
+            "name": "Update a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              },
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "It is best practice to only send data that you want updated as it will return a much faster response. For instance, if you only need to update the FirstName value, then you should set all other Member properties to null so that only the First Name update is attempted.\n\nPlease see the Creating and Updating Data section of the introduction for more information on how to set property values.\n\nThe response will contain the updated member object populated with all of the data to which you have read a"
+        },
+        {
+          "info": {
+            "name": "Retrieve the Profile Image of a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId/profile-image",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The size of the image returned. normal: 150 X 200 (Default), small: 100 X 133, tiny: 70 X 93"
+              },
+              {
+                "name": "width",
+                "value": "",
+                "type": "query",
+                "description": "Specifies a custom width for the returned image. The height will be adjusted to keep the same aspect ratio. The width can only be a number less than or equal to 150 as that is the max width of any stored image."
+              }
+            ]
+          },
+          "docs": "Retrieves the profile image for the member that was uploaded through the member profile page in WOLFconnect.\n\nThis resource supports the If-Modified-Since request header and will return a 304 Not Modified response if the image has not been modified since the time specified.\n\nHEAD is also supported for this resource.\n\n*NOTE: The size and width parameters should not be used at the same time.*"
+        },
+        {
+          "info": {
+            "name": "Set the Profile Image of a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId/profile-image",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "left",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "top",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "width",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "height",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "profileImage",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Sets the profile image for a member. The request must be a multi-part request containing the original image and the coordinates to use to crop the image. PUT is also supported for this resource.\n\nThe coordinates should be specified in an aspect ratio of 3:4. For instance, if you have an image that is 800 X 800, and you want the center of the image selected for the profile image, you would pass in the following for the coordinates:\n\n- Left: 100\n- Top: 0\n- Width: 600\n- Bottom: 800\n\nThis will set t"
+        },
+        {
+          "info": {
+            "name": "Delete the Profile Image of a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId/profile-image",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              }
+            ]
+          },
+          "docs": "Deletes the profile image for the member.\n\nNOTE: This resource returns OK even if the member does not have a profile image."
+        },
+        {
+          "info": {
+            "name": "Retrieve the Public Profile Image of a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId/public-profile-image",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              },
+              {
+                "name": "publicProfileOnly",
+                "value": "",
+                "type": "query",
+                "description": "Flag to tell the API whether or not to return the internal profile image if the public profile image does not exist. true: Do not return the internal profile image when no public profile image exists. false: Return the internal profile image when no public profile image exists. (Default)"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The size of the image returned. normal: 150 X 200 (Default)"
+              },
+              {
+                "name": "width",
+                "value": "",
+                "type": "query",
+                "description": "Specifies a custom width for the returned image. The height will be adjusted to keep the same aspect ratio. The width can only be a number less than or equal to 150 as that is the max width of any stored image."
+              }
+            ]
+          },
+          "docs": "Retrieves the public profile image for the member that was uploaded through the public profile page in WOLFconnect. Members can have different images for their internal profile as opposed to their public profiles. By default, if no public profile image has been uploaded, then the member profile image is returned.\n\nHEAD is also supported for this resource.\n\n*NOTE: The size and width parameters should not be used at the same time.*"
+        },
+        {
+          "info": {
+            "name": "Get the In/Out Status of a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId/in-out-status",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              }
+            ]
+          },
+          "docs": "Gets the in/out status (displayed in the top-left corner of WOLFconnect) and the notes and detailed notes for the member (if enabled, displayed on the In/Out popup window that appears when first logging in)."
+        },
+        {
+          "info": {
+            "name": "Set the In/Out Status of a Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/:memberId/in-out-status",
+            "params": [
+              {
+                "name": "memberId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the member."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the in/out status (displayed in the top-left corner of WOLFconnect) and updates the notes and detailed notes for the member (if enabled, displayed on the In/Out popup window that appears when first logging in)."
+        },
+        {
+          "info": {
+            "name": "Get the In/Out Status of All the Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/members/v1/in-out-status"
+          },
+          "docs": "Returns the in/out statuses and the notes and detailed notes for all *active* members for a given client code."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a Collection of Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/transactions/v1",
+            "params": [
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              },
+              {
+                "name": "$filter",
+                "value": "",
+                "type": "query",
+                "description": "Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.)."
+              },
+              {
+                "name": "$orderby",
+                "value": "",
+                "type": "query",
+                "description": "Orders the objects returned in the response by a property related to the resource."
+              },
+              {
+                "name": "$skip",
+                "value": "",
+                "type": "query",
+                "description": "Skips the specified number of records before returning the results. $orderby must be specified for $skip to be used."
+              },
+              {
+                "name": "$top",
+                "value": "",
+                "type": "query",
+                "description": "Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. The maximum number of objects returned from any resource is 1,000. If not passed, $top=1000 is assumed."
+              }
+            ]
+          },
+          "docs": "Retrieves a collection of transactions within the current client code. OData can be used to filter, order and page through the list.\n\n**OData Support:** $expand, $filter, $orderby, $skip, $top\n\n### Common OData Queries\n\nFind all transactions for a given office:\n\n```\n$filter=Tiers/any(x:x/AgentCommissions/any(y:y/OfficeId eq '[Lone Wolf Office Id]'))\n```\n\nFind all transactions for a given agent:\n\n```\n$filter=Tiers/any(x:x/AgentCommissions/any(y:y/AgentId eq '[Lone Wolf Member Id]'))\n```\n\nFind all"
+        },
+        {
+          "info": {
+            "name": "Create a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.globalwolfweb.com/wolfconnect/transactions/v1",
+            "params": [
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "A new Transaction must have one Tier associated to it and that Tier must have at least one AgentCommission associated to it; you will receive a validation error if you send a Transaction object without that data.\n\nTransaction.Number should be set to NULL unless the primary office for the transaction allows manual entry of a transaction number.\n\nThe response will contain the newly created transaction object populated with all of the data to which you have read access. You can use the OData $expan"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.globalwolfweb.com/wolfconnect/transactions/v1/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the transaction. This will be the value in the Transaction.Id property when the transaction was created."
+              },
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              }
+            ]
+          },
+          "docs": "Retrieves a transaction. The data in the response will contain all of the data to which you have read access. Properties with values of NULL typically mean that you do not have read access to that property. Please see the Permissions section of the introduction for more information.\n\n**OData Support:** $expand"
+        },
+        {
+          "info": {
+            "name": "Update a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.globalwolfweb.com/wolfconnect/transactions/v1/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the transaction. This will be the value in the Transaction.Id property when the transaction was created."
+              },
+              {
+                "name": "$expand",
+                "value": "",
+                "type": "query",
+                "description": "Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "It is best practice to only send data that you want updated as it will return a much faster response. For instance, if you only need to update the Transaction.CloseDate value, then you should set all other Transaction properties to null so that only a close date update is attempted.\n\nUnless the primary office allows manual entry for a transaction number and you actually want to change the transaction number, it is best to always set the Transaction.Number property to NULL before sending the requ"
+        },
+        {
+          "info": {
+            "name": "Finalize a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.globalwolfweb.com/wolfconnect/transactions/v1/:transactionId/finalize",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The Lone Wolf Id of the transaction to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The status of a transaction cannot be updated through the normal update process as you must call this resource to change the status. This resource will finalize all of the associated transaction tiers with the specified status code as well.\n\nThe list of valid status codes is defined in the Transaction.StatusCode property in the schema definitions."
+        },
+        {
+          "info": {
+            "name": "Search for Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.globalwolfweb.com/wolfconnect/transactions/v1/search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**NOTE: This resource has been deprecated in favor of using OData with the `/wolfconnect/transactions/v1` resource. See Retrieve a Collection of Transactions for more information.**\n\nThis retrieves all of the transactions that meet the search criteria. The SearchRequest object's Criteria property should contain an instance of a TransactionSearchCriteria object.\n\nYou will only be able to filter search criteria on fields to which you have read access. For example, if you don't have read access to "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

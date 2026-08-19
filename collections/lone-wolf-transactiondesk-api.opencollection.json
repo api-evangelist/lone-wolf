@@ -1,0 +1,987 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TransactionDesk Partner API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Exchange for Access Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/oauth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "grant_type",
+                  "value": ""
+                },
+                {
+                  "name": "client_id",
+                  "value": ""
+                },
+                {
+                  "name": "client_secret",
+                  "value": ""
+                },
+                {
+                  "name": "code",
+                  "value": ""
+                },
+                {
+                  "name": "redirect_uri",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Exchange an authorization code or client credentials for a bearer access token.\n\n- Use `grant_type=authorization_code` along with the `code` and `redirect_uri` from the Authorization Code flow.\n- Use `grant_type=client_credentials` for the Client Credentials flow (no user redirect required)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Summary",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions",
+            "params": [
+              {
+                "name": "$orderDir",
+                "value": "",
+                "type": "query",
+                "description": "Sort direction"
+              },
+              {
+                "name": "$skip",
+                "value": "",
+                "type": "query",
+                "description": "Number of records to skip (pagination)"
+              },
+              {
+                "name": "$take",
+                "value": "",
+                "type": "query",
+                "description": "Number of records to return (max 100)"
+              },
+              {
+                "name": "$orderBy",
+                "value": "",
+                "type": "query",
+                "description": "Field to order by"
+              }
+            ]
+          },
+          "docs": "Returns a full list of transactions owned by the authenticated user. Supports filter params ($orderDir, $skip, $take, $orderBy)."
+        },
+        {
+          "info": {
+            "name": "Create a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction file in the authenticated user's account."
+        },
+        {
+          "info": {
+            "name": "Get a Specific Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ]
+          },
+          "docs": "Returns a specific transaction file owned by the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Update a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates part or all of a specific transaction file."
+        },
+        {
+          "info": {
+            "name": "Delete a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ]
+          },
+          "docs": "Deletes a specific transaction file owned by the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get Transaction Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/details",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ]
+          },
+          "docs": "Returns property details associated with a specified transaction file. Details are divided into three sections: property information, listing information, and sale/purchase information."
+        },
+        {
+          "info": {
+            "name": "Update Transaction Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/details",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates part or all of the property details associated with a specified transaction file. You can update any combination of property, listing, and purchase fields."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Documents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/documents",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "$orderDir",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "$skip",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "$take",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "$orderBy",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a full list of documents associated with a specific transaction."
+        },
+        {
+          "info": {
+            "name": "Upload a Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/documents",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Uploads a new document to a specific transaction. The document binary must be Base64 encoded."
+        },
+        {
+          "info": {
+            "name": "Get a Specific Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/documents/:documentId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "DocumentGUID"
+              }
+            ]
+          },
+          "docs": "Returns the document binary of a specific file within a transaction."
+        },
+        {
+          "info": {
+            "name": "Update a Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/documents/:documentId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "DocumentGUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the name of a specific document within a transaction."
+        },
+        {
+          "info": {
+            "name": "Delete a Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/documents/:documentId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "DocumentGUID"
+              }
+            ]
+          },
+          "docs": "Deletes a specific document within a transaction."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Transaction Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/contacts",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ]
+          },
+          "docs": "Returns a list of all contacts associated with a specific transaction."
+        },
+        {
+          "info": {
+            "name": "Create a Transaction Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/contacts",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new contact associated with a specific transaction. Required fields: `firstName`, `lastName`, `typeId`, `transactionId`."
+        },
+        {
+          "info": {
+            "name": "Get a Specific Transaction Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/contacts/:contactId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "ContactGUID"
+              }
+            ]
+          },
+          "docs": "Returns a specific contact associated with a transaction."
+        },
+        {
+          "info": {
+            "name": "Update a Transaction Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/contacts/:contactId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "ContactGUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates one or more attributes of a specific transaction contact."
+        },
+        {
+          "info": {
+            "name": "Delete a Transaction Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/contacts/:contactId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "ContactGUID"
+              }
+            ]
+          },
+          "docs": "Deletes a specific contact from a transaction."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Contact Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Transaction Contact Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/contacts/types"
+          },
+          "docs": "Returns all transaction contact types the authenticated user is entitled to see. A user can see Global, Association, Office, and Personal level types, but can only PATCH/DELETE their own."
+        },
+        {
+          "info": {
+            "name": "Create a Transaction Contact Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/contacts/types",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction contact type for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get a Specific Transaction Contact Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/contacts/types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contact Type GUID"
+              }
+            ]
+          },
+          "docs": "Returns a specific transaction contact type."
+        },
+        {
+          "info": {
+            "name": "Update a Transaction Contact Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/contacts/types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contact Type GUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing transaction contact type. You can only update types you own."
+        },
+        {
+          "info": {
+            "name": "Delete a Transaction Contact Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/contacts/types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contact Type GUID"
+              }
+            ]
+          },
+          "docs": "Deletes a specific transaction contact type. You can only delete types you own."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Transaction Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/types"
+          },
+          "docs": "Returns all transaction types the authenticated user is entitled to see. A user can see Global, Association, Office, and Personal level types, but can only PATCH/DELETE their own."
+        },
+        {
+          "info": {
+            "name": "Create a Transaction Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/types",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction type for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get a Specific Transaction Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction Type GUID"
+              }
+            ]
+          },
+          "docs": "Returns a specific transaction type the authenticated user is entitled to see."
+        },
+        {
+          "info": {
+            "name": "Update a Transaction Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction Type GUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing transaction type. You can only update types you own."
+        },
+        {
+          "info": {
+            "name": "Delete a Transaction Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/types/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction Type GUID"
+              }
+            ]
+          },
+          "docs": "Deletes a specific transaction type. You can only delete types you own."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Statuses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Transaction Statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses"
+          },
+          "docs": "Returns all transaction statuses the authenticated user is entitled to see."
+        },
+        {
+          "info": {
+            "name": "Create a Transaction Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction status for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get a Specific Transaction Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction Status GUID"
+              }
+            ]
+          },
+          "docs": "Returns a specific transaction status the authenticated user is entitled to see."
+        },
+        {
+          "info": {
+            "name": "Update a Transaction Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction Status GUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing transaction status. You can only update statuses you own."
+        },
+        {
+          "info": {
+            "name": "Delete a Transaction Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction Status GUID"
+              }
+            ]
+          },
+          "docs": "Deletes a specific transaction status. You can only delete statuses you own."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Single Sign On",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Agent Dashboard SSO Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/view-url"
+          },
+          "docs": "Returns a one-time-use SSO link that lands the user directly on their Agent Dashboard page."
+        },
+        {
+          "info": {
+            "name": "Get Transaction List SSO Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/view-url"
+          },
+          "docs": "Returns a one-time-use SSO link that lands the user directly on their Transaction List page."
+        },
+        {
+          "info": {
+            "name": "Get Specific Transaction SSO Link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:id/view-url",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "TransactionGUID"
+              }
+            ]
+          },
+          "docs": "Returns a one-time-use SSO link that lands the user directly into a specific transaction."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Metadata",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses/meta"
+          },
+          "docs": "Returns metadata for a GET request, including the default number of records returned, the maximum, and the default sort order. Not available on transaction details or transaction contacts endpoints."
+        },
+        {
+          "info": {
+            "name": "Get Metadata Properties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/statuses/meta/properties"
+          },
+          "docs": "Returns the attributes of a resource along with their sort, filter, and type specifications."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Other Endpoints",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get All Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/users"
+          },
+          "docs": "Returns users for the authenticated API client's owner scope.\n\n**Authorization:** Requires OAuth client credentials token with a valid on-behalf-of user and an API client whose owner type is `Client`, `Company`, or `Office`."
+        },
+        {
+          "info": {
+            "name": "Get All Libraries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/formlibraries"
+          },
+          "docs": "Returns all form-library folders available to the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get Library Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/formlibraries/:folderId",
+            "params": [
+              {
+                "name": "folderId",
+                "value": "",
+                "type": "path",
+                "description": "Form-library folder identifier"
+              }
+            ]
+          },
+          "docs": "Returns details for a specific form-library folder."
+        },
+        {
+          "info": {
+            "name": "Get Forms Within a Library",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.pre.transactiondesk.com/v2/formlibraries/:folderId/forms/:formLib",
+            "params": [
+              {
+                "name": "folderId",
+                "value": "",
+                "type": "path",
+                "description": "Form-library folder identifier"
+              },
+              {
+                "name": "formLib",
+                "value": "",
+                "type": "path",
+                "description": "Form identifier within the folder. Matching is case-insensitive."
+              }
+            ]
+          },
+          "docs": "Returns a specific form within a form-library folder."
+        },
+        {
+          "info": {
+            "name": "Add Form to a Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/forms",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a form to a transaction.\n\n**Request Fields:**\n\n| Field | Type | Description |\n|---|---|---|\n| formLib | string | Form-library identifier of the form to add |"
+        },
+        {
+          "info": {
+            "name": "Delete Form from Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.pre.transactiondesk.com/v2/transactions/:transactionId/forms/:id",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Transaction form instance identifier"
+              }
+            ]
+          },
+          "docs": "Removes a form from a transaction."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

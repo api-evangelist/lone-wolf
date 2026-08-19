@@ -1,0 +1,57 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://apidocs.lwolf.com/doc/{transact,deals,back-office-online,authentisign,transactiondesk,zipform,wolfconnect}-api.md
+  + https://www.lwolf.com/api-getting-started + openapi/*.yml
+limit_count: 0
+documented: false
+summary: >-
+  Lone Wolf Technologies publishes NO rate limits. All seven API documentation pages on
+  apidocs.lwolf.com were fetched in their machine-readable markdown form and searched for
+  rate-limit language (rate limit, throttle, quota, 429, Retry-After, X-RateLimit): zero
+  matches across 134,726 bytes of documentation. None of the seven published OpenAPI
+  definitions declares a 429 response on any of their 348 operations, and no definition
+  declares a RateLimit, X-RateLimit or Retry-After response header. The API getting-started
+  page states only that credentials are issued after an access-request form is reviewed by
+  the integrations team; it names no quota, tier or throttle. An agent integrating with Lone
+  Wolf has no published runtime signal telling it when it is being throttled and no documented
+  ceiling to plan against — the only published ceiling of any kind is a response-size cap on
+  WolfConnect, recorded below because it constrains client behaviour, not because it is a
+  rate limit.
+limits: []
+response_headers:
+  declared: []
+  note: >-
+    No RateLimit-*, X-RateLimit-*, or Retry-After header is documented in any Lone Wolf API
+    reference or declared in any of the seven OpenAPI definitions.
+exhaustion_status_code: null
+related_ceilings:
+  - api: WolfConnect API
+    kind: response-size-cap
+    limit: 1000
+    unit: objects per response
+    detail: >-
+      "The maximum number of objects returned from any resource is 1,000. If the $top parameter
+      is not passed in the query string, $top=1000 is assumed. If a value greater than 1,000 is
+      specified an error will be thrown." Paging via $top/$skip (with $orderby) is required to
+      retrieve more. This is a payload ceiling, not a request-rate ceiling.
+    source: https://apidocs.lwolf.com/doc/wolfconnect-api.md
+  - api: zipForm Partner API
+    kind: page-size
+    limit: null
+    unit: records per page
+    detail: >-
+      Paged collection endpoints accept page/pagesize; no maximum pagesize value is published.
+    source: https://apidocs.lwolf.com/doc/zipform-api.md
+evidence:
+  - {url: 'https://apidocs.lwolf.com/doc/transact-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://apidocs.lwolf.com/doc/deals-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://apidocs.lwolf.com/doc/back-office-online-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://apidocs.lwolf.com/doc/authentisign-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://apidocs.lwolf.com/doc/transactiondesk-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://apidocs.lwolf.com/doc/zipform-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://apidocs.lwolf.com/doc/wolfconnect-api.md', status: 200, rate_limit_mentions: 0}
+  - {url: 'https://www.lwolf.com/api-getting-started', status: 200, rate_limit_mentions: 0}
+cross_reference:
+  - conventions/lone-wolf-conventions.yml
+  - plans/lone-wolf-plans-pricing.yml

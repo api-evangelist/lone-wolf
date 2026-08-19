@@ -1,0 +1,1481 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transact API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authorization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Obtain an access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Exchanges OAuth client credentials for a JWT access token. The returned `access_token` must be sent as a Bearer token in the `Authorization` header on all subsequent requests, together with the `lw-subscription-key` header.\n\n**Note:** this endpoint is served from the gateway root (`https://gateway.lwolf.com`) rather than a service base path."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users and Offices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/platform/v1/clients/:clientId/users",
+            "params": [
+              {
+                "name": "clientId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the Lone Wolf client (tenant) account."
+              }
+            ]
+          },
+          "docs": "Returns the users belonging to the specified client account."
+        },
+        {
+          "info": {
+            "name": "List offices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/platform/v1/clients/:clientId/offices",
+            "params": [
+              {
+                "name": "clientId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the Lone Wolf client (tenant) account."
+              }
+            ]
+          },
+          "docs": "Returns the offices belonging to the specified client account."
+        },
+        {
+          "info": {
+            "name": "Send a user invite",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/platform/v1/clients/:clientId/users/invite",
+            "params": [
+              {
+                "name": "clientId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the Lone Wolf client (tenant) account."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends an invitation to add a user to the specified client account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/Transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction for the user specified in the request body."
+        },
+        {
+          "info": {
+            "name": "List transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/transactions",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "$filter",
+                "value": "opportunityId eq 5a283c97-44a9-45a9-2f3a-08de10e96589",
+                "type": "query",
+                "description": "OData filter expression used to restrict the result set."
+              }
+            ]
+          },
+          "docs": "Returns the transactions visible to the specified user. Supports OData `$filter` (e.g. `$filter=opportunityId eq <guid>`)."
+        },
+        {
+          "info": {
+            "name": "Get a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/transactions/:transactionId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction."
+              }
+            ]
+          },
+          "docs": "Returns a single transaction by its key."
+        },
+        {
+          "info": {
+            "name": "Update a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/transactions/:transactionId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial update to a transaction. Only the fields present in the body are modified."
+        },
+        {
+          "info": {
+            "name": "Delete a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/transactions/:transactionId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction."
+              }
+            ]
+          },
+          "docs": "Deletes the specified transaction."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Share Groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List share groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/ShareGroup",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "$expand",
+                "value": "members, opportunities",
+                "type": "query",
+                "description": "Comma-separated list of related entities to include inline in the response."
+              },
+              {
+                "name": "$filter",
+                "value": "opportunityId eq 5a283c97-44a9-45a9-2f3a-08de10e96589",
+                "type": "query",
+                "description": "OData filter expression used to restrict the result set."
+              }
+            ]
+          },
+          "docs": "Returns the share groups visible to the specified user. Supports OData `$expand` (e.g. `$expand=opportunities`) and `$filter`, including lambda expressions such as `$filter=opportunities/any(o: o/opportunityId eq <guid>)`."
+        },
+        {
+          "info": {
+            "name": "Create a share group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/ShareGroup",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new, empty share group. Use the update endpoint to add members and share opportunities."
+        },
+        {
+          "info": {
+            "name": "Get a share group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/ShareGroup/:shareGroupId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "shareGroupId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the share group."
+              },
+              {
+                "name": "$expand",
+                "value": "members, opportunities",
+                "type": "query",
+                "description": "Comma-separated list of related entities to include inline in the response."
+              }
+            ]
+          },
+          "docs": "Returns a single share group by its key. Use `$expand=members` and/or `$expand=opportunities` to embed group members and shared opportunities in the response."
+        },
+        {
+          "info": {
+            "name": "Update a share group (add members and share)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/ShareGroup/:shareGroupId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "shareGroupId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the share group."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces the share group definition, including its member list and the opportunities shared with the group."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/templates",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ]
+          },
+          "docs": "Returns the transaction templates available to the specified user."
+        },
+        {
+          "info": {
+            "name": "Get a template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/templates/:templateId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction template."
+              }
+            ]
+          },
+          "docs": "Returns a single transaction template by its key."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Offers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an offer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/Offers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new offer on a transaction for the user specified in the request body. A user-scoped alternative is available at `POST /transact-workflow/v1/users/{userId}/Offers`."
+        },
+        {
+          "info": {
+            "name": "List offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Offers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ]
+          },
+          "docs": "Returns the offers visible to the specified user."
+        },
+        {
+          "info": {
+            "name": "Create an offer (user-scoped)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Offers",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new offer on a transaction under the specified user's path. Equivalent to `POST /transact-workflow/v1/Offers` with the user supplied in the path instead of the request body."
+        },
+        {
+          "info": {
+            "name": "Get an offer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Offers/:offerId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "offerId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the offer."
+              }
+            ]
+          },
+          "docs": "Returns a single offer by its key."
+        },
+        {
+          "info": {
+            "name": "Update an offer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Offers/:offerId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "offerId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the offer."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial update to an offer. Only the fields present in the body are modified."
+        },
+        {
+          "info": {
+            "name": "Delete an offer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Offers/:offerId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "offerId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the offer."
+              }
+            ]
+          },
+          "docs": "Deletes the specified offer."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/Contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new contact on a transaction for the user specified in the request body."
+        },
+        {
+          "info": {
+            "name": "List contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Contacts",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ]
+          },
+          "docs": "Returns the transaction contacts visible to the specified user."
+        },
+        {
+          "info": {
+            "name": "Get a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Contacts/:contactId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the contact."
+              }
+            ]
+          },
+          "docs": "Returns a single contact by its key."
+        },
+        {
+          "info": {
+            "name": "Update a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Contacts/:contactId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the contact."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial update to a contact. Only the fields present in the body are modified."
+        },
+        {
+          "info": {
+            "name": "Delete a contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Contacts/:contactId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "contactId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the contact."
+              }
+            ]
+          },
+          "docs": "Deletes the specified contact."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Folders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/Folders",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new folder within a transaction for the user specified in the request body."
+        },
+        {
+          "info": {
+            "name": "List folders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Folders",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ]
+          },
+          "docs": "Returns the transaction folders visible to the specified user."
+        },
+        {
+          "info": {
+            "name": "Get a folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Folders/:folderId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "folderId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the folder."
+              }
+            ]
+          },
+          "docs": "Returns a single folder by its key."
+        },
+        {
+          "info": {
+            "name": "Update a folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Folders/:folderId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "folderId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the folder."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial update to a folder. Only the fields present in the body are modified."
+        },
+        {
+          "info": {
+            "name": "Delete a folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/Folders/:folderId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "folderId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the folder."
+              }
+            ]
+          },
+          "docs": "Deletes the specified folder."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload a document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/Documents",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "transactionId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "parentId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "formId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "userId",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Uploads a document file to a transaction. The request is sent as `multipart/form-data`. A user-scoped alternative is available at `POST /transact-workflow/v1/users/{userId}/documents`."
+        },
+        {
+          "info": {
+            "name": "List documents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/documents",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "$filter",
+                "value": "parentId eq c69f5c7f-f9f4-4d7c-c22f-08de10fda488",
+                "type": "query",
+                "description": "OData filter expression used to restrict the result set (e.g. filter documents by folder: `parentId eq <folderId>`)."
+              }
+            ]
+          },
+          "docs": "Returns the documents visible to the specified user."
+        },
+        {
+          "info": {
+            "name": "Upload a document (user-scoped)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/documents",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "transactionId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "parentId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "formId",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Uploads a document file to a transaction under the specified user's path. Equivalent to `POST /transact-workflow/v1/Documents` with the user supplied in the path instead of the form body. The request is sent as `multipart/form-data`."
+        },
+        {
+          "info": {
+            "name": "Get a document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/documents/:documentId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the document."
+              }
+            ]
+          },
+          "docs": "Returns a single document's metadata by its key."
+        },
+        {
+          "info": {
+            "name": "Delete a document",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/documents/:documentId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the document."
+              }
+            ]
+          },
+          "docs": "Deletes the specified document."
+        },
+        {
+          "info": {
+            "name": "Download a document file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/transact-workflow/v1/users/:userId/documents/file/:documentId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the document."
+              }
+            ]
+          },
+          "docs": "Returns the binary file content of the specified document."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Form Libraries",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List form libraries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/forms-design/api/users/:userId/libraries",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ]
+          },
+          "docs": "Returns the form libraries available to the specified user, including field schema information."
+        },
+        {
+          "info": {
+            "name": "List library forms",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/forms-design/api/users/:userId/forms",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "libId",
+                "value": "",
+                "type": "query",
+                "description": "GUID of the form library to list forms from."
+              }
+            ]
+          },
+          "docs": "Returns the forms in the specified library."
+        },
+        {
+          "info": {
+            "name": "Get a library form",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/forms-design/api/users/:userId/forms/:libId/:formId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "libId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the form library."
+              },
+              {
+                "name": "formId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the form."
+              }
+            ]
+          },
+          "docs": "Returns a single form from the specified library."
+        },
+        {
+          "info": {
+            "name": "Stream a form page image",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/forms-design/api/users/:userId/images/:imageId/:pageNum",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "imageId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the form image resource."
+              },
+              {
+                "name": "pageNum",
+                "value": "",
+                "type": "path",
+                "description": "1-based page number to stream."
+              }
+            ]
+          },
+          "docs": "Streams the rendered image of a single page of a form."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transaction Forms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List transaction forms",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/forms-editor/api/v1/users/:userId/FormPackages/:transactionId/forms",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction (form package)."
+              }
+            ]
+          },
+          "docs": "Returns the forms attached to the specified transaction's form package."
+        },
+        {
+          "info": {
+            "name": "Add forms to a transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/forms-editor/api/v1/users/:userId/FormPackages/:transactionId/forms",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction (form package)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds one or more library forms to the transaction's form package."
+        },
+        {
+          "info": {
+            "name": "Get a transaction form PDF",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/forms-editor/api/v1/users/:userId/FormPackages/:transactionId/forms/:formId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction (form package)."
+              },
+              {
+                "name": "formId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the form within the form package."
+              }
+            ]
+          },
+          "docs": "Returns the PDF rendering of a form attached to the transaction."
+        },
+        {
+          "info": {
+            "name": "Move a form to another folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gateway.lwolf.com/forms-editor/api/v1/users/:userId/FormPackages/:transactionId/forms/:formId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the transaction (form package)."
+              },
+              {
+                "name": "formId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the form within the form package."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the parent folder of a form within the transaction's form package."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Signings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List signings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/authentisign/v3/users/:userId/signings",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "api-version",
+                "value": "3",
+                "type": "query",
+                "description": "Authentisign API version. Use `3`."
+              }
+            ]
+          },
+          "docs": "Returns the signings belonging to the specified user."
+        },
+        {
+          "info": {
+            "name": "Create a signing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/authentisign/v3/users/:userId/signings",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "api-version",
+                "value": "3",
+                "type": "query",
+                "description": "Authentisign API version. Use `3`."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "Name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "isOrdered",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "ExpirationDate",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "Files",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "CallbackUrl",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "TransactionId",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Creates a new signing with one or more documents. The request is sent as `multipart/form-data`."
+        },
+        {
+          "info": {
+            "name": "Get a signing SSO link",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/authentisign/v3/api/v3/users/:userId/sso/signing/:signingId",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the signing."
+              },
+              {
+                "name": "redirectUrl",
+                "value": "",
+                "type": "query",
+                "description": "URL to redirect the user to after the signing session."
+              }
+            ]
+          },
+          "docs": "Returns a single-sign-on link that opens the specified signing in the Authentisign UI."
+        },
+        {
+          "info": {
+            "name": "Add signing participants (batch)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.lwolf.com/authentisign/v3/api/v3/users/:userId/participants/batch",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds multiple participants to a signing in a single request. The `type` field on each participant controls their role (e.g. signer vs. carbon-copy recipient)."
+        },
+        {
+          "info": {
+            "name": "List original signing documents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/authentisign/v3/api/v3/users/:userId/signings/:signingId/documents",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the signing."
+              }
+            ]
+          },
+          "docs": "Returns the original (unsigned) documents attached to the signing."
+        },
+        {
+          "info": {
+            "name": "List signed documents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/authentisign/v3/api/v3/users/:userId/signings/:signingId/documents/s",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the signing."
+              }
+            ]
+          },
+          "docs": "Returns the signed documents for the signing."
+        },
+        {
+          "info": {
+            "name": "List signing certificates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/authentisign/v3/api/v3/users/:userId/signings/:signingId/documents/sc",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user."
+              },
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "GUID of the signing."
+              }
+            ]
+          },
+          "docs": "Returns the signing certificates for the signing's documents."
+        },
+        {
+          "info": {
+            "name": "Download an individual signed document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.lwolf.com/authentisign/v3/api/v3/:encryptedDocumentId/d",
+            "params": [
+              {
+                "name": "encryptedDocumentId",
+                "value": "",
+                "type": "path",
+                "description": "Encrypted identifier of the signed document, as returned by the signed documents listing endpoints."
+              }
+            ]
+          },
+          "docs": "Downloads a single signed document by its encrypted document identifier."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

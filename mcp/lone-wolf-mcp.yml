@@ -2,14 +2,12 @@ generated: '2026-07-26'
 method: searched
 status: published
 source: https://apidocs.lwolf.com/mcp
-summary: >-
-  Lone Wolf ships a live, anonymously reachable MCP server at https://apidocs.lwolf.com/mcp.
-  It is the Bump.sh documentation-portal MCP server that fronts the apidocs.lwolf.com hub, not
-  a product API server: its five tools search, read and diff the published documentation for
-  all seven Lone Wolf OpenAPI definitions. No Lone Wolf transaction, deal, back-office or
-  e-signature operation is exposed as an MCP tool — an agent can discover and read the whole
-  contract through MCP, then must call the REST APIs directly with credentials issued through
-  the access-request process.
+summary: 'Lone Wolf ships a live, anonymously reachable MCP server at https://apidocs.lwolf.com/mcp. It
+  is the Bump.sh documentation-portal MCP server that fronts the apidocs.lwolf.com hub, not a product
+  API server: its five tools search, read and diff the published documentation for all seven Lone Wolf
+  OpenAPI definitions. No Lone Wolf transaction, deal, back-office or e-signature operation is exposed
+  as an MCP tool — an agent can discover and read the whole contract through MCP, then must call the REST
+  APIs directly with credentials issued through the access-request process.'
 server:
   name: lone-wolf-apidocs
   vendor: Bump.sh (documentation platform), operated for Lone Wolf Technologies
@@ -17,49 +15,69 @@ server:
   url: https://apidocs.lwolf.com/mcp
   protocol: MCP JSON-RPC 2.0 over HTTP
   authentication: none
-  auth_note: >-
-    tools/list returns 200 with the full tool set and inputSchemas anonymously; no OAuth
-    challenge is issued and no /.well-known/oauth-protected-resource is published.
+  auth_note: tools/list returns 200 with the full tool set and inputSchemas anonymously; no OAuth challenge
+    is issued and no /.well-known/oauth-protected-resource is published.
   scope: documentation (search / read / changes) over the apidocs.lwolf.com hub
   probed: '2026-07-26'
   tools_manifest: mcp/lone-wolf-mcp-tools.json
 tools:
-  - name: search
-    description: >-
-      Search across all documentation pages in the portal by keyword. Returns matching pages
-      with URL, title, type and a text excerpt. Filterable by object type (api, operation,
-      schema, topic, authentication, webhook, group, response, server). Returns a maximum of
-      20 results plus a total count.
-    input_schema: {required: [query], properties: [url, query, type]}
-    backing_rest_operation: null
-  - name: get_pages
-    description: >-
-      Retrieve the full content of one or more documentation pages by URL (1-10 per call),
-      including titles and types.
-    input_schema: {required: [urls], properties: [urls]}
-    backing_rest_operation: null
-  - name: list_pages
-    description: >-
-      List all child pages under a given URL in the portal hierarchy — the recommended
-      starting point for exploring what documentation exists before fetching pages.
-    input_schema: {required: [], properties: [url]}
-    backing_rest_operation: null
-  - name: list_changes
-    description: >-
-      List visible documentation changes for a hub, an API documentation, or a specific
-      version, ordered newest first, with pagination.
-    input_schema: {required: [], properties: [url, page, limit]}
-    backing_rest_operation: null
-  - name: get_change
-    description: >-
-      Retrieve a single visible documentation change by identifier, including title,
-      description, markdown diff content and creation date.
-    input_schema: {required: [id], properties: [id]}
-    backing_rest_operation: null
+- name: search
+  description: Search across all documentation pages in the portal by keyword. Returns matching pages
+    with URL, title, type and a text excerpt. Filterable by object type (api, operation, schema, topic,
+    authentication, webhook, group, response, server). Returns a maximum of 20 results plus a total count.
+  input_schema:
+    required:
+    - query
+    properties:
+    - url
+    - query
+    - type
+  backing_rest_operation: null
+- name: get_pages
+  description: Retrieve the full content of one or more documentation pages by URL (1-10 per call), including
+    titles and types.
+  input_schema:
+    required:
+    - urls
+    properties:
+    - urls
+  backing_rest_operation: null
+- name: list_pages
+  description: List all child pages under a given URL in the portal hierarchy — the recommended starting
+    point for exploring what documentation exists before fetching pages.
+  input_schema:
+    required: []
+    properties:
+    - url
+  backing_rest_operation: null
+- name: list_changes
+  description: List visible documentation changes for a hub, an API documentation, or a specific version,
+    ordered newest first, with pagination.
+  input_schema:
+    required: []
+    properties:
+    - url
+    - page
+    - limit
+  backing_rest_operation: null
+- name: get_change
+  description: Retrieve a single visible documentation change by identifier, including title, description,
+    markdown diff content and creation date.
+  input_schema:
+    required:
+    - id
+    properties:
+    - id
+  backing_rest_operation: null
 coverage:
   tools_published: 5
   tools_backed_by_a_lone_wolf_rest_operation: 0
   lone_wolf_rest_operations_total: 348
-  note: >-
-    The MCP surface and the REST surface do not overlap at all — see
-    mcp/lone-wolf-tool-crosswalk.yml for the full divergence record.
+  note: The MCP surface and the REST surface do not overlap at all — see mcp/lone-wolf-tool-crosswalk.yml
+    for the full divergence record.
+deployment:
+  mode: remote
+  verified: searched
+  tools: 5
+  checked: '2026-08-12'
+  source: catalog MCP census

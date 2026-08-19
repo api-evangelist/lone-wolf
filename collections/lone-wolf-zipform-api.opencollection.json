@@ -1,0 +1,790 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ZipForm Partner API",
+    "version": "5.1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Auth-ContextId",
+      "value": "{{X-Auth-ContextId}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authenticate Using User Credentials",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/auth/user",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authenticates the partner application and a zipForm® user using username/password or user GUID, and returns a Context Id for use in subsequent requests.\n\nOptionally supply `LinkExternalId` to link the user's account to a partner external ID.\n\n**Returns 409** if account linking fails."
+        },
+        {
+          "info": {
+            "name": "Authenticate Using External Id",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/auth/external-id",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authenticates using the partner's External Id and Shared Key, and returns a Context Id."
+        },
+        {
+          "info": {
+            "name": "End Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/auth/end-session"
+          },
+          "docs": "Ends the current session identified by the Context Id. Partners using Context Id authentication should invoke this when their application session ends to destroy the Context Id."
+        },
+        {
+          "info": {
+            "name": "Unlink Account (GET)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/auth/unlink",
+            "params": [
+              {
+                "name": "SharedKey",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ExternalId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Alternative GET form of the unlink method. Supply SharedKey and ExternalId as query parameters."
+        },
+        {
+          "info": {
+            "name": "Unlink Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/auth/unlink",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Unlinks a partner account (identified by External Id) from its associated zipForm® account. The zipForm® account becomes available for linking to another partner account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Transaction List",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions",
+            "params": [
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Return transactions created from this date onwards"
+              },
+              {
+                "name": "modifiedSince",
+                "value": "",
+                "type": "query",
+                "description": "Return transactions modified from this date onwards"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status: active (default), pending, closed, inactive, locked, all, all:active, all:pending, all:closed, all:inactive, all:locked"
+              },
+              {
+                "name": "agentId",
+                "value": "",
+                "type": "query",
+                "description": "Filter transactions by agent ID (brokerage/team scenarios)"
+              },
+              {
+                "name": "filterBy",
+                "value": "",
+                "type": "query",
+                "description": "Text filter applied to property address, city, zip, transaction name, or buyer/seller name"
+              },
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by team ID, or use 'all' for all teams the agent belongs to"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pagesize",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sortorder",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns the list of transactions available for the authenticated user. Supports optional filter parameters."
+        },
+        {
+          "info": {
+            "name": "Create Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction for the authenticated user. `name` is required. `data` can include key-value pairs from the Transaction Data Keys appendix. `transactionType` and `propertyType` accept string or integer enum values."
+        },
+        {
+          "info": {
+            "name": "Get Transaction Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ]
+          },
+          "docs": "Returns the metadata for a specific transaction. Useful for a quick lookup of a transaction by its GUID."
+        },
+        {
+          "info": {
+            "name": "Delete Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ]
+          },
+          "docs": "Deletes the specified transaction for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get Transaction Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/data",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ]
+          },
+          "docs": "Returns the data (key-value pairs) for a given transaction. See the Transaction Data Keys appendix in the introduction for the full list of available keys."
+        },
+        {
+          "info": {
+            "name": "Set Transaction Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/data",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query",
+                "description": "Merge (default) adds to existing data; Replace removes existing data and sets the new values."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the data for a given transaction. The `mode` parameter controls whether supplied data is merged with existing data (default) or replaces it entirely."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Apply Template to Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/apply/:templateId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "templateId",
+                "value": "",
+                "type": "path",
+                "description": "Template ID"
+              }
+            ]
+          },
+          "docs": "Applies a template to a specified transaction."
+        },
+        {
+          "info": {
+            "name": "Get List of Templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/templates"
+          },
+          "docs": "Returns the list of templates available to the authenticated user. Optionally filter by office using the path `/templates/<office ID>`."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Forms and Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Form List",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/forms",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ]
+          },
+          "docs": "Returns the list of forms for a given transaction. Forms are distinguished by `contentType` having a value of `form`."
+        },
+        {
+          "info": {
+            "name": "Get Document List",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "excludeforms",
+                "value": "",
+                "type": "query",
+                "description": "If true, only non-form documents are returned"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pagesize",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sortorder",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns the list of documents and forms for a given transaction, in the same order as the zipForm® Plus UI. Use `excludeforms=true` to return only non-form documents."
+        },
+        {
+          "info": {
+            "name": "Add Form to Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents/form",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a form (by its GUID) to a transaction. Form GUIDs are obtained from the Get Library Forms endpoint."
+        },
+        {
+          "info": {
+            "name": "Upload File Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents/file",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "Name",
+                "value": "",
+                "type": "query",
+                "description": "Document name"
+              },
+              {
+                "name": "Description",
+                "value": "",
+                "type": "query",
+                "description": "Document description"
+              },
+              {
+                "name": "ContainerId",
+                "value": "",
+                "type": "query",
+                "description": "Optional folder ID to store the document in"
+              },
+              {
+                "name": "Id",
+                "value": "",
+                "type": "query",
+                "description": "Optional document ID. If provided and found, adds a new version."
+              }
+            ]
+          },
+          "docs": "Uploads a file document to a transaction. If `Id` is omitted, a new document is created at version 1. If `Id` is provided and matches an existing document, a new version is added.\n\n**Supported MIME types:** `application/pdf`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `image/jpeg`, `image/png`, `image/bmp`, `image/gif`"
+        },
+        {
+          "info": {
+            "name": "Get Document Contents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents/:documentId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "Document ID or Form GUID"
+              }
+            ]
+          },
+          "docs": "Returns the content of the specified form or document. If a form GUID is specified, returns it as a PDF. Otherwise returns the document in its existing format.\n\nOptionally append `/<version>` to the URL to specify the form version or document version number."
+        },
+        {
+          "info": {
+            "name": "Delete Document",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents/:documentId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "Document ID or Form GUID"
+              }
+            ]
+          },
+          "docs": "Deletes the specified form or document from the transaction."
+        },
+        {
+          "info": {
+            "name": "Get Document Metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents/:documentId/meta",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "Document ID or Form GUID"
+              }
+            ]
+          },
+          "docs": "Returns the metadata associated with a form or document. For forms, `size` is always 0. `signed` values: 0=not signed, 1=Docusign, 2=zipLogix Digital Ink, 3=zipLogix Digital Ink TouchSign."
+        },
+        {
+          "info": {
+            "name": "Get Form Hash",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/documents/:documentId/hash",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "Document ID or Form GUID"
+              }
+            ]
+          },
+          "docs": "Returns an MD5 hash of the form, calculated upon PDF generation. Useful for determining whether a form has changed since it was last retrieved."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Title Integration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update Title Order Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/title-order-status/:status",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "path",
+                "description": "New title order status"
+              }
+            ]
+          },
+          "docs": "Allows a title partner to update the status of a title order associated with a transaction."
+        },
+        {
+          "info": {
+            "name": "Retrieve All Title Order Notes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/title-order-note",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ]
+          },
+          "docs": "Retrieves all title notes associated with a transaction."
+        },
+        {
+          "info": {
+            "name": "Add Note to Title Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/title-order-note",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows a title partner to add a note to the title order associated with a transaction."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Form Libraries",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Agent Libraries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/agents/libraries",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pagesize",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sortorder",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns the list of form libraries available to the authenticated user. Each user may have access to one or more libraries through their entitlements or purchases."
+        },
+        {
+          "info": {
+            "name": "Get Library Forms",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/libraries/:libraryId/:libraryName/:libraryVersion",
+            "params": [
+              {
+                "name": "libraryId",
+                "value": "",
+                "type": "path",
+                "description": "Library ID"
+              },
+              {
+                "name": "libraryName",
+                "value": "",
+                "type": "path",
+                "description": "Library Name"
+              },
+              {
+                "name": "libraryVersion",
+                "value": "",
+                "type": "path",
+                "description": "Library Version"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "pagesize",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "orderby",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sortorder",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns the list of forms available in a specific library. Since this method is about forms, `contentType` always has a value of `form` in the response."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Teams",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get List of Teams for an Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://ws.zipformplus.com/api/teams"
+          },
+          "docs": "Returns the list of teams the authenticated agent belongs to. A team may be a standalone team or a brokerage team. Returns an empty response if the agent is not part of any team."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Authentisign",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Signing Packet",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://ws.zipformplus.com/api/transactions/:transactionId/get-authentisign-url",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "Transaction GUID"
+              },
+              {
+                "name": "docList",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of form or document IDs to include in the signing packet."
+              },
+              {
+                "name": "packetName",
+                "value": "",
+                "type": "query",
+                "description": "The name to assign to the Authentisign e-sign packet."
+              }
+            ]
+          },
+          "docs": "Generates an Authentisign 2 (AS2) SSO signing URL for the specified transaction. Builds a signing session using the authenticated member's profile, the specified transaction, and the provided document list and packet name. The returned URL can be used to redirect the user directly into the Authentisign signing experience."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

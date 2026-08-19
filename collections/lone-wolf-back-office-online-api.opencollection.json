@@ -1,0 +1,1500 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Back Office API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Business Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Business Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/business-contacts",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Returns all the business contacts for the specified transaction."
+        },
+        {
+          "info": {
+            "name": "Create Business Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/business-contacts",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new business contact for the transaction."
+        },
+        {
+          "info": {
+            "name": "Get Business Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/business-contacts/:businessContactId",
+            "params": [
+              {
+                "name": "businessContactId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the business contact."
+              }
+            ]
+          },
+          "docs": "Retrieves a single business contact."
+        },
+        {
+          "info": {
+            "name": "Update Business Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/business-contacts/:businessContactId",
+            "params": [
+              {
+                "name": "businessContactId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the business contact."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Make changes to existing business contacts."
+        },
+        {
+          "info": {
+            "name": "Delete Business Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/business-contacts/:businessContactId",
+            "params": [
+              {
+                "name": "businessContactId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the business contact."
+              }
+            ]
+          },
+          "docs": "Delete an existing business contact."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Classifications",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Classifications",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/classifications"
+          },
+          "docs": "Get Classifications"
+        },
+        {
+          "info": {
+            "name": "Get Classification",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/classifications/:classificationId",
+            "params": [
+              {
+                "name": "classificationId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the classification."
+              }
+            ]
+          },
+          "docs": "Get Classification"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Client Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Client Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/client-contacts",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get Client Contacts"
+        },
+        {
+          "info": {
+            "name": "Create Client Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/client-contacts",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Client Contact"
+        },
+        {
+          "info": {
+            "name": "Get Client Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/client-contacts/:clientContactId",
+            "params": [
+              {
+                "name": "clientContactId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the client contact."
+              }
+            ]
+          },
+          "docs": "Get Client Contact"
+        },
+        {
+          "info": {
+            "name": "Update Client Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/client-contacts/:clientContactId",
+            "params": [
+              {
+                "name": "clientContactId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the client contact."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Client Contact"
+        },
+        {
+          "info": {
+            "name": "Delete Client Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/client-contacts/:clientContactId",
+            "params": [
+              {
+                "name": "clientContactId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the client contact."
+              }
+            ]
+          },
+          "docs": "Delete Client Contact"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Commission Fees",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Commission Fees",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers/:tierId/commissions/:commissionId/fees",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              },
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              },
+              {
+                "name": "commissionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the commission."
+              }
+            ]
+          },
+          "docs": "Get Commission Fees"
+        },
+        {
+          "info": {
+            "name": "Get Commission Fee",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/commission-fees/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the commission fee."
+              }
+            ]
+          },
+          "docs": "Get Commission Fee"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Commissions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Commissions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers/:tierId/commissions",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              },
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              }
+            ]
+          },
+          "docs": "Retrieves the list of commissions for a specific transaction and tier. This will only return the list of commissions to which you have\naccess. It may not be the full list of commissions associated with the transaction."
+        },
+        {
+          "info": {
+            "name": "Create Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers/:tierId/commissions",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              },
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Commission"
+        },
+        {
+          "info": {
+            "name": "Get Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/commissions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the commission."
+              }
+            ]
+          },
+          "docs": "Get Commission"
+        },
+        {
+          "info": {
+            "name": "Update Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/commissions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the commission."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Commission"
+        },
+        {
+          "info": {
+            "name": "Delete Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/commissions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete Commission"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Condition Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Condition Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/condition-types"
+          },
+          "docs": "Get Condition Types"
+        },
+        {
+          "info": {
+            "name": "Get Condition Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/condition-types/:conditionTypeId",
+            "params": [
+              {
+                "name": "conditionTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the condition type."
+              }
+            ]
+          },
+          "docs": "Get Condition Type"
+        },
+        {
+          "info": {
+            "name": "Update Condition Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/condition-types/:conditionTypeId",
+            "params": [
+              {
+                "name": "conditionTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the condition type."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Condition Type"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Conditions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Conditions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/conditions",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get Conditions"
+        },
+        {
+          "info": {
+            "name": "Create Condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/conditions",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Condition"
+        },
+        {
+          "info": {
+            "name": "Get Condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/conditions/:conditionId",
+            "params": [
+              {
+                "name": "conditionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the condition."
+              }
+            ]
+          },
+          "docs": "Get Condition"
+        },
+        {
+          "info": {
+            "name": "Update Condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/conditions/:conditionId",
+            "params": [
+              {
+                "name": "conditionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the condition."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Condition"
+        },
+        {
+          "info": {
+            "name": "Delete Condition",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/conditions/:conditionId",
+            "params": [
+              {
+                "name": "conditionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the condition."
+              }
+            ]
+          },
+          "docs": "Delete Condition"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contact Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Contact Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/contact-types"
+          },
+          "docs": "Get Contact Types"
+        },
+        {
+          "info": {
+            "name": "Get Contact Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/contact-types/:contactTypeId",
+            "params": [
+              {
+                "name": "contactTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the contact type."
+              }
+            ]
+          },
+          "docs": "Get Contact Type"
+        },
+        {
+          "info": {
+            "name": "Update Contact Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/contact-types/:contactTypeId",
+            "params": [
+              {
+                "name": "contactTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the contact type."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Contact Type"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Deposits",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Deposits",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/deposits",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get Deposits"
+        },
+        {
+          "info": {
+            "name": "Create Deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/deposits",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Deposit"
+        },
+        {
+          "info": {
+            "name": "Get Deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/deposits/:depositId",
+            "params": [
+              {
+                "name": "depositId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the deposit."
+              }
+            ]
+          },
+          "docs": "Get Deposit"
+        },
+        {
+          "info": {
+            "name": "Update Deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/deposits/:depositId",
+            "params": [
+              {
+                "name": "depositId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the deposit."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Deposit"
+        },
+        {
+          "info": {
+            "name": "Delete Deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/deposits/:depositId",
+            "params": [
+              {
+                "name": "depositId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the deposit."
+              }
+            ]
+          },
+          "docs": "Delete Deposit"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Employees",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Employees",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/employees"
+          },
+          "docs": "Get Employees"
+        },
+        {
+          "info": {
+            "name": "Get Employee",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/employees/:employeeId",
+            "params": [
+              {
+                "name": "employeeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the employee."
+              }
+            ]
+          },
+          "docs": "Get Employee"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "External Agents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get External Agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/external-agents",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get External Agents"
+        },
+        {
+          "info": {
+            "name": "Create External Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/external-agents",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create External Agent"
+        },
+        {
+          "info": {
+            "name": "Get External Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/external-agents/:externalAgentId",
+            "params": [
+              {
+                "name": "externalAgentId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the external agent."
+              }
+            ]
+          },
+          "docs": "Get External Agent"
+        },
+        {
+          "info": {
+            "name": "Update External Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/external-agents/:externalAgentId",
+            "params": [
+              {
+                "name": "externalAgentId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the external agent."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update External Agent"
+        },
+        {
+          "info": {
+            "name": "Delete External Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/external-agents/:externalAgentId",
+            "params": [
+              {
+                "name": "externalAgentId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the external agent."
+              }
+            ]
+          },
+          "docs": "Delete External Agent"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "External Commissions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get External Commissions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers/:tierId/external-commissions",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              },
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              }
+            ]
+          },
+          "docs": "Get External Commissions"
+        },
+        {
+          "info": {
+            "name": "Create External Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers/:tierId/external-commissions",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              },
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create External Commission"
+        },
+        {
+          "info": {
+            "name": "Get External Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/external-commissions/:externalCommissionId",
+            "params": [
+              {
+                "name": "externalCommissionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the external commission."
+              }
+            ]
+          },
+          "docs": "Get External Commission"
+        },
+        {
+          "info": {
+            "name": "Update External Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/external-commissions/:externalCommissionId",
+            "params": [
+              {
+                "name": "externalCommissionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the external commission."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update External Commission"
+        },
+        {
+          "info": {
+            "name": "Delete External Commission",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/backoffice/v1/external-commissions/:externalCommissionId",
+            "params": [
+              {
+                "name": "externalCommissionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the external commission."
+              }
+            ]
+          },
+          "docs": "Delete External Commission"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Features",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Features",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/features"
+          },
+          "docs": "Get Features"
+        },
+        {
+          "info": {
+            "name": "Get Feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/features/:featureId",
+            "params": [
+              {
+                "name": "featureId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the feature."
+              }
+            ]
+          },
+          "docs": "Get Feature"
+        },
+        {
+          "info": {
+            "name": "Update Feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/features/:featureId",
+            "params": [
+              {
+                "name": "featureId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the feature."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Feature"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Offices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Offices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/offices"
+          },
+          "docs": "Get Offices"
+        },
+        {
+          "info": {
+            "name": "Get Office",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/offices/:officeId",
+            "params": [
+              {
+                "name": "officeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the office."
+              }
+            ]
+          },
+          "docs": "Get Office"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Property Types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Property Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/property-types"
+          },
+          "docs": "Get Property Types"
+        },
+        {
+          "info": {
+            "name": "Get Property Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/property-types/:propertyTypeId",
+            "params": [
+              {
+                "name": "propertyTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the property type."
+              }
+            ]
+          },
+          "docs": "Get Property Type"
+        },
+        {
+          "info": {
+            "name": "Update Property Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/property-types/:propertyTypeId",
+            "params": [
+              {
+                "name": "propertyTypeId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the property type."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Property Type"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sources of Business",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Sources of Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/sources-of-business"
+          },
+          "docs": "Get Sources of Business"
+        },
+        {
+          "info": {
+            "name": "Get Source of Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/sources-of-business/:sourceOfBusinessId",
+            "params": [
+              {
+                "name": "sourceOfBusinessId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the source of business."
+              }
+            ]
+          },
+          "docs": "Get Source of Business"
+        },
+        {
+          "info": {
+            "name": "Update Source of Business",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/sources-of-business/:sourceOfBusinessId",
+            "params": [
+              {
+                "name": "sourceOfBusinessId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the source of business."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Source of Business"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tiers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Tiers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get Tiers"
+        },
+        {
+          "info": {
+            "name": "Create Tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/tiers",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Tier"
+        },
+        {
+          "info": {
+            "name": "Get Tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/tiers/:tierId",
+            "params": [
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              }
+            ]
+          },
+          "docs": "Get Tier"
+        },
+        {
+          "info": {
+            "name": "Update Tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/tiers/:tierId",
+            "params": [
+              {
+                "name": "tierId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Tier"
+        },
+        {
+          "info": {
+            "name": "Calculate Tier",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/tiers/calculate-tier",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Calculates the commissions and fees for a tier. No data is saved during this call and the only data that is\nused in the calculations is the data that is passed in the tier object."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions"
+          },
+          "docs": "Get Transactions"
+        },
+        {
+          "info": {
+            "name": "Create Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Transaction"
+        },
+        {
+          "info": {
+            "name": "Get Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get Transaction"
+        },
+        {
+          "info": {
+            "name": "Update Transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Transaction"
+        },
+        {
+          "info": {
+            "name": "Get Transaction Summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/:transactionId/summary",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the transaction."
+              }
+            ]
+          },
+          "docs": "Get Transaction Summary"
+        },
+        {
+          "info": {
+            "name": "Get Transaction Summaries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/backoffice/v1/transactions/summary"
+          },
+          "docs": "Get Transaction Summaries"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

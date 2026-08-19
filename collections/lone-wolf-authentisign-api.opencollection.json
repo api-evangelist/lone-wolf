@@ -1,0 +1,1295 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Authentisign API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update Email Signature. Use this endpoint to update the email signature associated with the current account.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/accounts/email-signature",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "emailSignature",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /Accounts/email-signature\r\n    \"emailSignature\" : \"Best Regards, John Doe\""
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "CCs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve CCs for a signing. This endpoint fetches all the CCs associated with the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/ccs",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which CCs are to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/CCs"
+        },
+        {
+          "info": {
+            "name": "Add CCs in batch. This endpoint allows you to add multiple CCs at once for efficient processing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/ccs/batch",
+            "headers": [
+              {
+                "name": "externalId",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /api/v1/signings/{signingId}/CCs/batch\r\n    [\r\n        {\r\n            \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"signingId\": \"12345678-1234-1234-1234-123456789012\",\r\n            \"firstName\": \"John\",\r\n            \"middleName\": \"D\",\r\n            \"lastName\": \"Doe\",\r\n            \"email\": \"john.doe@example.com\",\r\n            \"displayOrder\": 1,\r\n            \"externalId\": \"EXT1234\",\r\n            \"transactionId\": \"9b74f03d-71d4-4911-a0d4-60c720bac"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve signing document IDs. This endpoint fetches the document IDs associated with the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which document IDs are to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents"
+        },
+        {
+          "info": {
+            "name": "Apply a layout to a document within a specific signing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents/:documentId",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing to which the document belongs."
+              },
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the document to which the layout is to be applied."
+              },
+              {
+                "name": "LayoutId",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Layout ID. This property represents the unique identifier of the document layout."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    PATCH /api/v1/signings/3fa85f64-5717-4562-b3fc-2c963f66afa6/documents/3fa85f64-5717-4562-b3fc-2c963f66afa7\r\n    {\r\n       \"LayoutId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa8\"\r\n    }"
+        },
+        {
+          "info": {
+            "name": "Retrieve the fully executed combined signing package PDF.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents/s",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which the final document is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents/s"
+        },
+        {
+          "info": {
+            "name": "Retrieve the URL to a fully executed combined signing package PDF.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents/s/url",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which the final document URL is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents/s/url"
+        },
+        {
+          "info": {
+            "name": "Retrieve the signing certificate for a specific signing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents/sc",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which the certificate is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET ~/api/v1/signings/{signingId}/documents/sc"
+        },
+        {
+          "info": {
+            "name": "Retrieve the latest signed document for a specific signing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents/ls",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which the latest signed document is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET ~/api/v1/signings/{signingId}/documents/ls"
+        },
+        {
+          "info": {
+            "name": "Retrieve the URL to latest signed document associated with the specified signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/documents/ls/url",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which the final document URL is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/documents/ls/url"
+        },
+        {
+          "info": {
+            "name": "Retrieve the original document using its encrypted ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/documents/:encryptedDocumentId/o",
+            "params": [
+              {
+                "name": "encryptedDocumentId",
+                "value": "",
+                "type": "path",
+                "description": "The encrypted identifier of the document to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /{encryptedDocumentId}/o"
+        },
+        {
+          "info": {
+            "name": "Retrieve the URL of the original document.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/documents/:documentId/o/url",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the document."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /{documentId}/o/url"
+        },
+        {
+          "info": {
+            "name": "Retrieve the final version of a document using its encrypted ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/documents/:encryptedDocumentId/d",
+            "params": [
+              {
+                "name": "encryptedDocumentId",
+                "value": "",
+                "type": "path",
+                "description": "The encrypted identifier of the document to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /{encryptedDocumentId}/d"
+        },
+        {
+          "info": {
+            "name": "Retrieve the URL of the final version of a document.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/documents/:documentId/d/url",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the document."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /{documentId}/d/url"
+        },
+        {
+          "info": {
+            "name": "Retrieve the certificate of a document using its encrypted ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/documents/:encryptedDocumentId/dc",
+            "params": [
+              {
+                "name": "encryptedDocumentId",
+                "value": "",
+                "type": "path",
+                "description": "The encrypted identifier of the document for which the certificate is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /{encryptedDocumentId}/dc"
+        },
+        {
+          "info": {
+            "name": "Retrieve the URL of the document's certificate.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/documents/:documentId/dc/url",
+            "params": [
+              {
+                "name": "documentId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the document."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /{documentId}/dc/url"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "History",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve Audit Trail. This endpoint allows you to pull a list of all audit trail events related to this signing. The audit trail is also embedded into the final signed documents themselves.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/history",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the signing for which the audit trail is to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /signings/{signingId}/history\r\n            \r\nHeader:\r\n    externalId: SomeExternalId"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Layouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get layouts by language. This endpoint retrieves all layouts created under the account based on the specified language.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/layouts",
+            "params": [
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "The language used in the API call."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /layouts?language=en"
+        },
+        {
+          "info": {
+            "name": "Create a new layout. This endpoint allows you to create a signature layout for future signing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/layouts",
+            "params": [
+              {
+                "name": "Name",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set the Layout Name. This property represents the descriptive name of the layout."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /layouts\r\n    {\r\n        \"name\": \"Test Layout\"\r\n    }"
+        },
+        {
+          "info": {
+            "name": "Copy an existing layout. This endpoint lets you duplicate a layout for reuse.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/layouts/:id/copy",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the layout to copy."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /layouts/{layoutId}/copy"
+        },
+        {
+          "info": {
+            "name": "Delete a specific layout. This endpoint removes a layout based on its ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/authentisign/api/v1/layouts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the layout to delete."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    DELETE /layouts/{LayoutId}"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Participants",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the list of signing participants within a signing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/participants",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which participants are to be fetched."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{signingId}/participants"
+        },
+        {
+          "info": {
+            "name": "Update the email address of a signing participant and resend the invitation.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.lwolf.com/authentisign/api/v1/participants/:participantId/email",
+            "params": [
+              {
+                "name": "participantId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the participant whose email is to be updated."
+              },
+              {
+                "name": "Email",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set the email address of the participant."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    PATCH /api/v1/participants/{participantId}/email \r\n    {\r\n        \"email\": \"change@lwolf.com\"\r\n    }"
+        },
+        {
+          "info": {
+            "name": "Batch creation of signing participants for a signing process.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/participants/batch",
+            "headers": [
+              {
+                "name": "externalId",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /api/v1/participants/batch \r\n    Header: externalId\r\n    Request Body:\r\n    [\r\n        {\r\n            \"Id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"SigningId\": \"5c192f97-41e4-ed11-8e8b-00224827d18c\",\r\n            \"FirstName\": \"John\",\r\n            \"MiddleName\": \"D\",\r\n            \"LastName\": \"Doe\",\r\n            \"Email\": \"john.doe@example.com\",\r\n            \"ParticipantRole\": \"Buyer\",\r\n            \"CustomSignature\": \"JD_Signature\",\r\n            "
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Signings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve all signings owned by a user. This endpoint fetches a list of all the signings that the user owns.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings",
+            "params": [
+              {
+                "name": "TransactionId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "StatusId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "SortBy",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "SortDescending",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "FilterBy",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "SkipItems",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ItemLimit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings?SortBy=LastModified&SortDescending=true&FilterBy=exampleFilter&SkipItems=0&ItemLimit=50&TransactionId=example-transaction-id&StatusId=1,21"
+        },
+        {
+          "info": {
+            "name": "Create a signing. This endpoint allows for the creation of a new signing, including the ability to add a webhook callback URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings",
+            "headers": [
+              {
+                "name": "externalId",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "Files",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "FilesWithStrikeoutsDisabled",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "Fields",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "Participants",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "Id",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "Name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "AccountId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "StatusId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "IsOrdered",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "DateCreated",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "LastModified",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "ExpirationDate",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "IdPosition",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "ReminderDay",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "ReminderHour",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "TransactionId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "TechnologyProvider",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "CallbackUrl",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "LayoutId",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "ApplyLayout",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings\r\n            \r\nRequest Body:\r\n            \r\n```json\r\n{\r\n    \"Id\": \"example-guid-1\",\r\n    \"Name\": \"Test Layout\",\r\n    \"AccountId\": \"example-guid-2\",\r\n    \"StatusId\": 1,\r\n    \"IsOrdered\": false,\r\n    \"DateCreated\": \"2023-04-20T02:59:00Z\",\r\n    \"LastModified\": \"2023-04-21T02:59:00Z\",\r\n    \"ExpirationDate\": \"2023-04-26T02:59:00Z\",\r\n    \"IdPosition\": 1,\r\n    \"ReminderDay\": 5,\r\n    \"ReminderHour\": 2,\r\n    \"TransactionId\": \"example-guid-3\",\r\n    \"Techno"
+        },
+        {
+          "info": {
+            "name": "Retrieve details of an individual signing. This endpoint fetches details for the signing associated with the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing to be retrieved."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/signings/{id}"
+        },
+        {
+          "info": {
+            "name": "Update the callback URL for a signing. This endpoint allows you to update the callback URL on the signing for webhook events.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing to be updated."
+              },
+              {
+                "name": "CallbackUrl",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set the Callback URL. This property represents the URL to which callbacks related to the signing should be sent."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    PATCH /api/v1/signings/{id}\r\n    {\r\n        \"CallbackUrl\": \"https://newcallbackurl.com\"\r\n    }"
+        },
+        {
+          "info": {
+            "name": "Deletes a signing session. This endpoint removes a signing session based on the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session to be deleted."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    DELETE /signings/{id}"
+        },
+        {
+          "info": {
+            "name": "Duplicate an existing signing. This endpoint creates a copy of a signing session based on the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:id/copy",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session to be copied."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{id}/copy"
+        },
+        {
+          "info": {
+            "name": "Reset a signing session. This endpoint resets the status of a signing session based on its ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:id/reset",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session to be reset."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{id}/reset"
+        },
+        {
+          "info": {
+            "name": "Resend the signing invitation. This endpoint resends the invitation for a signing session based on the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:id/resend-invitation",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{id}/resend-invitation"
+        },
+        {
+          "info": {
+            "name": "Send final documents of a signing session. This endpoint sends the final documents for a completed signing session.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/send-final-documents",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session."
+              },
+              {
+                "name": "Emails",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set the email addresses. This property represents the email addresses, typically in a serialized or comma-separated format."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{signingId}/send-final-documents\r\n            \r\nRequest Body:\r\n            \r\n```json\r\n{\r\n   \"Emails\": \"email1@example.com,email2@example.com\"\r\n}\r\n```"
+        },
+        {
+          "info": {
+            "name": "Link a transaction to a signing session. This endpoint associates a transaction with a signing session based on the provided ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/link-transaction",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session."
+              },
+              {
+                "name": "TransactionId",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set the unique identifier of the transaction."
+              },
+              {
+                "name": "Documents",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set the list of documents associated with the transaction."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{signingId}/link-transaction\r\n            \r\nRequest Body:\r\n            \r\n```json\r\n{\r\n    \"TransactionId\": \"example-transaction-id\",\r\n    \"Documents\": [\r\n        {\r\n            \"Id\": \"example-document-id-1\",\r\n            \"BFMDocumentId\": \"BFMDoc-001\"\r\n        },\r\n        {\r\n            \"Id\": \"example-document-id-2\",\r\n            \"BFMDocumentId\": \"BFMDoc-002\"\r\n        }\r\n        // ... add more documents as required\r\n    ]\r\n}\r\n```"
+        },
+        {
+          "info": {
+            "name": "Force completes a signing session. This endpoint forcefully completes a signing session based on the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/force-complete",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session to be forcefully completed."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{signingId}/force-complete"
+        },
+        {
+          "info": {
+            "name": "Retrieve deleted signing sessions. This endpoint fetches all the deleted signing sessions for a given external ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/deleted",
+            "headers": [
+              {
+                "name": "externalId",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /signings/deleted\r\n    Headers:\r\n        externalId: your-external-id-guid"
+        },
+        {
+          "info": {
+            "name": "Recover a deleted signing session. This endpoint recovers a deleted signing session based on the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/recover-deleted",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing session to be recovered."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    PUT /signings/{signingId}/recover-deleted"
+        },
+        {
+          "info": {
+            "name": "Send a signing session to participants. This endpoint starts the signing process for a signing session based on the provided signing ID.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/send-signing",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The email to query."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /signings/{signingId}/send-signing"
+        },
+        {
+          "info": {
+            "name": "This is only called by Trestle client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/:signingId/reject",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This is only called by Trestle client"
+        },
+        {
+          "info": {
+            "name": "GetLinksOfInvitationsWhenSigningIsSent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/participants/:signingId/invitations",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "GetLinksOfDocumentsWhenSigningIsCompleted",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/documents/:signingId/completed",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "GetLinksOfOriginalDocuments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/documents/:signingId/originals",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "GetLinksOfCertificateDocuments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/signings/documents/:signingId/certificates",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sso",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an SSO URL for a specific signing. This endpoint generates an SSO URL that directly lands the user into the design phase of the signing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/sso/signing/:signingId",
+            "params": [
+              {
+                "name": "signingId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the signing for which the SSO URL is to be generated."
+              },
+              {
+                "name": "redirectUrl",
+                "value": "",
+                "type": "query",
+                "description": "The URL where the user will be redirected to upon exiting the design phase."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/sso/signing/{signingId}?redirectUrl=https://example.com"
+        },
+        {
+          "info": {
+            "name": "SSO into the layout design phase. This endpoint allows customization of the layout and setting up signature blocks.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.lwolf.com/authentisign/api/v1/sso/layout/:layoutId",
+            "params": [
+              {
+                "name": "layoutId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier for the layout."
+              },
+              {
+                "name": "redirectUrl",
+                "value": "",
+                "type": "query",
+                "description": "Redirect URL after customization."
+              },
+              {
+                "name": "language",
+                "value": "",
+                "type": "query",
+                "description": "Optional language parameter. If not supplied the language setting of the account will be used."
+              }
+            ]
+          },
+          "docs": "Sample request:\r\n            \r\n    GET /api/v1/sso/layout/{layoutId}?redirectUrl=https://example.com&language=en"
+        },
+        {
+          "info": {
+            "name": "SSO into the layout design phase with account update. This endpoint allows customization of the layout and setting up signature blocks.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.lwolf.com/authentisign/api/v1/sso/layout/:layoutId",
+            "params": [
+              {
+                "name": "layoutId",
+                "value": "",
+                "type": "path",
+                "description": "The identifier for the layout."
+              },
+              {
+                "name": "redirectUrl",
+                "value": "",
+                "type": "query",
+                "description": "Redirect URL after customization."
+              },
+              {
+                "name": "Id",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Account ID. This property represents the unique identifier of the account."
+              },
+              {
+                "name": "FirstName",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set First Name. This property represents the first name of the account holder."
+              },
+              {
+                "name": "MiddleName",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Middle Name. This property represents the middle name of the account holder."
+              },
+              {
+                "name": "LastName",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Last Name. This property represents the last name of the account holder."
+              },
+              {
+                "name": "Email",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Email. This property represents the email address associated with the account."
+              },
+              {
+                "name": "Phone",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Phone. This property represents the phone number associated with the account."
+              },
+              {
+                "name": "Company",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Company. This property represents the company associated with the account."
+              },
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Client ID. This property represents the identifier of the client associated with the account."
+              },
+              {
+                "name": "ClientFullName",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Client Full Name. This property represents the full name of the client associated with the account."
+              },
+              {
+                "name": "ClientShortName",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Client Short Name. This property represents the short name of the client associated with the account."
+              },
+              {
+                "name": "TimeZone",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Time Zone. This property represents the time zone of the account."
+              },
+              {
+                "name": "GMTOffset",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set GMT Offset. This property represents the Greenwich Mean Time (GMT) offset of the account's time zone."
+              },
+              {
+                "name": "ApplyDST",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Apply DST. This property indicates whether Daylight Saving Time (DST) is applied to the account's time zone."
+              },
+              {
+                "name": "IsExpired",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Is Expired. This property indicates whether the account is expired."
+              },
+              {
+                "name": "IsValid",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Is Valid. This property indicates whether the account is valid."
+              },
+              {
+                "name": "IsDisabled",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Is Disabled. This property indicates whether the account is disabled."
+              },
+              {
+                "name": "IsDeleted",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Is Deleted. This property indicates whether the account is deleted."
+              },
+              {
+                "name": "Language",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Language. This property represents the preferred language of the account holder."
+              },
+              {
+                "name": "IsInitialized",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Is Initialized. This property indicates whether the account has been initialized."
+              },
+              {
+                "name": "HasMoxiContacts",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set Has Moxi Contacts. This property indicates whether the account has contacts in Moxi."
+              },
+              {
+                "name": "LwaId",
+                "value": "",
+                "type": "query",
+                "description": "Get or Set LWA ID. This property represents the identifier used for linking with an external system, if applicable."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sample request:\r\n            \r\n    POST /api/v1/sso/layout/{layoutId}\r\n    {\r\n        \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n        \"firstName\": \"John\",\r\n        \"middleName\": \"D\",\r\n        \"lastName\": \"Doe\",\r\n        \"email\": \"john.doe@example.com\",\r\n        \"phone\": \"555-5555\",\r\n        \"company\": \"JD Inc\",\r\n        \"clientId\": \"Client123\",\r\n        \"clientFullName\": \"John Doe\",\r\n        \"clientShortName\": \"JD\",\r\n        \"timeZone\": \"EST\",\r\n        \"gmtOffset\": -5,\r\n        \"applyDST\""
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
