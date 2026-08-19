@@ -48,7 +48,7 @@ tags:
   - Brokers
 created: '2026-07-26'
 modified: '2026-08-13'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
   - aid: lone-wolf:lone-wolf-transact-api
     name: Lone Wolf Transact API
