@@ -28,6 +28,25 @@ description: >-
   documents RETS live queries) rather than redistributing it.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
+  - Real-Estate
+  - United States
+  - PropTech
+  - Transaction
+  - Transaction Management
+  - Brokerage Back Office
+  - Real Estate Accounting
+  - Commissions
+  - Forms
+  - zipForm
+  - TransactionDesk
+  - E-Signature
+  - CMA
+  - Valuation
+  - CRM
+  - MLS
+  - Real Estate Agents
+  - Brokers
+tags_raw:
   - Real Estate
   - United States
   - PropTech
@@ -64,6 +83,13 @@ apis:
     humanURL: https://apidocs.lwolf.com/doc/transact-api
     baseURL: https://gateway.lwolf.com
     tags:
+      - Transaction
+      - Offers
+      - Documents
+      - Signings
+      - Contacts
+      - Form Libraries
+    tags_raw:
       - Transactions
       - Offers
       - Documents
@@ -98,6 +124,10 @@ apis:
     humanURL: https://apidocs.lwolf.com/doc/deals-api
     baseURL: https://deals.api.lwolf.com
     tags:
+      - Deals
+      - Transaction
+      - Partner Integration
+    tags_raw:
       - Deals
       - Transactions
       - Partner Integration
@@ -155,6 +185,11 @@ apis:
       - E-Signature
       - Signings
       - Documents
+      - Webhook
+    tags_raw:
+      - E-Signature
+      - Signings
+      - Documents
       - Webhooks
     properties:
       - type: OpenAPI
@@ -180,6 +215,12 @@ apis:
     humanURL: https://apidocs.lwolf.com/doc/transactiondesk-api
     baseURL: https://api.pre.transactiondesk.com
     tags:
+      - Transaction
+      - Documents
+      - Contacts
+      - Single Sign-On
+      - Authentication
+    tags_raw:
       - Transactions
       - Documents
       - Contacts
@@ -208,6 +249,12 @@ apis:
     tags:
       - zipForm
       - Forms
+      - Transaction
+      - Templates
+      - Title Integration
+    tags_raw:
+      - zipForm
+      - Forms
       - Transactions
       - Templates
       - Title Integration
@@ -233,6 +280,11 @@ apis:
     humanURL: https://apidocs.lwolf.com/doc/wolfconnect-api
     baseURL: https://api.globalwolfweb.com
     tags:
+      - Members
+      - Transaction
+      - Classifications
+      - Property Types
+    tags_raw:
       - Members
       - Transactions
       - Classifications
