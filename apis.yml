@@ -69,242 +69,2656 @@ created: '2026-07-26'
 modified: '2026-08-13'
 specificationVersion: '0.23'
 apis:
-  - aid: lone-wolf:lone-wolf-transact-api
-    name: Lone Wolf Transact API
-    description: >-
-      Programmatic access to Lone Wolf's transaction management platform across the full
-      transaction lifecycle — creating and updating transactions, managing offers,
-      contacts, folders and documents, sharing transactions across teams via share groups,
-      attaching forms from form libraries, and sending documents out for e-signature.
-      Resources are scoped under /users/{userId}. Collection endpoints on the Transact
-      Workflow service support OData query options ($filter, $expand); this is OData query
-      syntax only and is not a RESO Web API surface. Secured with a bearer token plus a
-      subscription key. 37 paths / 53 operations in the published OpenAPI 3.0.3 definition.
-    humanURL: https://apidocs.lwolf.com/doc/transact-api
-    baseURL: https://gateway.lwolf.com
-    tags:
-      - Transaction
-      - Offers
-      - Documents
-      - Signings
-      - Contacts
-      - Form Libraries
-    tags_raw:
-      - Transactions
-      - Offers
-      - Documents
-      - Signings
-      - Contacts
-      - Form Libraries
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-transact-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-transact-api-overlay.yaml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/transact-api
-      - type: APIReference
-        url: https://apidocs.lwolf.com/doc/transact-api
-      - type: Changelog
-        url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
-  - aid: lone-wolf:lone-wolf-deals-api
-    name: Lone Wolf Deals API
-    description: >-
-      Partner-integration API (release 25.01.00) covering deal records across the Lone Wolf
-      Foundation platform. All requests require an Authorization header carrying a Bearer
-      JWT obtained by POSTing credentials to https://authentication.api.lwolf.com/v1/login.
-      The largest operation surface published by Lone Wolf — 53 paths / 86 operations. The
-      OpenAPI definition declares no servers block; the production base URL recorded here
-      (https://deals.api.lwolf.com) comes from the Getting Started and Searching Deals
-      sections of the published documentation, which show GET https://deals.api.lwolf.com/v1
-      and /v1/deals/search. The definition also declares no operationIds, so its operations
-      cannot be addressed by name from workflows, MCP tool bindings or agent skills.
-    humanURL: https://apidocs.lwolf.com/doc/deals-api
-    baseURL: https://deals.api.lwolf.com
-    tags:
-      - Deals
-      - Transaction
-      - Partner Integration
-    tags_raw:
-      - Deals
-      - Transactions
-      - Partner Integration
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-deals-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-deals-api-overlay.yaml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/deals-api
-      - type: Changelog
-        url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
-      - type: Authentication
-        url: https://authentication.api.lwolf.com/v1/login
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
-  - aid: lone-wolf:lone-wolf-back-office-api
-    name: Lone Wolf Back Office API
-    description: >-
-      Brokerage back-office and accounting API covering the money side of the transaction —
-      commissions, commission fees and tiers, deposits, conditions and condition types,
-      classifications, employees, offices, transactions, and business and client contacts.
-      This is the brokerWOLF/Back Office Online lineage, the system of record for brokerage
-      accounting. 39 paths / 69 operations in the published OpenAPI 3.0.1 definition.
-    humanURL: https://apidocs.lwolf.com/doc/back-office-online-api
-    baseURL: https://api.lwolf.com/backoffice
-    tags:
-      - Back Office
-      - Accounting
-      - Commissions
-      - Deposits
-      - Offices
-      - Employees
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-back-office-online-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-back-office-online-api-overlay.yaml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/back-office-online-api
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
-  - aid: lone-wolf:lone-wolf-authentisign-api
-    name: Lone Wolf Authentisign API
-    description: >-
-      E-signature API for Authentisign, Lone Wolf's signing product. Creates and manages
-      signings, signer roles, documents and signing status. Supports an optional CallbackUrl
-      on a signing, and a PATCH endpoint to update it, giving a real webhook surface for
-      signing events — the only genuine event/callback mechanism found across Lone Wolf's
-      published definitions. 41 paths / 46 operations in the published OpenAPI 3.0.1
-      definition; the definition declares no securitySchemes block.
-    humanURL: https://apidocs.lwolf.com/doc/authentisign-api
-    baseURL: https://api.lwolf.com/authentisign
-    tags:
-      - E-Signature
-      - Signings
-      - Documents
-      - Webhook
-    tags_raw:
-      - E-Signature
-      - Signings
-      - Documents
-      - Webhooks
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-authentisign-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-authentisign-api-overlay.yaml
-      - type: Webhooks
-        url: asyncapi/lone-wolf-authentisign-webhooks.yml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/authentisign-api
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
-  - aid: lone-wolf:lone-wolf-transactiondesk-api
-    name: Lone Wolf TransactionDesk Partner API
-    description: >-
-      Partner API for the TransactionDesk edition of Lone Wolf Transactions, covering
-      transaction summaries, documents, contacts and contact types, transaction types and
-      statuses, single sign-on, and resource metadata. Uses an OAuth 2.0 authorization-code
-      flow — redirect to /oauth/authorize, exchange a one-time code (10-minute expiry) at
-      POST /oauth/token, then send Authorization: Bearer. 25 paths / 44 operations. Note the
-      only server declared in the definition is the preproduction host
-      https://api.pre.transactiondesk.com; no production base URL is published.
-    humanURL: https://apidocs.lwolf.com/doc/transactiondesk-api
-    baseURL: https://api.pre.transactiondesk.com
-    tags:
-      - Transaction
-      - Documents
-      - Contacts
-      - Single Sign-On
-      - Authentication
-    tags_raw:
-      - Transactions
-      - Documents
-      - Contacts
-      - Single Sign On
-      - OAuth
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-transactiondesk-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-transactiondesk-api-overlay.yaml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/transactiondesk-api
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
-  - aid: lone-wolf:lone-wolf-zipform-api
-    name: Lone Wolf zipForm Partner API
-    description: >-
-      The zipForm REST web service (v5.1), exposing zipForm transaction data, PDF forms and
-      selected zipForm application functionality for integration into partner applications.
-      Explicitly made available on a licensed basis to third-party application partners.
-      Authentication combines a Shared Key with either a Context Id or an External Id,
-      passed via X-Auth-ContextId / X-Auth-SharedKey headers or query string. 22 paths /
-      28 operations, with production and staging base URLs both published.
-    humanURL: https://apidocs.lwolf.com/doc/zipform-api
-    baseURL: https://ws.zipformplus.com/api
-    tags:
-      - zipForm
-      - Forms
-      - Transaction
-      - Templates
-      - Title Integration
-    tags_raw:
-      - zipForm
-      - Forms
-      - Transactions
-      - Templates
-      - Title Integration
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-zipform-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-zipform-api-overlay.yaml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/zipform-api
-      - type: Changelog
-        url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
-  - aid: lone-wolf:lone-wolf-wolfconnect-api
-    name: Lone Wolf WolfConnect API
-    description: >-
-      A collection of RESTful web resources giving third parties access to Lone Wolf data —
-      members, transactions, classifications, conditions, contact types, property types and
-      sources of business. Authentication uses a signed Authorization header (LoneWolfToken
-      HMAC signature scheme). Documents OData support, concurrency checking, compression and
-      permissions. 15 paths / 22 operations, with both production and sandbox hosts published.
-    humanURL: https://apidocs.lwolf.com/doc/wolfconnect-api
-    baseURL: https://api.globalwolfweb.com
-    tags:
-      - Members
-      - Transaction
-      - Classifications
-      - Property Types
-    tags_raw:
-      - Members
-      - Transactions
-      - Classifications
-      - Property Types
-    properties:
-      - type: OpenAPI
-        url: openapi/lone-wolf-wolfconnect-api-openapi.yml
-      - type: Overlay
-        url: overlays/lone-wolf-wolfconnect-api-overlay.yaml
-      - type: ErrorCatalog
-        url: errors/lone-wolf-error-codes.yml
-      - type: Documentation
-        url: https://apidocs.lwolf.com/doc/wolfconnect-api
-      - type: Changelog
-        url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
-      - type: Sandbox
-        url: https://api-sb.globalwolfweb.com
-      - type: DeveloperPortal
-        url: https://www.lwolf.com/api-portal
+- aid: lone-wolf:lone-wolf-authentisign-api
+  name: Lone Wolf Authentisign API
+  description: >-
+    E-signature API for Authentisign, Lone Wolf's signing product. Creates and manages signings, signer
+    roles, documents and signing status. Supports an optional CallbackUrl on a signing, and a PATCH endpoint
+    to update it, giving a real webhook surface for signing events — the only genuine event/callback mechanism
+    found across Lone Wolf's published definitions. 41 paths / 46 operations in the published OpenAPI
+    3.0.1 definition; the definition declares no securitySchemes block.
+  humanURL: https://apidocs.lwolf.com/doc/authentisign-api
+  baseURL: https://api.lwolf.com/authentisign
+  tags:
+  - E-Signature
+  - Signings
+  - Documents
+  - Webhook
+  tags_raw:
+  - E-Signature
+  - Signings
+  - Documents
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-authentisign-api-openapi.yml
+  - type: Overlay
+    url: overlays/lone-wolf-authentisign-api-overlay.yaml
+  - type: Webhooks
+    url: asyncapi/lone-wolf-authentisign-webhooks.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/authentisign-api
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+- aid: lone-wolf:lone-wolf-accounts-api
+  name: Lone Wolf Technologies Accounts API
+  description: The Accounts API from Lone Wolf Technologies — 1 operation(s) for accounts.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-authentication-api
+  name: Lone Wolf Technologies Authentication API
+  description: The Authentication API from Lone Wolf Technologies — 6 operation(s) for authentication.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-authorization-api
+  name: Lone Wolf Technologies Authorization API
+  description: OAuth 2.0 client credentials token endpoint.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-business-contact-api
+  name: Lone Wolf Technologies Business Contact API
+  description: >-
+    The Business Contact API from Lone Wolf Technologies — 8 operation(s) for business contact.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Business Contact
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-business-contact-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-business-contacts-api
+  name: Lone Wolf Technologies Business Contacts API
+  description: >-
+    Business contacts represent a business or third party that is part of a transaction such as a home
+    inspector or a lawyer.
+
+    They do not represent the buyer or seller. For buyer and seller contacts, use client contacts.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Business Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-business-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-ccs-api
+  name: Lone Wolf Technologies C Cs API
+  description: The CCs API from Lone Wolf Technologies — 2 operation(s) for ccs.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - CCs
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-ccs-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-classification-api
+  name: Lone Wolf Technologies Classification API
+  description: The Classification API from Lone Wolf Technologies — 2 operation(s) for classification.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Classification
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-classification-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-classifications-api
+  name: Lone Wolf Technologies Classifications API
+  description: Classifications relate to the commission structure of a transaction.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Classifications
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-classifications-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-client-contact-api
+  name: Lone Wolf Technologies Client Contact API
+  description: The Client Contact API from Lone Wolf Technologies — 8 operation(s) for client contact.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Client Contact
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-client-contact-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-client-contacts-api
+  name: Lone Wolf Technologies Client Contacts API
+  description: >-
+    Client contacts represent a buyer or seller that is part of a transaction. For all other types of
+    contacts,
+
+    use business contacts.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Client Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-client-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-commission-api
+  name: Lone Wolf Technologies Commission API
+  description: The Commission API from Lone Wolf Technologies — 2 operation(s) for commission.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Commission
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-commission-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-commission-fees-api
+  name: Lone Wolf Technologies Commission Fees API
+  description: Represents fees that are associated with commissions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Commission Fees
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-commission-fees-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-commissions-api
+  name: Lone Wolf Technologies Commissions API
+  description: >-
+    Represents the commissions and the related agent's within the brokerage that receive those commissions.
+
+    For commissions related to agent's that are not part of the brokerage, use external commissions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Commissions
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-commissions-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-condition-api
+  name: Lone Wolf Technologies Condition API
+  description: The Condition API from Lone Wolf Technologies — 2 operation(s) for condition.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Condition
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-condition-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-condition-type-api
+  name: Lone Wolf Technologies Condition Type API
+  description: The Condition Type API from Lone Wolf Technologies — 2 operation(s) for condition type.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Condition Type
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-condition-type-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-condition-types-api
+  name: Lone Wolf Technologies Condition Types API
+  description: Represents some common conditions that can be added to transactions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Condition Types
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-condition-types-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-conditions-api
+  name: Lone Wolf Technologies Conditions API
+  description: Represents the conditions that exist on the transaction before it can be closed.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Conditions
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-conditions-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-contact-type-api
+  name: Lone Wolf Technologies Contact Type API
+  description: The Contact Type API from Lone Wolf Technologies — 2 operation(s) for contact type.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Contact Type
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-contact-type-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-contact-types-api
+  name: Lone Wolf Technologies Contact Types API
+  description: Represents the types of contacts for both business and client.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Contact Types
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-contact-types-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-contacts-api
+  name: Lone Wolf Technologies Contacts API
+  description: Manage transaction contacts.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-deal-api
+  name: Lone Wolf Technologies Deal API
+  description: The Deal API from Lone Wolf Technologies — 7 operation(s) for deal.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Deal
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-deal-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-deposit-api
+  name: Lone Wolf Technologies Deposit API
+  description: The Deposit API from Lone Wolf Technologies — 2 operation(s) for deposit.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Deposit
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-deposit-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-deposits-api
+  name: Lone Wolf Technologies Deposits API
+  description: Represents the deposits that have are required for the transaction.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Deposits
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-deposits-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-documents-api
+  name: Lone Wolf Technologies Documents API
+  description: The Documents API from Lone Wolf Technologies — 17 operation(s) for documents.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-documents-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-employees-api
+  name: Lone Wolf Technologies Employees API
+  description: >-
+    Represents a person that works at the brokerage. This includes the broker themselves, office admins,
+    agent's, everyone.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Employees
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-employees-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-external-agent-api
+  name: Lone Wolf Technologies External Agent API
+  description: The External Agent API from Lone Wolf Technologies — 8 operation(s) for external agent.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - External Agent
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-external-agent-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-external-agents-api
+  name: Lone Wolf Technologies External Agents API
+  description: Represents agents that are on the transaction but are not part of the brokerage.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - External Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-external-agents-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-external-commission-api
+  name: Lone Wolf Technologies External Commission API
+  description: >-
+    The External Commission API from Lone Wolf Technologies — 2 operation(s) for external commission.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - External Commission
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-external-commission-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-external-commissions-api
+  name: Lone Wolf Technologies External Commissions API
+  description: >-
+    Represents the external commissions and the related external agent's that are not part of the brokerage
+
+    that receive those commissions. For commissions related to agent's that are part of the brokerage,
+    use commissions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - External Commissions
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-external-commissions-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-features-api
+  name: Lone Wolf Technologies Features API
+  description: Represents the different features that are enabled or disabled for a client.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Features
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-features-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-folders-api
+  name: Lone Wolf Technologies Folders API
+  description: Manage folders within transactions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Folders
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-folders-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-form-libraries-api
+  name: Lone Wolf Technologies Form Libraries API
+  description: Browse form libraries and library forms (Forms Design service).
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Form Libraries
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-form-libraries-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-forms-and-documents-api
+  name: Lone Wolf Technologies Forms and Documents API
+  description: Manage forms and file documents within transactions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Forms and Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-forms-and-documents-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-history-api
+  name: Lone Wolf Technologies History API
+  description: The History API from Lone Wolf Technologies — 1 operation(s) for history.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - History
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-history-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-layouts-api
+  name: Lone Wolf Technologies Layouts API
+  description: The Layouts API from Lone Wolf Technologies — 3 operation(s) for layouts.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Layouts
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-layouts-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-members-api
+  name: Lone Wolf Technologies Members API
+  description: >-
+    The Members resource is a RESTful web resource running on Microsoft's Web API allowing third parties
+    to access member data.
+
+
+    The following actions are currently supported:
+
+
+    - Retrieve a member or a collection of members
+
+    - Retrieve the profile image of a member
+
+    - Retrieve the public profile image of a member
+
+    - Set the In/Out status of a member
+
+    - Get the In/Out status of a member
+
+    - Get the In/Out status of all active members
+
+
+    Use of the above resource will require the appropriate authentication headers to be present. Construction
+    of authentication headers is outlined in the Authentication section above.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Members
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-members-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-metadata-api
+  name: Lone Wolf Technologies Metadata API
+  description: Retrieve metadata and property specifications for API resources
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-metadata-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-offers-api
+  name: Lone Wolf Technologies Offers API
+  description: Manage offers on transactions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Offers
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-offers-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-offices-api
+  name: Lone Wolf Technologies Offices API
+  description: Represents the different physical offices that make up the brokerage.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Offices
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-offices-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-other-endpoints-api
+  name: Lone Wolf Technologies Other Endpoints API
+  description: Additional endpoints including users, form libraries, and transaction forms
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Other Endpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-other-endpoints-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-participants-api
+  name: Lone Wolf Technologies Participants API
+  description: The Participants API from Lone Wolf Technologies — 3 operation(s) for participants.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Participants
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-participants-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-property-type-api
+  name: Lone Wolf Technologies Property Type API
+  description: The Property Type API from Lone Wolf Technologies — 2 operation(s) for property type.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Property Type
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-property-type-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-property-types-api
+  name: Lone Wolf Technologies Property Types API
+  description: Represents the different property types that can be associated to a transaction.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Property Types
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-property-types-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-share-groups-api
+  name: Lone Wolf Technologies Share Groups API
+  description: Share transactions with groups of users and manage group membership.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Share Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-share-groups-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-signings-api
+  name: Lone Wolf Technologies Signings API
+  description: The Signings API from Lone Wolf Technologies — 23 operation(s) for signings.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Signings
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-signings-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-single-sign-on-api
+  name: Lone Wolf Technologies Single Sign On API
+  description: >-
+    Generate one-time-use SSO links for the agent dashboard, transaction list, or a specific transaction
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Single Sign On
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-single-sign-on-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-source-of-business-api
+  name: Lone Wolf Technologies Source of Business API
+  description: >-
+    The Source of Business API from Lone Wolf Technologies — 1 operation(s) for source of business.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Source of Business
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-source-of-business-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-sources-of-business-api
+  name: Lone Wolf Technologies Sources of Business API
+  description: >-
+    Represents the different sources of business that were used to find the buyers and sellers.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Sources of Business
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-sources-of-business-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-sso-api
+  name: Lone Wolf Technologies SSO API
+  description: The Sso API from Lone Wolf Technologies — 2 operation(s) for sso.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Sso
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-sso-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-teams-api
+  name: Lone Wolf Technologies Teams API
+  description: Manage team-based transaction access for agents in brokerage or team scenarios.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-teams-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-templates-api
+  name: Lone Wolf Technologies Templates API
+  description: List and apply transaction templates.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-templates-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-tier-api
+  name: Lone Wolf Technologies Tier API
+  description: The Tier API from Lone Wolf Technologies — 3 operation(s) for tier.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Tier
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-tier-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-tiers-api
+  name: Lone Wolf Technologies Tiers API
+  description: >-
+    Represents a tier or sub-transaction for a given transaction. All transactions must have at least
+    one tier.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Tiers
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-tiers-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-title-integration-api
+  name: Lone Wolf Technologies Title Integration API
+  description: Allow title partners to update title order status and manage notes on transactions.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Title Integration
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-title-integration-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-contact-types-api
+  name: Lone Wolf Technologies Transaction Contact Types API
+  description: Manage contact type definitions
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Contact Types
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-contact-types-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-contacts-api
+  name: Lone Wolf Technologies Transaction Contacts API
+  description: Manage contacts associated with transaction files
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-documents-api
+  name: Lone Wolf Technologies Transaction Documents API
+  description: Manage documents within transaction files
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-documents-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-forms-api
+  name: Lone Wolf Technologies Transaction Forms API
+  description: Manage forms attached to a transaction's form package (Forms Editor service).
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Forms
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-forms-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-statuses-api
+  name: Lone Wolf Technologies Transaction Statuses API
+  description: Manage transaction status definitions
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Statuses
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-statuses-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-summary-api
+  name: Lone Wolf Technologies Transaction Summary API
+  description: Create, read, update, and delete transaction files and their property details
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Summary
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-summary-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-templates-api
+  name: Lone Wolf Technologies Transaction Templates API
+  description: Read transaction templates available to a user.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-templates-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transaction-types-api
+  name: Lone Wolf Technologies Transaction Types API
+  description: Manage transaction type definitions
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transaction Types
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transaction-types-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-transactions-api
+  name: Lone Wolf Technologies Transactions API
+  description: Represents a transaction.
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-users-and-offices-api
+  name: Lone Wolf Technologies Users and Offices API
+  description: Users and offices belonging to a client account (Platform service).
+  humanURL: https://apidocs.lwolf.com/doc/transact-api
+  baseURL: https://gateway.lwolf.com
+  tags:
+  - Users and Offices
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-users-and-offices-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
 common:
+  - type: Overlay
+    url: overlays/lone-wolf-transact-api-overlay.yaml
+  - type: Overlay
+    url: overlays/lone-wolf-deals-api-overlay.yaml
+  - type: Overlay
+    url: overlays/lone-wolf-back-office-online-api-overlay.yaml
+  - type: Overlay
+    url: overlays/lone-wolf-transactiondesk-api-overlay.yaml
+  - type: Overlay
+    url: overlays/lone-wolf-zipform-api-overlay.yaml
+  - type: Overlay
+    url: overlays/lone-wolf-wolfconnect-api-overlay.yaml
   - type: AgenticAccess
     url: agentic-access/lone-wolf-agentic-access.yml
   - type: DomainSecurity
