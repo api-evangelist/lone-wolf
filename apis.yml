@@ -26,6 +26,18 @@ description: >-
   Property Identifier — RESO certification governs MLS listing feeds, which is not the
   layer Lone Wolf occupies; it consumes MLS data under MLS agreements (Cloud CMA
   documents RETS live queries) rather than redistributing it.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Real-Estate
@@ -2707,6 +2719,9 @@ apis:
   - type: Sandbox
     url: https://api-sb.globalwolfweb.com
 common:
+  - type: CapabilityMap
+    url: capabilities/lone-wolf-capability-edges.yml
+    name: Lone Wolf Technologies Business Capability Map
   - type: Overlay
     url: overlays/lone-wolf-transact-api-overlay.yaml
   - type: Overlay
