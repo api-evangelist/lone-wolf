@@ -118,6 +118,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -930,6 +932,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - deal
+  tags_raw:
   - Deal
   properties:
   - type: OpenAPI
@@ -1960,6 +1964,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - Single Sign-On
+  tags_raw:
   - Single Sign On
   properties:
   - type: OpenAPI
@@ -2082,6 +2088,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - SSO
+  tags_raw:
   - Sso
   properties:
   - type: OpenAPI
@@ -2122,6 +2130,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
@@ -2644,6 +2654,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
