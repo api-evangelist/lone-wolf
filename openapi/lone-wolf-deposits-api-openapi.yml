@@ -1,0 +1,623 @@
+openapi: 3.2.0
+info:
+  title: Back Office Deposits API
+  version: '1.0'
+  description: Represents the deposits that have are required for the transaction.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Deposits
+  description: Represents the deposits that have are required for the transaction.
+paths:
+  /v1/transactions/{transactionId}/deposits:
+    post:
+      tags:
+      - Deposits
+      summary: Create Deposit
+      operationId: post-v1-transactions-transactionid-deposits
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The deposit to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deposit'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              date: string
+              amount: 0
+              received: true
+              interest: true
+              held: true
+              heldBy: string
+              direct: true
+              reference: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deposit'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                date: string
+                amount: 0
+                received: true
+                interest: true
+                held: true
+                heldBy: string
+                direct: true
+                reference: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    get:
+      tags:
+      - Deposits
+      summary: Get Deposits
+      operationId: get-v1-transactions-transactionid-deposits
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deposit'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                date: string
+                amount: 0
+                received: true
+                interest: true
+                held: true
+                heldBy: string
+                direct: true
+                reference: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/deposits/{depositId}:
+    get:
+      tags:
+      - Deposits
+      summary: Get Deposit
+      operationId: get-v1-deposits-depositid
+      parameters:
+      - name: depositId
+        in: path
+        description: The id of the deposit.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deposit'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                date: string
+                amount: 0
+                received: true
+                interest: true
+                held: true
+                heldBy: string
+                direct: true
+                reference: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    delete:
+      tags:
+      - Deposits
+      summary: Delete Deposit
+      operationId: delete-v1-deposits-depositid
+      parameters:
+      - name: depositId
+        in: path
+        description: The id of the deposit.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deposit'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                date: string
+                amount: 0
+                received: true
+                interest: true
+                held: true
+                heldBy: string
+                direct: true
+                reference: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Deposits
+      summary: Update Deposit
+      operationId: patch-v1-deposits-depositid
+      parameters:
+      - name: depositId
+        in: path
+        description: The id of the deposit.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the deposit to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositPatchRequest'
+            example:
+              date: string
+              amount: 0
+              received: true
+              interest: true
+              held: true
+              heldBy: string
+              direct: true
+              reference: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deposit'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                date: string
+                amount: 0
+                received: true
+                interest: true
+                held: true
+                heldBy: string
+                direct: true
+                reference: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    Deposit:
+      required:
+      - date
+      - amount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        date:
+          type: string
+          description: The date the deposit was received.
+          format: date
+        amount:
+          type: number
+          description: The amount of the deposit.
+          format: currency
+        received:
+          type: boolean
+          description: If the deposit has been received or not.
+        interest:
+          type: boolean
+          description: If the deposit accumulates interest.
+        held:
+          type: boolean
+          description: If the deposit is held or not.
+        heldBy:
+          type:
+          - string
+          - 'null'
+          description: Who the deposit is held by.
+        direct:
+          type: boolean
+          description: If the deposit is direct or not.
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The reference number for the deposit.
+      additionalProperties: false
+      description: Represents a deposit associated to a transaction.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    DepositPatchRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date the deposit was received.
+          format: date
+          writeOnly: true
+        amount:
+          type: number
+          description: The amount of the deposit.
+          format: currency
+          writeOnly: true
+        received:
+          type: boolean
+          description: If the deposit has been received or not.
+          writeOnly: true
+        interest:
+          type: boolean
+          description: If the deposit accumulates interest.
+          writeOnly: true
+        held:
+          type: boolean
+          description: If the deposit is held or not.
+          writeOnly: true
+        heldBy:
+          type:
+          - string
+          - 'null'
+          description: Who the deposit is held by.
+          writeOnly: true
+        direct:
+          type: boolean
+          description: If the deposit is direct or not.
+          writeOnly: true
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The reference number for the deposit.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a deposit.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

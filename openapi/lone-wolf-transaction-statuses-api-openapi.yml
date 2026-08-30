@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  title: TransactionDesk Partner Transaction Statuses API
+  description: "Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.\n\n## Authorization\n\n### Authorization Code Flow\n\n1. Redirect the user to the OAuth authorization URL:\n   `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`\n2. The user logs in via the Lonewolf Authentication system.\n3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.\n4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.\n5. Include the access token in the `Authorization: Bearer <token>` header on every request.\n\n### Client Credentials Flow\n\nFor enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.\n\n## Universal Global Fields\n\nBelow is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.\n\n### 1. Property Information\n\n#### Address\n- `streetNumber`\n- `streetName`\n- `city`\n- `county`\n- `state`\n- `zipCode`\n\n#### Subdivision and Parcel Information\n- `subDivision`\n- `lotNumber`\n- `block`\n- `pageNumber`\n- `platBook`\n\n#### Property Characteristics\n- `yearBuilt`\n- `zoningClass`\n- `schoolDistrict`\n\n#### Tax and Legal Information\n- `taxNumber`\n- `township`\n- `legalDescription`\n\n### 2. Listing Information\n\n#### Listing Identification\n- `mlsNumber`\n\n#### Pricing\n- `listPrice`\n\n#### Listing Timeline\n- `expirationDate`\n\n#### Property Inclusions and Exclusions\n- `propertyIncludes`\n- `propertyExcludes`\n- `leasedItems`\n\n### 3. Purchase Information\n\n#### Pricing\n- `purchasePrice`\n\n#### Offer Timeline\n- `offerDate`\n- `offerExpirationDate`\n- `offerAcceptanceDate`\n\n#### Financing Timeline\n- `applicationDate`\n- `approvalDate`\n\n#### Deposits\n- `depositAmount`\n- `additionalDepositAmount`\n- `additionalDepositDate`\n\n#### Transaction Milestones\n- `fundingDate`\n- `possessionDate`\n- `closingDate`"
+  version: '2.0'
+servers:
+- url: https://api.pre.transactiondesk.com
+security:
+- bearerAuth: []
+tags:
+- name: Transaction Statuses
+  description: Manage transaction status definitions
+paths:
+  /v2/transactions/statuses:
+    get:
+      summary: Get All Transaction Statuses
+      description: Returns all transaction statuses the authenticated user is entitled to see.
+      tags:
+      - Transaction Statuses
+      responses:
+        '200':
+          description: List of transaction statuses returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+    post:
+      summary: Create a Transaction Status
+      description: Creates a new transaction status for the authenticated user.
+      tags:
+      - Transaction Statuses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Fallen-Through
+      responses:
+        '200':
+          description: Transaction status created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: ee9d3620-9b2f-437d-b522-3c785dbbfacd
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/transactions/statuses/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction Status GUID
+    get:
+      summary: Get a Specific Transaction Status
+      description: Returns a specific transaction status the authenticated user is entitled to see.
+      tags:
+      - Transaction Statuses
+      responses:
+        '200':
+          description: Transaction status returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionStatus'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction status not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    patch:
+      summary: Update a Transaction Status
+      description: Updates an existing transaction status. You can only update statuses you own.
+      tags:
+      - Transaction Statuses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Fallen-Through
+      responses:
+        '200':
+          description: Transaction status updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction status not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    delete:
+      summary: Delete a Transaction Status
+      description: Deletes a specific transaction status. You can only delete statuses you own.
+      tags:
+      - Transaction Statuses
+      responses:
+        '200':
+          description: Transaction status deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction status not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+components:
+  schemas:
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
+    TransactionStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: ee349fd8-5842-420f-84a2-9b80b8d9632e
+          description: Unique identifier for this transaction status
+        name:
+          type: string
+          example: Active
+        ownerId:
+          type: string
+          format: uuid
+          example: 476ba212-d96d-49e5-82df-3f474d9e9188
+          description: Owner of this status (Global, Association, Office, or Personal level)
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2008-03-02T04:26:50.607+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2008-03-02T04:26:50.607+00:00'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

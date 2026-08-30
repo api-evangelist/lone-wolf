@@ -1,0 +1,280 @@
+openapi: 3.2.0
+info:
+  title: TransactionDesk Partner Transaction Contacts API
+  description: "Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.\n\n## Authorization\n\n### Authorization Code Flow\n\n1. Redirect the user to the OAuth authorization URL:\n   `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`\n2. The user logs in via the Lonewolf Authentication system.\n3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.\n4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.\n5. Include the access token in the `Authorization: Bearer <token>` header on every request.\n\n### Client Credentials Flow\n\nFor enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.\n\n## Universal Global Fields\n\nBelow is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.\n\n### 1. Property Information\n\n#### Address\n- `streetNumber`\n- `streetName`\n- `city`\n- `county`\n- `state`\n- `zipCode`\n\n#### Subdivision and Parcel Information\n- `subDivision`\n- `lotNumber`\n- `block`\n- `pageNumber`\n- `platBook`\n\n#### Property Characteristics\n- `yearBuilt`\n- `zoningClass`\n- `schoolDistrict`\n\n#### Tax and Legal Information\n- `taxNumber`\n- `township`\n- `legalDescription`\n\n### 2. Listing Information\n\n#### Listing Identification\n- `mlsNumber`\n\n#### Pricing\n- `listPrice`\n\n#### Listing Timeline\n- `expirationDate`\n\n#### Property Inclusions and Exclusions\n- `propertyIncludes`\n- `propertyExcludes`\n- `leasedItems`\n\n### 3. Purchase Information\n\n#### Pricing\n- `purchasePrice`\n\n#### Offer Timeline\n- `offerDate`\n- `offerExpirationDate`\n- `offerAcceptanceDate`\n\n#### Financing Timeline\n- `applicationDate`\n- `approvalDate`\n\n#### Deposits\n- `depositAmount`\n- `additionalDepositAmount`\n- `additionalDepositDate`\n\n#### Transaction Milestones\n- `fundingDate`\n- `possessionDate`\n- `closingDate`"
+  version: '2.0'
+servers:
+- url: https://api.pre.transactiondesk.com
+security:
+- bearerAuth: []
+tags:
+- name: Transaction Contacts
+  description: Manage contacts associated with transaction files
+paths:
+  /v2/transactions/{id}/contacts:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get All Transaction Contacts
+      description: Returns a list of all contacts associated with a specific transaction.
+      tags:
+      - Transaction Contacts
+      responses:
+        '200':
+          description: List of contacts returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionContact'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+    post:
+      summary: Create a Transaction Contact
+      description: 'Creates a new contact associated with a specific transaction. Required fields: `firstName`, `lastName`, `typeId`, `transactionId`.'
+      tags:
+      - Transaction Contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionContact'
+      responses:
+        '200':
+          description: Contact created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: d70cf831-53ca-41b4-9214-aa6acce37718
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/transactions/{transactionId}/contacts/{contactId}:
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    - in: path
+      name: contactId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ContactGUID
+    get:
+      summary: Get a Specific Transaction Contact
+      description: Returns a specific contact associated with a transaction.
+      tags:
+      - Transaction Contacts
+      responses:
+        '200':
+          description: Contact returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionContact'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    patch:
+      summary: Update a Transaction Contact
+      description: Updates one or more attributes of a specific transaction contact.
+      tags:
+      - Transaction Contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionContact'
+      responses:
+        '200':
+          description: Contact updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    delete:
+      summary: Delete a Transaction Contact
+      description: Deletes a specific contact from a transaction.
+      tags:
+      - Transaction Contacts
+      responses:
+        '200':
+          description: Contact deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Contact not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+components:
+  schemas:
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    TransactionContact:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: ContactGUID
+        transactionId:
+          type: string
+          format: uuid
+          example: 34bfff2a-d186-48c6-b09d-6c15232cfe26
+          description: TransactionGUID this contact is associated with
+        preferredName:
+          type: string
+          example: Bobby Jones
+          description: Preferred name; overrides firstName/lastName on real estate forms
+        firstName:
+          type: string
+          example: Robert
+        middleName:
+          type: string
+          example: P
+        lastName:
+          type: string
+          example: Jones
+        fullAddress:
+          type: string
+          example: 100 Wellington St.
+          description: Street number and name
+        city:
+          type: string
+          example: London
+        state:
+          type: string
+          example: 'ON'
+        zipCode:
+          type: string
+          example: N6E B3B
+        phone:
+          type: string
+          example: 519-000-0000
+        fax:
+          type: string
+          example: 519-000-0001
+        cell:
+          type: string
+          example: 519-000-0002
+        email:
+          type: string
+          format: email
+          example: bobbyjones@fakeemail.com
+        company:
+          type: string
+          example: Bobby Jones Real Estate
+        typeId:
+          type: string
+          format: uuid
+          example: 918753cd-df9d-4a8c-b9c5-2d0115835ea0
+          description: Contact type GUID. See Glossary for values.
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

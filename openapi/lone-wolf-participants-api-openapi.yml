@@ -1,0 +1,316 @@
+openapi: 3.2.0
+info:
+  title: Authentisign Participants API
+  description: Authentisign API
+  version: '1.0'
+servers:
+- url: https://api.lwolf.com/authentisign
+tags:
+- name: Participants
+paths:
+  /api/v1/signings/{signingId}/participants:
+    get:
+      tags:
+      - Participants
+      summary: Retrieve the list of signing participants within a signing.
+      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/participants"
+      operationId: GetParticipants
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which participants are to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/participants/{participantId}/email:
+    put:
+      tags:
+      - Participants
+      summary: Update the email address of a signing participant and resend the invitation.
+      description: "Sample request:\n            \n    PATCH /api/v1/participants/{participantId}/email \n    {\n        \"email\": \"change@lwolf.com\"\n    }"
+      operationId: UpdateParticipantEmail
+      parameters:
+      - name: participantId
+        in: path
+        description: The identifier of the participant whose email is to be updated.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Email
+        in: query
+        description: Get or Set the email address of the participant.
+      requestBody:
+        description: The data transfer object containing the new email address.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantEmailDtoExternal'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantEmailDtoExternal'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantEmailDtoExternal'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/participants/batch:
+    post:
+      tags:
+      - Participants
+      summary: Batch creation of signing participants for a signing process.
+      description: "Sample request:\n            \n    POST /api/v1/participants/batch \n    Header: externalId\n    Request Body:\n    [\n        {\n            \"Id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n            \"SigningId\": \"5c192f97-41e4-ed11-8e8b-00224827d18c\",\n            \"FirstName\": \"John\",\n            \"MiddleName\": \"D\",\n            \"LastName\": \"Doe\",\n            \"Email\": \"john.doe@example.com\",\n            \"ParticipantRole\": \"Buyer\",\n            \"CustomSignature\": \"JD_Signature\",\n            \"CustomInitials\": \"JD\",\n            \"SigningPin\": \"123456\",\n            \"Type\": 0,\n            \"DisplayOrder\": 1,\n            \"SignerGroup\": 1,\n            \"CustomInvitationSubject\": \"Invitation to Sign\",\n            \"CustomInvitationMessage\": \"Please review and sign the document.\",\n            \"ExternalId\": \"External12345\",\n            \"TransactionId\": \"3fb95f64-5717-4562-b3fc-2c963f66bfa7\",\n            \"Language\": \"en\",\n            \"StaticSignatureEnabled\": true,\n            \"ScriptedSignatureEnabled\": true,\n            \"ImageSignatureEnabled\": true,\n            \"TrestleRole\": \"Role1\"\n        }\n    ]"
+      operationId: AddParticipants
+      parameters:
+      - name: externalId
+        in: header
+        description: External identifier provided in the header.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: List of participant data transfer objects to be created.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+components:
+  schemas:
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Authentisign.Services.Dtos.ParticipantDto:
+      required:
+      - firstName
+      - lastName
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        signingId:
+          type: string
+          format: uuid
+        firstName:
+          minLength: 1
+          type: string
+        middleName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          minLength: 1
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+        participantRole:
+          type:
+          - string
+          - 'null'
+        customSignature:
+          type:
+          - string
+          - 'null'
+        customInitials:
+          type:
+          - string
+          - 'null'
+        signingPin:
+          type:
+          - string
+          - 'null'
+        type:
+          type: integer
+          format: int32
+        displayOrder:
+          type: integer
+          format: int32
+        signerGroup:
+          type: integer
+          format: int32
+        customInvitationSubject:
+          type:
+          - string
+          - 'null'
+        customInvitationMessage:
+          type:
+          - string
+          - 'null'
+        externalId:
+          type:
+          - string
+          - 'null'
+        transactionId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        language:
+          type:
+          - string
+          - 'null'
+        staticSignatureEnabled:
+          type:
+          - boolean
+          - 'null'
+        scriptedSignatureEnabled:
+          type:
+          - boolean
+          - 'null'
+        imageSignatureEnabled:
+          type:
+          - boolean
+          - 'null'
+        trestleRole:
+          type:
+          - string
+          - 'null'
+        crmId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+      additionalProperties: false
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.ParticipantEmailDtoExternal:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

@@ -1,0 +1,266 @@
+openapi: 3.2.0
+info:
+  title: TransactionDesk Partner Other Endpoints API
+  description: "Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.\n\n## Authorization\n\n### Authorization Code Flow\n\n1. Redirect the user to the OAuth authorization URL:\n   `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`\n2. The user logs in via the Lonewolf Authentication system.\n3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.\n4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.\n5. Include the access token in the `Authorization: Bearer <token>` header on every request.\n\n### Client Credentials Flow\n\nFor enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.\n\n## Universal Global Fields\n\nBelow is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.\n\n### 1. Property Information\n\n#### Address\n- `streetNumber`\n- `streetName`\n- `city`\n- `county`\n- `state`\n- `zipCode`\n\n#### Subdivision and Parcel Information\n- `subDivision`\n- `lotNumber`\n- `block`\n- `pageNumber`\n- `platBook`\n\n#### Property Characteristics\n- `yearBuilt`\n- `zoningClass`\n- `schoolDistrict`\n\n#### Tax and Legal Information\n- `taxNumber`\n- `township`\n- `legalDescription`\n\n### 2. Listing Information\n\n#### Listing Identification\n- `mlsNumber`\n\n#### Pricing\n- `listPrice`\n\n#### Listing Timeline\n- `expirationDate`\n\n#### Property Inclusions and Exclusions\n- `propertyIncludes`\n- `propertyExcludes`\n- `leasedItems`\n\n### 3. Purchase Information\n\n#### Pricing\n- `purchasePrice`\n\n#### Offer Timeline\n- `offerDate`\n- `offerExpirationDate`\n- `offerAcceptanceDate`\n\n#### Financing Timeline\n- `applicationDate`\n- `approvalDate`\n\n#### Deposits\n- `depositAmount`\n- `additionalDepositAmount`\n- `additionalDepositDate`\n\n#### Transaction Milestones\n- `fundingDate`\n- `possessionDate`\n- `closingDate`"
+  version: '2.0'
+servers:
+- url: https://api.pre.transactiondesk.com
+security:
+- bearerAuth: []
+tags:
+- name: Other Endpoints
+  description: Additional endpoints including users, form libraries, and transaction forms
+paths:
+  /v2/users:
+    get:
+      summary: Get All Users
+      description: 'Returns users for the authenticated API client''s owner scope.
+
+
+        **Authorization:** Requires OAuth client credentials token with a valid on-behalf-of user and an API client whose owner type is `Client`, `Company`, or `Office`.'
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: List of users returned successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/formlibraries:
+    get:
+      summary: Get All Libraries
+      description: Returns all form-library folders available to the authenticated user.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: List of form libraries returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FormLibrary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/formlibraries/{folderId}:
+    parameters:
+    - in: path
+      name: folderId
+      required: true
+      schema:
+        type: integer
+      description: Form-library folder identifier
+    get:
+      summary: Get Library Details
+      description: Returns details for a specific form-library folder.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: Form library details returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormLibrary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+  /v2/formlibraries/{folderId}/forms/{formLib}:
+    parameters:
+    - in: path
+      name: folderId
+      required: true
+      schema:
+        type: integer
+      description: Form-library folder identifier
+    - in: path
+      name: formLib
+      required: true
+      schema:
+        type: string
+      description: Form identifier within the folder. Matching is case-insensitive.
+    get:
+      summary: Get Forms Within a Library
+      description: Returns a specific form within a form-library folder.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: Form returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormLibraryForm'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+  /v2/transactions/{transactionId}/forms:
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction identifier
+    post:
+      summary: Add Form to a Transaction
+      description: 'Adds a form to a transaction.
+
+
+        **Request Fields:**
+
+
+        | Field | Type | Description |
+
+        |---|---|---|
+
+        | formLib | string | Form-library identifier of the form to add |'
+      tags:
+      - Other Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - formLib
+              properties:
+                formLib:
+                  type: string
+                  example: ABC123
+                  description: Form-library identifier of the form to add
+      responses:
+        '200':
+          description: Form added successfully. Returns the created transaction form instance ID.
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+                example: 7f0f7fc1-8a2f-4e3d-b23f-3b6d2f1f9a11
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/transactions/{transactionId}/forms/{id}:
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction identifier
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction form instance identifier
+    delete:
+      summary: Delete Form from Transaction
+      description: Removes a form from a transaction.
+      tags:
+      - Other Endpoints
+      responses:
+        '200':
+          description: Form removed successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+components:
+  schemas:
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
+    FormLibrary:
+      type: object
+      properties:
+        folderId:
+          type: integer
+          example: 123
+          description: Form-library folder identifier
+        name:
+          type: string
+          example: State Forms
+          description: Name of the form library folder
+        description:
+          type: string
+          example: State form library
+          description: Description of the form library folder
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    FormLibraryForm:
+      type: object
+      properties:
+        formLib:
+          type: string
+          example: ABC123
+          description: Form identifier within the folder
+        name:
+          type: string
+          example: Purchase Agreement
+          description: Name of the form
+        description:
+          type: string
+          example: Purchase Agreement form
+          description: Description of the form
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

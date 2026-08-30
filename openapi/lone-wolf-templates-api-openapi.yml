@@ -1,0 +1,783 @@
+openapi: 3.2.0
+info:
+  title: ZipForm Partner Templates API
+  description: 'The zipForm® REST web service is made available on a licensed basis to third-party application partners. It exposes zipForm® transaction data, PDF forms, and certain zipForm® application functionality for integration into partner applications.
+
+
+    **Base URLs:**
+
+    - Production: `https://ws.zipformplus.com/api`
+
+    - Staging/QA: `https://api.pre.zipformplus.com/api`
+
+
+    ## Authentication
+
+
+    All requests (except authentication endpoints) must include a **Shared Key** and either a **Context Id** or **External Id**, passed via request headers or query string.
+
+
+    ### Via Request Headers (Context Id)
+
+    ```
+
+    X-Auth-ContextId: <Context Id>
+
+    X-Auth-SharedKey: <Client Shared Key>
+
+    ```
+
+
+    ### Via Query String (Context Id)
+
+    ```
+
+    <URL>?ContextId=<Context Id>&SharedKey=<Client Shared Key>
+
+    ```
+
+
+    ### Via Request Headers (External Id)
+
+    ```
+
+    X-Auth-ExternalId: <Client External Id>
+
+    X-Auth-SharedKey: <Client Shared Key>
+
+    ```
+
+
+    ### Via Query String (External Id)
+
+    ```
+
+    <URL>?ExternalId=<External Id>&SharedKey=<Client shared key>
+
+    ```
+
+
+    ## Response Codes
+
+
+    | Code | Description |
+
+    |---|---|
+
+    | 200 | OK |
+
+    | 201 | Created |
+
+    | 204 | No Content — success but resource has no content |
+
+    | 304 | Not Modified |
+
+    | 400 | Bad Request |
+
+    | 401 | Unauthorized |
+
+    | 403 | Forbidden / Blank PDF Not Allowed |
+
+    | 404 | Not Found |
+
+    | 409 | Account Linking Failed |
+
+    | 415 | Unsupported Media Type |
+
+    | 500 | Internal Server Error |
+
+    | 503 | Service Unavailable |
+
+
+    ## Terminology
+
+
+    | Term | Definition |
+
+    |---|---|
+
+    | Shared Key | A unique identifier granted to the partner that authenticates its Foreign Application |
+
+    | Context Id | A session identifier returned after authentication, uniquely identifying the current interaction |
+
+    | External Id | A partner-supplied identifier that uniquely identifies a user in the partner''s application |
+
+    | Foreign Application (FA) | An external application that consumes the zipForm® web service |
+
+    | MD5 | Message-digest algorithm used for data encryption |
+
+
+    ## Pagination and Sorting
+
+
+    Supported on collection endpoints (Get Transaction List, Get Document List, Get Library Documents, Get Agent Libraries):
+
+
+    ```
+
+    <URL>?page=<page number>&pagesize=<page size>&orderby=<sort field>&sortorder=<sort order>
+
+    ```
+
+
+    | Collection | Sort Fields |
+
+    |---|---|
+
+    | Transactions | `name`, `created` |
+
+    | Forms/Documents | `name`, `ContentType` |
+
+    | Libraries | `name`, `state` |
+
+
+    `sortorder`: `asc` or `desc`
+
+
+    ## Universal Global Fields
+
+
+    Below is a list of the fields related to a transaction that can be updated through the API for the ZipForms System.
+
+
+    ### 1. Property Listing Address
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_CompositeAddress`
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_City`
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_StateOrProvince`
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_PostalCode`
+
+
+    ### 2. Listing Agent Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_FullName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_AgentID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_CellPhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_Pager`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_Email`
+
+
+    ### 3. Listing Office Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_Name`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_OfficeID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_ContactInformation_Fax`
+
+
+    #### Address
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_CompositeAddress`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_City`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_StateOrProvince`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_PostalCode`
+
+
+    ### 4. Listing Details
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingID`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_ListDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_ListPrice`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_ExpirationDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_Remarks`
+
+
+    ### 5. Geographic Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_GeographicData_County`
+
+
+    ### 6. Sales Agent Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_FullName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_AgentID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_CellPhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_Pager`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_Email`
+
+
+    ### 7. Sales Office Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_Name`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_OfficeID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_ContactInformation_Fax`
+
+
+    #### Address
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_CompositeAddress`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_City`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_StateOrProvince`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_PostalCode`
+
+
+    ### 8. Sales Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ContractDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ClosePrice`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_CloseDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AmountFinanced`
+
+
+    ### 9. School Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SchoolData_SchoolDistrict`
+
+
+    ### 10. Tax Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_TaxData_TaxID`
+
+    - `REData_REProperties_ResidentialProperty_Listing_TaxData_County`
+
+    - `REData_REProperties_ResidentialProperty_Listing_TaxData_LegalDescription`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ParcelNumber`
+
+
+    ### 11. Property Characteristics
+
+    - `REData_REProperties_ResidentialProperty_Subdivision`
+
+    - `REData_REProperties_ResidentialProperty_AssociationFee`
+
+    - `REData_REProperties_ResidentialProperty_YearBuilt`
+
+
+    ---
+
+
+    ## Parties
+
+
+    ### 12. Seller 1
+
+
+    #### Identity
+
+    - `Other_Seller1_FirstName`
+
+    - `Other_Seller1_MiddleName`
+
+    - `Other_Seller1_LastName`
+
+    - `Other_Seller1_FullName`
+
+    - `Other_Seller1_Relationship`
+
+
+    #### Address
+
+    - `Other_Seller1_StreetAddress_CompositeAddress`
+
+    - `Other_Seller1_StreetAddress_City`
+
+    - `Other_Seller1_StreetAddress_StateOrProvince`
+
+    - `Other_Seller1_StreetAddress_PostalCode`
+
+
+    #### Contact Information
+
+    - `Other_Seller1_ContactInformation_OfficePhone`
+
+    - `Other_Seller1_ContactInformation_CellPhone`
+
+    - `Other_Seller1_ContactInformation_HomePhone`
+
+    - `Other_Seller1_ContactInformation_Fax`
+
+    - `Other_Seller1_ContactInformation_Email`
+
+
+    ### 13. Seller 2
+
+    Same structure as Seller 1 — prefix `Other_Seller2_`
+
+
+    ### 14. Buyer 1
+
+
+    #### Identity
+
+    - `Other_Buyer1_FirstName`
+
+    - `Other_Buyer1_MiddleName`
+
+    - `Other_Buyer1_LastName`
+
+    - `Other_Buyer1_FullName`
+
+    - `Other_Buyer1_Relationship`
+
+
+    #### Address
+
+    - `Other_Buyer1_StreetAddress_CompositeAddress`
+
+    - `Other_Buyer1_StreetAddress_City`
+
+    - `Other_Buyer1_StreetAddress_StateOrProvince`
+
+    - `Other_Buyer1_StreetAddress_PostalCode`
+
+
+    #### Contact Information
+
+    - `Other_Buyer1_ContactInformation_OfficePhone`
+
+    - `Other_Buyer1_ContactInformation_CellPhone`
+
+    - `Other_Buyer1_ContactInformation_HomePhone`
+
+    - `Other_Buyer1_ContactInformation_Fax`
+
+    - `Other_Buyer1_ContactInformation_Email`
+
+
+    ### 15. Buyer 2
+
+    Same structure as Buyer 1 — prefix `Other_Buyer2_`
+
+
+    ---
+
+
+    ## Additional Parties
+
+
+    ### 16. Seller Attorney
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_Name`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactName`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactInformation_Email`
+
+
+    ### 17. Buyer Attorney
+
+    Same structure as Seller Attorney — prefix `Other_AdditionalInfo_Attorneys_Buyers_`
+
+
+    ### 18. Appraiser
+
+    - `Other_AdditionalInfo_Appraiser_Name`
+
+    - `Other_AdditionalInfo_Appraiser_ContactName`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_CellPhone`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_Pager`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_Email`
+
+
+    ### 19. Escrow
+
+    - `Other_AdditionalInfo_Escrow_Name`
+
+    - `Other_AdditionalInfo_Escrow_ContactName`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Escrow_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Escrow_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Escrow_ContactInformation_Email`
+
+    - `Other_AdditionalInfo_Escrow_CaseNumber`
+
+
+    ### 20. Lender
+
+    - `Other_AdditionalInfo_Lender_Name`
+
+    - `Other_AdditionalInfo_Lender_ContactName`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_CellPhone`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_Pager`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_Email`
+
+    - `Other_AdditionalInfo_Lender_LoanNumber`
+
+
+    ### 21. Title Company
+
+    - `Other_AdditionalInfo_TitleInformation_Name`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactName`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_City`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_CellPhone`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_Email`
+
+
+    ---
+
+
+    ## Additional Listing and Sales Data
+
+
+    ### 22. Listing Condition Information
+
+    - `Other_AdditionalInfo_AdditionalListingData_ConditionInfo_Includes`
+
+    - `Other_AdditionalInfo_AdditionalListingData_ConditionInfo_Excludes`
+
+
+    ### 23. Listing Encumbrances
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_MortgageBalance1`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_MortgageBalance2`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_TotalEncumbrances`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_OtherLien`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_OtherLienDescription`
+
+
+    ### 24. Offer & Deposit Information
+
+    - `Other_AdditionalInfo_AdditionalSalesData_OfferDate`
+
+    - `Other_AdditionalInfo_AdditionalSalesData_OfferAcceptDate`
+
+    - `Other_AdditionalInfo_AdditionalSalesData_DepositAmount`
+
+
+    ### Tax Parcel Metadata
+
+    - `Other_AdditionalInfo_AdditionalTaxData_LotNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_UnitNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_Township`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_BlockNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_PlatBookNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_PlatPageNumber`
+
+
+    ### Property Type Flags
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Residential`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Multi`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Vacant`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Commercial`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_OtherPT`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_OtherPTDescription`
+
+
+    ### ZipForms Metadata
+
+    - `Other_ZFMetadata_ZFFilename`
+
+    - `Other_ZFMetadata_ZFBrokerName`
+
+    - `Other_ZFMetadata_ZFUserName_Name`
+
+    - `Other_ZFMetadata_ZFUserName_OfficePhone`
+
+    - `Other_ZFMetadata_ZFUserName_Fax`
+
+    - `Other_ZFMetadata_ZFUserName_CompositeAddress`
+
+
+    ---
+
+
+    ## Commission Data
+
+
+    ### Listing Side
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ListingCommissionPercent`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ListingCommissionAmount`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AdminTransactionFee`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_OtherDeductions`
+
+
+    #### Agent Splits
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneSplitName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoSplitName`
+
+
+    #### Net Values
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneNet`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoNet`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_OfficeCommissionNet`
+
+
+    ### Buy Side
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_BuyerCommissionPercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_BuyerCommissionAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AdminTransactionFee`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_OtherDeductions`
+
+
+    #### Referrals
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_ReferringAgentFeePercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_ReferringAgentFeeAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_ReferringAgentName`
+
+
+    #### Agent Splits
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneSplitName`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoSplitName`
+
+
+    #### Net Values
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneNet`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoNet`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_OfficeCommissionNet`
+
+
+    ### Signer Representative
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_FirstName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_MiddleName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_LastName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_Email`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_Phone`'
+  version: '5.1'
+servers:
+- url: https://ws.zipformplus.com/api
+  description: Production
+- url: https://api.pre.zipformplus.com/api
+  description: Staging/QA
+security:
+- contextAuth: []
+tags:
+- name: Templates
+  description: List and apply transaction templates.
+paths:
+  /transactions/{transactionId}/apply/{templateId}:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    - $ref: '#/components/parameters/templateId'
+    get:
+      summary: Apply Template to Transaction
+      description: Applies a template to a specified transaction.
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: Template applied successfully
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+  /templates:
+    get:
+      summary: Get List of Templates
+      description: Returns the list of templates available to the authenticated user. Optionally filter by office using the path `/templates/<office ID>`.
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: Template list returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Template'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+components:
+  schemas:
+    Template:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  parameters:
+    transactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction GUID
+    templateId:
+      name: templateId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Template ID
+  securitySchemes:
+    contextAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ContextId
+      description: Context Id obtained from an authentication endpoint. Must be used together with X-Auth-SharedKey.
+    sharedKey:
+      type: apiKey
+      in: header
+      name: X-Auth-SharedKey
+      description: Shared Key provided by zipLogix to authenticate the partner application.
+    externalIdAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ExternalId
+      description: External Id for partners authorized to use the External Id authentication scheme. Must be used together with X-Auth-SharedKey.

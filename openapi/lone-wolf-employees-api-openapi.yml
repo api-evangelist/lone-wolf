@@ -1,0 +1,376 @@
+openapi: 3.2.0
+info:
+  title: Back Office Employees API
+  version: '1.0'
+  description: Represents a person that works at the brokerage. This includes the broker themselves, office admins, agent's, everyone.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Employees
+  description: Represents a person that works at the brokerage. This includes the broker themselves, office admins, agent's, everyone.
+paths:
+  /v1/employees:
+    get:
+      tags:
+      - Employees
+      summary: Get Employees
+      operationId: get-v1-employees
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                lwaId: string
+                number: string
+                firstName: string
+                middleName: string
+                lastName: string
+                nickname: string
+                officeId: string
+                inactiveDate: string
+                legalName: string
+                addressLine1: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                emailAddressMain: string
+                birthDate: string
+                startDate: string
+                phoneNumberMain: string
+                phoneNumberMobile: string
+                phoneNumberPager: string
+                faxNumberMain: string
+                phoneNumberDirect: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/employees/{employeeId}:
+    get:
+      tags:
+      - Employees
+      summary: Get Employee
+      operationId: get-v1-employees-employeeid
+      parameters:
+      - name: employeeId
+        in: path
+        description: The id of the employee.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                lwaId: string
+                number: string
+                firstName: string
+                middleName: string
+                lastName: string
+                nickname: string
+                officeId: string
+                inactiveDate: string
+                legalName: string
+                addressLine1: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                emailAddressMain: string
+                birthDate: string
+                startDate: string
+                phoneNumberMain: string
+                phoneNumberMobile: string
+                phoneNumberPager: string
+                faxNumberMain: string
+                phoneNumberDirect: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
+    Employee:
+      required:
+      - firstName
+      - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        lwaId:
+          type:
+          - string
+          - 'null'
+          description: The id of the Lone Wolf Account associated to the employee.
+          format: uuid
+        number:
+          type:
+          - string
+          - 'null'
+          description: The assigned number.
+        firstName:
+          type: string
+          description: The first name.
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: The middle name.
+        lastName:
+          type: string
+          description: The last name.
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: The nickname.
+        officeId:
+          type:
+          - string
+          - 'null'
+          description: The id of the office to which the employee belongs.
+          format: uuid
+        inactiveDate:
+          type:
+          - string
+          - 'null'
+          description: The date the employee was inactive. If null, the employee is still active.
+          format: date
+        legalName:
+          type:
+          - string
+          - 'null'
+          description: The legal name.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code. This will be unformatted.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address.
+        birthDate:
+          type:
+          - string
+          - 'null'
+          description: The birthdate.
+          format: date
+        startDate:
+          type:
+          - string
+          - 'null'
+          description: The start date.
+          format: date
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number.
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile phone number.
+        phoneNumberPager:
+          type:
+          - string
+          - 'null'
+          description: The pager number.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The fax number.
+        phoneNumberDirect:
+          type:
+          - string
+          - 'null'
+          description: The direct phone number.
+        office:
+          $ref: '#/components/schemas/OfficeReadOnly'
+      additionalProperties: false
+      description: Represents an employee.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

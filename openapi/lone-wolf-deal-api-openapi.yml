@@ -1,0 +1,630 @@
+openapi: 3.2.0
+info:
+  title: Deals Deal API
+  version: 1.0.0
+  description: "## Index\n\nFor partner integration use (25.01.00)\n\n### Getting Started\n\n#### Getting a JWT Access Token\n\n`POST https://authentication.api.lwolf.com/v1/login`\n\nAll APIs require an *Authorization* HTTP Header that contains a *Bearer {token}* as its value. The token is a JSON Web Token (JWT) and can be generated as needed from the Authentication API using a POST request to the `/v1/login` endpoint with your provided credentials / secrets.\n\nThis will provide a JWT token in the response which can then be used as your Bearer token in your Authorization header when making API calls.\n\n**Request Example**\n\n```json\n{\n  \"emailAddress\": \"api-aaaa111@apps.lwolf.com\",\n  \"password\": \"AAAA111\",\n  \"clientId\": \"GgP8g-zksBgWuXum!DbXh*qASYCsfNZF\"\n}\n```\n\n**cURL**\n\n```bash\ncurl --location --request POST 'https://authentication.api.lwolf.com/v1/login' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n\"emailAddress\": \"api-aaa111@apps.lwolf.com\",\n\"clientId\": \"AAAA111\",\n\"password\": \"GgP8g-zksBgWuXum!DbXh*qASYCsfNZF\"\n}'\n```\n\n**Response Example (200 OK)**\n\n```json\n{\n  \"token\": \"<JWT string>\",\n  \"expiresIn\": 86400\n}\n```\n\n### Searching Deals\n\n#### Using Field Search on Summaries\n\n`GET https://deals.api.lwolf.com/v1/search`\n\nThe Deals API supports searching deal summaries, compact and heavily indexed versions of deals, by a single field and value.\n\n**Example**\n\n```\nhttps://deals.api.lwolf.com/v1/deals/search?entityPath=deal&fieldName=bwId&searchText=12345\n```\n\n#### Using OData on Full Details\n\n`GET https://deals.api.lwolf.com/v1/deals`\n\nThe Deals API supports searching deals using a subset of OData queries ($filter, $top, $skip, $limit). Any top-level field can be used in a query however at the current time fields from nested objects is not supported. As well the use of the IN operator is not supported, however multiple OR operators can be used instead.\n\n**Example**\n\n```\nhttps://deals.api.lwolf.com/v1/deals?$filter=addressStreetNumber%20eq%20%27263%27%20and%20%20addressStreetName%20eq%20%27Wellington%20St%27%20and%20addressUnitNumber%20eq%20%27701%27\n```\n\nAPI for managing deals, commissions, conditions, and client contacts.\n\n## Roster API\n\nLone Wolf Technologies Roster API\n\n**API Endpoint:** `https://roster.api.lwolf.com/v1`\n\n**Schemes:** https\n\n**Version:** 1.0.0\n\n### Authentication\n\n**Bearer Token**\n\nUse the Authentication API to retrieve the JSON Web Token for all calls to this API. Pass the token as `Authorization: Bearer {token}` in the request header.\n\n### Members\n\n#### Add new member\n\n`POST /members`\n\nIf the 'id' is passed in this object, the API will attempt to use that for its member id. If 'id' is null or undefined, the API will generate one.\n\n**Request Example**\n\n```json\n{\n  \"id\": \"string (UUID)\",\n  \"bwId\": \"number (int32)\",\n  \"firstName\": \"string\",\n  \"middleName\": \"string\",\n  \"lastName\": \"string\",\n  \"number\": \"string\",\n  \"officeId\": \"string (UUID)\",\n  \"bwOfficeId\": \"number (int32)\",\n  \"inactiveDate\": \"string (date)\",\n  \"legalName\": \"string\",\n  \"primaryEmailAddress\": \"string\",\n  \"addressLine1\": \"string\",\n  \"addressLine2\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"addressProvinceCode\": \"string\",\n  \"addressCountryCode\": \"string\",\n  \"birthDate\": \"string (date)\",\n  \"typeId\": \"string\",\n  \"lwaId\": \"string (UUID)\",\n  \"memberTypeCode\": {\n    \"createdTimestamp\": \"string (date-time)\",\n    \"modifiedTimestamp\": \"string (date-time)\",\n    \"id\": \"string (UUID)\",\n    \"code\": \"string\",\n    \"name\": \"string\"\n  }\n}\n```\n\n| Response | Description |\n|---|---|\n| 201 Created | Member created |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 409 Conflict | Member already exists. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (201 Created)**\n\n```json\n{\n  \"createdTimestamp\": \"string (date-time)\",\n  \"modifiedTimestamp\": \"string (date-time)\",\n  \"id\": \"string (UUID)\",\n  \"version\": \"number (int32)\",\n  \"bwId\": \"number (int32)\",\n  \"firstName\": \"string\",\n  \"middleName\": \"string\",\n  \"lastName\": \"string\",\n  \"number\": \"string\",\n  \"officeId\": \"string (UUID)\",\n  \"bwOfficeId\": \"number (int32)\",\n  \"inactiveDate\": \"string (date)\",\n  \"legalName\": \"string\",\n  \"primaryEmailAddress\": \"string\",\n  \"addressLine1\": \"string\",\n  \"addressLine2\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"addressProvinceCode\": \"string\",\n  \"addressCountryCode\": \"string\",\n  \"birthDate\": \"string (date)\",\n  \"typeId\": \"string\",\n  \"lwaId\": \"string (UUID)\",\n  \"memberTypeCode\": {\n    \"createdTimestamp\": \"string (date-time)\",\n    \"modifiedTimestamp\": \"string (date-time)\",\n    \"id\": \"string (UUID)\",\n    \"code\": \"string\",\n    \"name\": \"string\"\n  }\n}\n```\n\n**Response Example (409 Conflict)**\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### Get list of members\n\n`GET /members`\n\n| Response | Description |\n|---|---|\n| 200 OK | Success |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (200 OK)**\n\n```json\n[\n  {\n    \"createdTimestamp\": \"string (date-time)\",\n    \"modifiedTimestamp\": \"string (date-time)\",\n    \"id\": \"string (UUID)\",\n    \"version\": \"number (int32)\",\n    \"bwId\": \"number (int32)\",\n    \"firstName\": \"string\",\n    \"middleName\": \"string\",\n    \"lastName\": \"string\",\n    \"number\": \"string\",\n    \"officeId\": \"string (UUID)\",\n    \"bwOfficeId\": \"number (int32)\",\n    \"inactiveDate\": \"string (date)\",\n    \"legalName\": \"string\",\n    \"primaryEmailAddress\": \"string\",\n    \"addressLine1\": \"string\",\n    \"addressLine2\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"addressProvinceCode\": \"string\",\n    \"addressCountryCode\": \"string\",\n    \"birthDate\": \"string (date)\",\n    \"typeId\": \"string\",\n    \"lwaId\": \"string (UUID)\",\n    \"memberTypeCode\": {\n      \"createdTimestamp\": \"string (date-time)\",\n      \"modifiedTimestamp\": \"string (date-time)\",\n      \"id\": \"string (UUID)\",\n      \"code\": \"string\",\n      \"name\": \"string\"\n    }\n  }\n]\n```\n\n#### Delete a specific member\n\n`DELETE /members/{memberId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| memberId | string (UUID) | |\n\n| Response | Description |\n|---|---|\n| 200 OK | Member deleted. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Member not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (404 Not Found)**\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### Get a specific member\n\n`GET /members/{memberId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| memberId | string (UUID) | |\n\n**Query Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| isBwId | boolean | Indicates whether the passed 'memberId' should be treated as the brokerWOLF id |\n\n| Response | Description |\n|---|---|\n| 200 OK | Member found. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Member not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n#### Update a member property\n\n`PATCH /members/{memberId}`\n\nUpdates properties on the member entity. None of its child collections can be updated with this route.\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| memberId | string (UUID) | |\n\n**Request Example**\n\n```json\n{\n  \"bwId\": \"number (int32)\",\n  \"firstName\": \"string\",\n  \"middleName\": \"string\",\n  \"lastName\": \"string\",\n  \"number\": \"string\",\n  \"officeId\": \"string (UUID)\",\n  \"bwOfficeId\": \"number (int32)\",\n  \"inactiveDate\": \"string (date)\",\n  \"legalName\": \"string\",\n  \"primaryEmailAddress\": \"string\",\n  \"addressLine1\": \"string\",\n  \"addressLine2\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"addressProvinceCode\": \"string\",\n  \"addressCountryCode\": \"string\",\n  \"birthDate\": \"string (date)\",\n  \"typeId\": \"string\",\n  \"lwaId\": \"string (UUID)\",\n  \"memberTypeCode\": {\n    \"createdTimestamp\": \"string (date-time)\",\n    \"modifiedTimestamp\": \"string (date-time)\",\n    \"id\": \"string (UUID)\",\n    \"code\": \"string\",\n    \"name\": \"string\"\n  }\n}\n```\n\n| Response | Description |\n|---|---|\n| 200 OK | Member updated. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Member not found. |\n| 412 Precondition Failed | Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n### Offices\n\n#### Add new office\n\n`POST /offices`\n\nIf the 'id' is passed in this object, the API will attempt to use that for its office id. If 'id' is null or undefined, the API will generate one.\n\n**Request Example**\n\n```json\n{\n  \"id\": \"string (UUID)\",\n  \"bwId\": \"number (int32)\",\n  \"name\": \"string\",\n  \"shortName\": \"string\",\n  \"inactiveDate\": \"string (date)\"\n}\n```\n\n| Response | Description |\n|---|---|\n| 201 Created | Office created |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 409 Conflict | Office already exists. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (201 Created)**\n\n```json\n{\n  \"createdTimestamp\": \"string (date-time)\",\n  \"modifiedTimestamp\": \"string (date-time)\",\n  \"id\": \"string (UUID)\",\n  \"version\": \"number (int32)\",\n  \"bwId\": \"number (int32)\",\n  \"name\": \"string\",\n  \"shortName\": \"string\",\n  \"inactiveDate\": \"string (date)\"\n}\n```\n\n#### Get list of offices\n\n`GET /offices`\n\n| Response | Description |\n|---|---|\n| 200 OK | Success |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (200 OK)**\n\n```json\n[\n  {\n    \"createdTimestamp\": \"string (date-time)\",\n    \"modifiedTimestamp\": \"string (date-time)\",\n    \"version\": \"number (int32)\",\n    \"id\": \"string (UUID)\",\n    \"bwId\": \"number (int32)\",\n    \"name\": \"string\",\n    \"shortName\": \"string\",\n    \"inactiveDate\": \"string (date)\"\n  }\n]\n```\n\n#### Delete a specific office\n\n`DELETE /offices/{officeId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| officeId | string (UUID) | |\n\n| Response | Description |\n|---|---|\n| 200 OK | Office deleted. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Office not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n#### Get a specific office\n\n`GET /offices/{officeId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| officeId | string (UUID) | |\n\n**Query Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| isBwId | boolean | Indicates whether the passed 'officeId' should be treated as the brokerWOLF id |\n\n| Response | Description |\n|---|---|\n| 200 OK | Office found. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Office not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n#### Update an office property\n\n`PATCH /offices/{officeId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| officeId | string (UUID) | |\n\n| Response | Description |\n|---|---|\n| 200 OK | Office updated. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Office not found. |\n| 412 Precondition Failed | Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n#### Get list of office summaries\n\n`GET /offices/summary`\n\n| Response | Description |\n|---|---|\n| 200 OK | Success |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (200 OK)**\n\n```json\n[\n  {\n    \"id\": \"string (UUID)\",\n    \"name\": \"string\",\n    \"shortName\": \"string\",\n    \"inactiveDate\": \"string (date)\"\n  }\n]\n```\n\n### Brokerages\n\n#### Add new brokerage\n\n`POST /brokerages`\n\nIf the 'id' is passed in this object, the API will attempt to use that for its brokerage id. If 'id' is null or undefined, the API will generate one. An internal token is needed to access this endpoint.\n\n**Request Example**\n\n```json\n{\n  \"createdTimestamp\": \"string (date-time)\",\n  \"modifiedTimestamp\": \"string (date-time)\",\n  \"name\": \"string\",\n  \"shortName\": \"string\",\n  \"id\": \"string\",\n  \"companyTypeCode\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"addressCountryCode\": \"string\"\n}\n```\n\n| Response | Description |\n|---|---|\n| 201 Created | Brokerage created |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 409 Conflict | Brokerage already exists. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (201 Created)**\n\n```json\n{\n  \"createdTimestamp\": \"string (date-time)\",\n  \"modifiedTimestamp\": \"string (date-time)\",\n  \"name\": \"string\",\n  \"shortName\": \"string\",\n  \"id\": \"string\",\n  \"companyTypeCode\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"addressCountryCode\": \"string\"\n}\n```\n\n#### Retrieve all brokerages\n\n`GET /brokerages`\n\nThis endpoint is internal only and requires an internal token. The response will be all brokerages in the database.\n\n**Query Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| filter | string | Filter that will be used to query the database. |\n\n| Response | Description |\n|---|---|\n| 200 OK | Success |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n#### Delete a specific brokerage\n\n`DELETE /brokerages/{clientId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| clientId | string (UUID) | |\n\n| Response | Description |\n|---|---|\n| 200 OK | Brokerage deleted. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Brokerage not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n#### Get a specific brokerage\n\n`GET /brokerages/{clientId}`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| clientId | string | |\n\n| Response | Description |\n|---|---|\n| 200 OK | Brokerage found. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Brokerage not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n### Member Types\n\n#### Get a specific Member Type\n\n`GET /member-types`\n\n**Path Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| id | string (UUID) | |\n\n| Response | Description |\n|---|---|\n| 200 OK | Member Type found. |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 403 Forbidden | Permission denied. See response body for details. |\n| 404 Not Found | Brokerage not found. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n**Response Example (200 OK)**\n\n```json\n{\n  \"id\": \"string (UUID)\",\n  \"createdTimestamp\": \"string (date-time)\",\n  \"modifiedTimestamp\": \"string (date-time)\",\n  \"version\": \"number (int32)\",\n  \"code\": \"string\",\n  \"name\": \"string\"\n}\n```\n\n#### Retrieve all Member Types\n\n`GET /member-types`\n\nThis endpoint is internal only and requires an internal token. The response will be all brokerages in the database.\n\n**Query Parameters**\n\n| Parameter | Type | Description |\n|---|---|---|\n| filter | string | Filter that will be used to query the database. |\n\n| Response | Description |\n|---|---|\n| 200 OK | Success |\n| 400 Bad Request | Invalid request. See response body for details. |\n| 401 Unauthorized | Unauthorized request. See response body for details. |\n| 500 Internal Server Error | Unknown error. See response body for details. |\n\n### Schema Definitions\n\n#### HttpStatus400\n\nInvalid request. See response body for details.\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### HttpStatus401\n\nUnauthorized request. See response body for details.\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### HttpStatus403\n\nPermission denied. See response body for details.\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### HttpStatus412\n\nOptimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database.\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### HttpStatus500\n\nUnknown error. See response body for details.\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### ApiError\n\n| Field | Type | Description |\n|---|---|---|\n| code | integer (int32) | An error code. This is typically the same as the http status code but can be different in some cases. |\n| message | string | Simple message about the error. |\n| details | string[] | An array of strings holding more details about the error. |\n\n```json\n{\n  \"code\": \"integer (int32)\",\n  \"message\": \"string\",\n  \"details\": [\"string\"]\n}\n```\n\n#### Member\n\n| Field | Type | Description |\n|---|---|---|\n| createdTimestamp | string (date-time) | |\n| modifiedTimestamp | string (date-time) | |\n| id | string (UUID) | |\n| bwId | number (int32) | The brokerWOLF Id of the member. This should not be used by third party systems as this value could go away in the future. |\n| version | number (int32) | The version of the member in the database. Used for optimistic concurrency checking. |\n| firstName | string | |\n| middleName | string | |\n| lastName | string | |\n| number | string | The brokerage specified number. |\n| officeId | string (UUID) | |\n| bwOfficeId | number (int32) | The brokerWOLF Id of the office. This should not be used by third party systems as this value could go away in the future. |\n| inactiveDate | string (date) | The date the member went inactive. If this is null, the member is active. |\n| legalName | string | The legal name of member. |\n| primaryEmailAddress | string | The primary email address of a member. |\n| addressLine1 | string | The address of a member. |\n| addressLine2 | string | The second address of a member. |\n| addressCity | string | The city of a member. |\n| addressPostalCode | string | The postal code of a member. |\n| addressProvinceCode | string | The province code of a member. |\n| addressCountryCode | string | The country code of a member. |\n| birthDate | string | The birth date of a member. |\n| typeId | string | The type id of a member. |\n| lwaId | string | The lwaId of a member. |\n| memberTypeCode | string | The member type of a member. |\n\n#### Office\n\n| Field | Type | Description |\n|---|---|---|\n| createdTimestamp | string (date-time) | |\n| modifiedTimestamp | string (date-time) | |\n| id | string (UUID) | |\n| version | number (int32) | The version of the office in the database. Used for optimistic concurrency checking. |\n| bwId | number (int32) | The brokerWOLF Id of the office. This should not be used by third party systems as this value could go away in the future. |\n| name | string | Main name of the office. |\n| shortName | string | Short name for the office. |\n| inactiveDate | string (date) | The date the office went inactive. If this is null, the office is active. |\n\n#### Brokerage\n\n| Field | Type | Description |\n|---|---|---|\n| createdTimestamp | string (date-time) | |\n| modifiedTimestamp | string (date-time) | |\n| version | number (int32) | The version of the brokerage in the database. Used for optimistic concurrency checking. |\n| name | string | Main name of the brokerage. |\n| shortName | string | Short name for the brokerage. |\n| id | string | |\n| companyTypeCode | string | Company Type Code for the brokerage. |\n| addressPostalCode | string | Address Postal Code for the brokerage. |\n| addressCountryCode | string | Country Code for the brokerage. |\n\n#### Member Type\n\n| Field | Type | Description |\n|---|---|---|\n| createdTimestamp | string (date-time) | |\n| modifiedTimestamp | string (date-time) | |\n| id | string | |\n| version | number (int32) | The version of the brokerage in the database. Used for optimistic concurrency checking. |\n| code | string | Member type code. |\n| name | string | Name of the member type. |\n\n#### Office Summary\n\n| Field | Type | Description |\n|---|---|---|\n| id | string (UUID) | |\n| name | string | Main name of the office. |\n| shortName | string | Short name for the office. |\n| inactiveDate | string (date) | The date the office went inactive. If this is null, the office is active. |\n\n"
+servers:
+- url: https://deals.api.lwolf.com
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+security:
+- BearerToken: []
+tags:
+- name: Deal
+paths:
+  /deals/{dealId}:
+    get:
+      summary: Get a deal
+      description: Using the deal guid in the request path, the method requests a deal.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+    patch:
+      summary: Update a deal
+      description: Updates a deal based on its deal id.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Successfully patched a deal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deal'
+            example:
+              id: string (UUID)
+              culture: string
+              number: string
+              mlsNumber: string
+              statusCode: string
+              classCode: string
+              name: string
+              addressStreetNumber: string
+              addressStreetName: string
+              addressStreetDirection: string
+              addressUnitNumber: string
+              addressCity: string
+              addressProvinceCode: string
+              addressPostalCode: string
+              addressCountryCode: string
+              offerDate: string (date)
+              closeDate: string (date)
+              entryDate: string (date)
+              finalizeDate: string (date)
+              firmDate: string (date)
+              closePrice: number (float)
+              legalDescription: string
+              classification:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                endTypeCode: string
+                endCount: string
+              propertyType:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                shortName: string
+                classCode: string
+              businessContacts: []
+              client-contacts: []
+              conditions: []
+              deposits: []
+              externalAgents: []
+              tiers: []
+    delete:
+      summary: Delete a deal
+      description: Deletes a deal based on its deal id.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted a deal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Unknown error. See response body for details.
+  /deals:
+    get:
+      summary: Get all deals
+      description: Requests all deals.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '200':
+          description: Retrieved deals successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deal'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+    post:
+      summary: Create a deal
+      description: Creates a deal.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters: []
+      responses:
+        '201':
+          description: Successfully created a deal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '409':
+          description: Deal already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deal'
+            example:
+              id: string (UUID)
+              culture: string
+              number: string
+              mlsNumber: string
+              statusCode: string
+              classCode: string
+              name: string
+              addressStreetNumber: string
+              addressStreetName: string
+              addressStreetDirection: string
+              addressUnitNumber: string
+              addressCity: string
+              addressProvinceCode: string
+              addressPostalCode: string
+              addressCountryCode: string
+              offerDate: string (date)
+              closeDate: string (date)
+              entryDate: string (date)
+              finalizeDate: string (date)
+              firmDate: string (date)
+              closePrice: number (float)
+              legalDescription: string
+              classification:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                endTypeCode: string
+                endCount: string
+              propertyType:
+                id: string (UUID)
+                createdTimestamp: string (date-time)
+                modifiedTimestamp: string (date-time)
+                code: string
+                name: string
+                shortName: string
+                classCode: string
+              businessContacts: []
+              client-contacts: []
+              conditions: []
+              deposits: []
+              externalAgents: []
+              tiers: []
+  /deals/{dealId}/submit:
+    post:
+      summary: Submit deal
+      description: Submits a deal with a deal id so that it will replicated in brokerWOLF
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully submitted a deal.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Unknown error. See response body for details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deal'
+  /deals/{dealId}/history:
+    get:
+      summary: Get deal history
+      description: Using the deal guid in the request path, the method requests a deal's history. History is a list of log entries.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal history successfully.
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Unknown error. See response body for details.
+  /deals/search:
+    get:
+      summary: Search for deals
+      description: Using various request parameters, looks up a deal summary.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: entityPath
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: fieldName
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: searchText
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: typeCodes
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: orderBy
+        in: in header
+        required: true
+        schema:
+          type: string
+      - name: direction
+        in: in header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Retrieved deal summary successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealSummary'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '500':
+          description: Unknown error. See response body for details.
+  /deals/{dealId}/bw-sync-status:
+    get:
+      summary: Get the sync status of the deal with brokerWOLF
+      description: Using the deal guid in the request path, the method requests the sync status with Broker Wolf
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal sync status successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealSyncStatus'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal Sync Status not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+  /deals/{dealId}/summary:
+    get:
+      summary: Get the summary of a deal
+      description: Using the deal guid in the request path, the method requests a summary.
+      tags:
+      - Deal
+      security:
+      - BearerToken: []
+      parameters:
+      - name: dealId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Retrieved deal summary successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DealSummary'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Deal Summary not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '412':
+          description: Optimistic concurrency check failed. The If-Match header is missing or it does not contain the version currently in the database.
+        '500':
+          description: Unknown error. See response body for details.
+components:
+  schemas:
+    DealSummary:
+      type: object
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    Deal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          format: int32
+        createdTimestamp:
+          type: string
+          format: date-time
+        modifiedTimestamp:
+          type: string
+          format: date-time
+        culture:
+          type: string
+        number:
+          type: string
+        mlsNumber:
+          type: string
+        statusCode:
+          type: string
+        classCode:
+          type: string
+        name:
+          type: string
+        addressStreetNumber:
+          type: string
+        addressStreetName:
+          type: string
+        addressStreetDirection:
+          type: string
+        addressUnitNumber:
+          type: string
+        addressCity:
+          type: string
+        addressProvinceCode:
+          type: string
+        addressPostalCode:
+          type: string
+        addressCountryCode:
+          type: string
+        offerDate:
+          type: string
+          format: date
+        closeDate:
+          type: string
+          format: date
+        entryDate:
+          type: string
+          format: date
+        finalizeDate:
+          type: string
+          format: date
+        firmDate:
+          type: string
+          format: date
+        closePrice:
+          type: number
+          format: float
+        legalDescription:
+          type: string
+        classification:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            createdTimestamp:
+              type: string
+              format: date-time
+            modifiedTimestamp:
+              type: string
+              format: date-time
+            code:
+              type: string
+            name:
+              type: string
+            endTypeCode:
+              type: string
+            endCount:
+              type: string
+        propertyType:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            createdTimestamp:
+              type: string
+              format: date-time
+            modifiedTimestamp:
+              type: string
+              format: date-time
+            code:
+              type: string
+            name:
+              type: string
+            shortName:
+              type: string
+            classCode:
+              type: string
+        businessContacts:
+          type: array
+          items: {}
+        client-contacts:
+          type: array
+          items: {}
+        conditions:
+          type: array
+          items: {}
+        deposits:
+          type: array
+          items: {}
+        externalAgents:
+          type: array
+          items: {}
+        tiers:
+          type: array
+          items: {}
+    DealSyncStatus:
+      type: object
+  securitySchemes:
+    BearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JSON Web Token obtained from the Authentication API (`POST /v1/login`). Pass the token as `Authorization: Bearer <token>` in every request. Tokens expire after the number of seconds specified in the `expiresIn` field of the login response.'

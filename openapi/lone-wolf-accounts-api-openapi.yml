@@ -1,0 +1,75 @@
+openapi: 3.2.0
+info:
+  title: Authentisign Accounts API
+  description: Authentisign API
+  version: '1.0'
+servers:
+- url: https://api.lwolf.com/authentisign
+tags:
+- name: Accounts
+paths:
+  /api/v1/accounts/email-signature:
+    post:
+      tags:
+      - Accounts
+      summary: Update Email Signature. Use this endpoint to update the email signature associated with the current account.
+      description: "Sample request:\n            \n    POST /Accounts/email-signature\n    \"emailSignature\" : \"Best Regards, John Doe\""
+      operationId: UpdateEmailSignature
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                emailSignature:
+                  type: string
+            encoding:
+              emailSignature:
+                style: form
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+components:
+  schemas:
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

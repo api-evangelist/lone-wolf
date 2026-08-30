@@ -1,0 +1,819 @@
+openapi: 3.2.0
+info:
+  title: Back Office External Agents API
+  version: '1.0'
+  description: Represents agents that are on the transaction but are not part of the brokerage.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: External Agents
+  description: Represents agents that are on the transaction but are not part of the brokerage.
+paths:
+  /v1/transactions/{transactionId}/external-agents:
+    get:
+      tags:
+      - External Agents
+      summary: Get External Agents
+      operationId: get-v1-transactions-transactionid-external-agents
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExternalAgent'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                typeCode: B
+                paymentMethodCode: B
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    post:
+      tags:
+      - External Agents
+      summary: Create External Agent
+      operationId: post-v1-transactions-transactionid-external-agents
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The external agent to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalAgent'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              endCode: B
+              typeCode: B
+              paymentMethodCode: B
+              firstName: string
+              lastName: string
+              companyName: string
+              addressLine1: string
+              addressLine2: string
+              addressCity: string
+              addressPostalCode: string
+              addressProvinceCode: string
+              addressCountryCode: string
+              phoneNumberMain: string
+              phoneNumberBusiness: string
+              faxNumberMain: string
+              emailAddressMain: string
+              emailAddressBusiness: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalAgent'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                typeCode: B
+                paymentMethodCode: B
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/external-agents/{externalAgentId}:
+    get:
+      tags:
+      - External Agents
+      summary: Get External Agent
+      operationId: get-v1-external-agents-externalagentid
+      parameters:
+      - name: externalAgentId
+        in: path
+        description: The id of the external agent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalAgent'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                typeCode: B
+                paymentMethodCode: B
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    delete:
+      tags:
+      - External Agents
+      summary: Delete External Agent
+      operationId: delete-v1-external-agents-externalagentid
+      parameters:
+      - name: externalAgentId
+        in: path
+        description: The id of the external agent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalAgent'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                typeCode: B
+                paymentMethodCode: B
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - External Agents
+      summary: Update External Agent
+      operationId: patch-v1-external-agents-externalagentid
+      parameters:
+      - name: externalAgentId
+        in: path
+        description: The id of the external agent.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the external agent to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalAgentPatchRequest'
+            example:
+              endCode: B
+              typeCode: B
+              paymentMethodCode: B
+              firstName: string
+              lastName: string
+              companyName: string
+              addressLine1: string
+              addressLine2: string
+              addressCity: string
+              addressPostalCode: string
+              addressProvinceCode: string
+              addressCountryCode: string
+              phoneNumberMain: string
+              phoneNumberBusiness: string
+              faxNumberMain: string
+              emailAddressMain: string
+              emailAddressBusiness: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalAgent'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                typeCode: B
+                paymentMethodCode: B
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    ExternalAgent:
+      required:
+      - endCode
+      - firstName
+      - lastName
+      - typeCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code end or side of the transaction.
+        typeCode:
+          enum:
+          - B
+          - R
+          type: string
+          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method use to pay the external agent.
+        firstName:
+          type: string
+          description: The first name of the external agent.
+        lastName:
+          type: string
+          description: The last name of the external agent.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company for which the external agent works.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The address unit number.
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character country code.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main phone number.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business phone number.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main fax number.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main email address.
+        emailAddressBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business email address.
+      additionalProperties: false
+      description: Represents an agent involved in the transaction that does not work for the brokerage.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    ExternalAgentPatchRequest:
+      type: object
+      properties:
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The code end or side of the transaction.
+          writeOnly: true
+        typeCode:
+          enum:
+          - B
+          - R
+          type:
+          - string
+          - 'null'
+          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
+          writeOnly: true
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method use to pay the external agent.
+          writeOnly: true
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the external agent.
+          writeOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the external agent.
+          writeOnly: true
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company for which the external agent works.
+          writeOnly: true
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+          writeOnly: true
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The address unit number.
+          writeOnly: true
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the address.
+          writeOnly: true
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the address. This will be unformatted.
+          writeOnly: true
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+          writeOnly: true
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character country code.
+          writeOnly: true
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main phone number.
+          writeOnly: true
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business phone number.
+          writeOnly: true
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main fax number.
+          writeOnly: true
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main email address.
+          writeOnly: true
+        emailAddressBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business email address.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of an external agent.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

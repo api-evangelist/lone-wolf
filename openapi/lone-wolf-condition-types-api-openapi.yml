@@ -1,0 +1,311 @@
+openapi: 3.2.0
+info:
+  title: Back Office Condition Types API
+  version: '1.0'
+  description: Represents some common conditions that can be added to transactions.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Condition Types
+  description: Represents some common conditions that can be added to transactions.
+paths:
+  /v1/condition-types:
+    get:
+      tags:
+      - Condition Types
+      summary: Get Condition Types
+      operationId: get-v1-condition-types
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConditionType'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/condition-types/{conditionTypeId}:
+    get:
+      tags:
+      - Condition Types
+      summary: Get Condition Type
+      operationId: get-v1-condition-types-conditiontypeid
+      parameters:
+      - name: conditionTypeId
+        in: path
+        description: The id of the condition type.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConditionType'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Condition Types
+      summary: Update Condition Type
+      operationId: patch-v1-condition-types-conditiontypeid
+      parameters:
+      - name: conditionTypeId
+        in: path
+        description: The id of the condition type.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the condition type to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConditionTypePatchRequest'
+            example:
+              name: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConditionType'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    ConditionTypePatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the condition type.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a condition type.
+    ConditionType:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the condition type.
+      additionalProperties: false
+      description: Represents a preset type of condition that can be applied to a transaction.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

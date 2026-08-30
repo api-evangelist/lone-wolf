@@ -1,0 +1,258 @@
+openapi: 3.2.0
+info:
+  title: Back Office Offices API
+  version: '1.0'
+  description: Represents the different physical offices that make up the brokerage.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Offices
+  description: Represents the different physical offices that make up the brokerage.
+paths:
+  /v1/offices:
+    get:
+      tags:
+      - Offices
+      summary: Get Offices
+      operationId: get-v1-offices
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Office'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                shortName: string
+                inactiveDate: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                code: string
+                startDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/offices/{officeId}:
+    get:
+      tags:
+      - Offices
+      summary: Get Office
+      description: Get Office
+      operationId: get-v1-offices-officeid
+      parameters:
+      - name: officeId
+        in: path
+        description: The id of the office.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Office'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                shortName: string
+                inactiveDate: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                code: string
+                startDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    Office:
+      required:
+      - name
+      - code
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name.
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name.
+        inactiveDate:
+          type:
+          - string
+          - 'null'
+          description: The date the office went inactive.
+          format: date
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code. This will be unformatted.
+        code:
+          type: string
+          description: The code for the office.
+        startDate:
+          type:
+          - string
+          - 'null'
+          description: The date the office opened.
+          format: date
+      additionalProperties: false
+      description: Represents an office.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

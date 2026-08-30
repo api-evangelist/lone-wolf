@@ -1,0 +1,630 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Conditions API
+  version: '1.0'
+  description: 'Operations tagged Conditions across 2 of this provider''s published API definitions: lone-wolf-back-office-online-api-openapi.yml, lone-wolf-wolfconnect-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.lwolf.com/backoffice
+- url: https://api.globalwolfweb.com
+  description: Production
+- url: https://api-sb.globalwolfweb.com
+  description: Test
+tags:
+- name: Conditions
+  description: Represents the conditions that exist on the transaction before it can be closed.
+paths:
+  /v1/transactions/{transactionId}/conditions:
+    get:
+      tags:
+      - Conditions
+      summary: Get Conditions
+      operationId: get-v1-transactions-transactionid-conditions
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Condition'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                description: string
+                dueDate: string
+                completeDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    post:
+      tags:
+      - Conditions
+      summary: Create Condition
+      operationId: post-v1-transactions-transactionid-conditions
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The condition to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Condition'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              description: string
+              dueDate: string
+              completeDate: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                description: string
+                dueDate: string
+                completeDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /v1/conditions/{conditionId}:
+    get:
+      tags:
+      - Conditions
+      summary: Get Condition
+      operationId: get-v1-conditions-conditionid
+      parameters:
+      - name: conditionId
+        in: path
+        description: The id of the condition.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                description: string
+                dueDate: string
+                completeDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    delete:
+      tags:
+      - Conditions
+      summary: Delete Condition
+      operationId: delete-v1-conditions-conditionid
+      parameters:
+      - name: conditionId
+        in: path
+        description: The id of the condition.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                description: string
+                dueDate: string
+                completeDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Conditions
+      summary: Update Condition
+      operationId: patch-v1-conditions-conditionid
+      parameters:
+      - name: conditionId
+        in: path
+        description: The id of the condition.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the condition to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConditionPatchRequest'
+            example:
+              description: string
+              dueDate: string
+              completeDate: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Condition'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                description: string
+                dueDate: string
+                completeDate: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /wolfconnect/conditions/v1/:
+    get:
+      tags:
+      - Conditions
+      summary: Retrieve the list of all Conditions
+      operationId: getConditions
+      description: All of the conditions that are configured for the Client Code used during the authentication process will be returned. The conditions returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of Condition objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Condition_2'
+      security:
+      - LoneWolfToken: []
+    servers:
+    - url: https://api.globalwolfweb.com
+      description: Production
+    - url: https://api-sb.globalwolfweb.com
+      description: Test
+components:
+  schemas:
+    ConditionPatchRequest:
+      type: object
+      properties:
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the commission.
+          writeOnly: true
+        dueDate:
+          type: string
+          description: The date the condition is due.
+          format: date
+          writeOnly: true
+        completeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the condition was completed.
+          format: date
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a condition.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    Condition:
+      required:
+      - description
+      - dueDate
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        description:
+          type: string
+          description: A description of the commission.
+        dueDate:
+          type: string
+          description: The date the condition is due.
+          format: date
+        completeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the condition was completed.
+          format: date
+      additionalProperties: false
+      description: Represents a condition on a transaction.
+    Condition_2:
+      type: object
+      description: 'A condition lookup value from the Conditions API. Note: transaction-level conditions attached to a Transaction use the TransactionCondition schema.'
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the classification.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the condition.
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: The date the classification became inactive. (Nullable)
+  securitySchemes:
+    LoneWolfToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Custom HMAC-signed authorization scheme used when calling resources that access your actual data:
+
+
+        ```
+
+        Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+
+        ```
+
+
+        A `Content-MD5` header is also required on every request (base 64 encoded MD5 hash of the request body, or of an empty string for requests without a body: `1B2M2Y8AsgTpgAmY7PhCfg==`).
+
+
+        The signature is the HMACSHA256 hash (seeded with your secret key) of `[HTTP Method]:[Resource URI]:[Date]:[Content-MD5]`. HMACSHA384 and HMACSHA512 are also supported by appending the algorithm to the scheme (e.g. `LoneWolfToken-HMACSHA512`).
+
+
+        See the Authentication, Creating a Request, and Creating the Signature sections of the introduction for full details, date format, and worked examples. A separate `LoneWolfKey` scheme exists for resources that deal with your API account; there is never a scenario where you would send more than one type of authorization scheme.'
+x-refined-from:
+- lone-wolf-back-office-online-api-openapi.yml
+- lone-wolf-wolfconnect-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

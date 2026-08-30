@@ -1,0 +1,468 @@
+openapi: 3.2.0
+info:
+  title: TransactionDesk Partner Transaction Summary API
+  description: "Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.\n\n## Authorization\n\n### Authorization Code Flow\n\n1. Redirect the user to the OAuth authorization URL:\n   `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`\n2. The user logs in via the Lonewolf Authentication system.\n3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.\n4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.\n5. Include the access token in the `Authorization: Bearer <token>` header on every request.\n\n### Client Credentials Flow\n\nFor enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.\n\n## Universal Global Fields\n\nBelow is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.\n\n### 1. Property Information\n\n#### Address\n- `streetNumber`\n- `streetName`\n- `city`\n- `county`\n- `state`\n- `zipCode`\n\n#### Subdivision and Parcel Information\n- `subDivision`\n- `lotNumber`\n- `block`\n- `pageNumber`\n- `platBook`\n\n#### Property Characteristics\n- `yearBuilt`\n- `zoningClass`\n- `schoolDistrict`\n\n#### Tax and Legal Information\n- `taxNumber`\n- `township`\n- `legalDescription`\n\n### 2. Listing Information\n\n#### Listing Identification\n- `mlsNumber`\n\n#### Pricing\n- `listPrice`\n\n#### Listing Timeline\n- `expirationDate`\n\n#### Property Inclusions and Exclusions\n- `propertyIncludes`\n- `propertyExcludes`\n- `leasedItems`\n\n### 3. Purchase Information\n\n#### Pricing\n- `purchasePrice`\n\n#### Offer Timeline\n- `offerDate`\n- `offerExpirationDate`\n- `offerAcceptanceDate`\n\n#### Financing Timeline\n- `applicationDate`\n- `approvalDate`\n\n#### Deposits\n- `depositAmount`\n- `additionalDepositAmount`\n- `additionalDepositDate`\n\n#### Transaction Milestones\n- `fundingDate`\n- `possessionDate`\n- `closingDate`"
+  version: '2.0'
+servers:
+- url: https://api.pre.transactiondesk.com
+security:
+- bearerAuth: []
+tags:
+- name: Transaction Summary
+  description: Create, read, update, and delete transaction files and their property details
+paths:
+  /v2/transactions:
+    get:
+      summary: Get All Transactions
+      description: Returns a full list of transactions owned by the authenticated user. Supports filter params ($orderDir, $skip, $take, $orderBy).
+      tags:
+      - Transaction Summary
+      parameters:
+      - in: query
+        name: $orderDir
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+        description: Sort direction
+      - in: query
+        name: $skip
+        schema:
+          type: integer
+        description: Number of records to skip (pagination)
+      - in: query
+        name: $take
+        schema:
+          type: integer
+          maximum: 100
+        description: Number of records to return (max 100)
+      - in: query
+        name: $orderBy
+        schema:
+          type: string
+        description: Field to order by
+      responses:
+        '200':
+          description: List of transactions returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+    post:
+      summary: Create a Transaction
+      description: Creates a new transaction file in the authenticated user's account.
+      tags:
+      - Transaction Summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: Name of Property
+                  description: Name of the transaction file
+                typeId:
+                  type: string
+                  format: uuid
+                  example: 805355ec-7f7d-413e-986a-c767ea0632da
+                  description: TransactionTypeGUID. See Glossary for values.
+                statusId:
+                  type: string
+                  format: uuid
+                  example: 805355ec-7f7d-413e-986a-c767ea0632da
+                  description: TransactionStatusGUID. See Glossary for values.
+      responses:
+        '200':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 805355ec-7f7d-413e-986a-c767ea0632da
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/transactions/{id}:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get a Specific Transaction
+      description: Returns a specific transaction file owned by the authenticated user.
+      tags:
+      - Transaction Summary
+      responses:
+        '200':
+          description: Transaction returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    patch:
+      summary: Update a Transaction
+      description: Updates part or all of a specific transaction file.
+      tags:
+      - Transaction Summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                statusId:
+                  type: string
+                  format: uuid
+                typeId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Transaction updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    delete:
+      summary: Delete a Transaction
+      description: Deletes a specific transaction file owned by the authenticated user.
+      tags:
+      - Transaction Summary
+      responses:
+        '200':
+          description: Transaction deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+  /v2/transactions/{id}/details:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get Transaction Details
+      description: 'Returns property details associated with a specified transaction file. Details are divided into three sections: property information, listing information, and sale/purchase information.'
+      tags:
+      - Transaction Summary
+      responses:
+        '200':
+          description: Transaction details returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetails'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    patch:
+      summary: Update Transaction Details
+      description: Updates part or all of the property details associated with a specified transaction file. You can update any combination of property, listing, and purchase fields.
+      tags:
+      - Transaction Summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDetails'
+      responses:
+        '200':
+          description: Transaction details updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: TransactionGUID used to uniquely identify this specific Transaction
+        name:
+          type: string
+          example: 1916 Glenarbor Way
+          description: Name of the transaction file as it appears in the application
+        statusId:
+          type: string
+          format: uuid
+          example: 6d6d2bfe-b166-4f2c-9027-629f09a35b79
+          description: TransactionStatusGUID. See Glossary for values.
+        typeId:
+          type: string
+          format: uuid
+          example: 2d9d021d-beb7-456d-9cae-6ce5486ac3f5
+          description: TransactionTypeGUID. See Glossary for values.
+        ownerId:
+          type: string
+          format: uuid
+          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
+          description: OwnerID of this Transaction File
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:49.143+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:52.27+00:00'
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    TransactionDetails:
+      type: object
+      properties:
+        property:
+          type: object
+          properties:
+            streetName:
+              type: string
+              example: Wellington Rd.
+            streetNumber:
+              type: string
+              example: '200'
+            state:
+              type: string
+              example: 'ON'
+            city:
+              type: string
+              example: London
+            county:
+              type: string
+              example: Middlesex
+            zipCode:
+              type: string
+              example: N6E 38B
+            subDivision:
+              type: string
+              example: White Oaks
+            lotNumber:
+              type: string
+              example: '8'
+            block:
+              type: string
+              example: '20'
+            pageNumber:
+              type: string
+              example: '5'
+            platBook:
+              type: string
+              example: '33'
+            yearBuilt:
+              type: integer
+              example: 1980
+            schoolDistrict:
+              type: string
+              example: Aquinis School District
+            zoningClass:
+              type: string
+              example: Residential
+            taxNumber:
+              type: string
+              example: 112-1231-999
+            township:
+              type: string
+              example: Essex
+            legalDescription:
+              type: string
+              example: PL ; Lot ; Bl ; DL ; LD ; S ; Twn ; Rge ; M ; Lot A, Section 75, Victoria District, Plan 42316
+        listing:
+          type: object
+          properties:
+            mlsNumber:
+              type: string
+              example: '421126'
+            listPrice:
+              type: number
+              example: 200000
+            expirationDate:
+              type: string
+              format: date-time
+              example: '2012-04-23T18:25:43.51'
+            propertyIncludes:
+              type: string
+              example: Dishwasher, Stove, Fridge
+            propertyExcludes:
+              type: string
+              example: Washer, Dryer
+            leasedItems:
+              type: string
+              example: Hot Water Tank
+        purchase:
+          type: object
+          properties:
+            purchasePrice:
+              type: number
+              example: 190000
+            offerDate:
+              type: string
+              format: date-time
+            offerExpirationDate:
+              type: string
+              format: date-time
+            offerAcceptanceDate:
+              type: string
+              format: date-time
+            applicationDate:
+              type: string
+              format: date-time
+            approvalDate:
+              type: string
+              format: date-time
+            depositAmount:
+              type: number
+              example: 50000
+            additionalDepositAmount:
+              type: number
+              example: 10000
+            additionalDepositDate:
+              type: string
+              format: date-time
+            fundingDate:
+              type: string
+              format: date-time
+            possessionDate:
+              type: string
+              format: date-time
+            closingDate:
+              type: string
+              format: date-time
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

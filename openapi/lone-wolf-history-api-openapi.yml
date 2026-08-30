@@ -1,0 +1,72 @@
+openapi: 3.2.0
+info:
+  title: Authentisign History API
+  description: Authentisign API
+  version: '1.0'
+servers:
+- url: https://api.lwolf.com/authentisign
+tags:
+- name: History
+paths:
+  /api/v1/signings/{signingId}/history:
+    get:
+      tags:
+      - History
+      summary: Retrieve Audit Trail. This endpoint allows you to pull a list of all audit trail events related to this signing. The audit trail is also embedded into the final signed documents themselves.
+      description: "Sample request:\n            \n    GET /signings/{signingId}/history\n            \nHeader:\n    externalId: SomeExternalId"
+      operationId: GetSigningHistory
+      parameters:
+      - name: signingId
+        in: path
+        description: The unique identifier of the signing for which the audit trail is to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+components:
+  schemas:
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

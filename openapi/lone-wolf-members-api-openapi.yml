@@ -1,0 +1,893 @@
+openapi: 3.2.0
+info:
+  title: WolfConnect Members API
+  version: 1.0.0
+  description: "The Lone Wolf WolfConnect API is a collection of RESTful web resources allowing third parties access to data.\n\n## Index\n\n1. [Authentication](#authentication)\n2. [Creating a Request](#creating-a-request)\n3. [Creating the Signature for the Authorization Header](#creating-the-signature-for-the-authorization-header)\n4. [Handling a Response](#handling-a-response)\n5. [Handling Time Zones](#handling-time-zones)\n6. [Supported Data Formats](#supported-data-formats)\n7. [Compression](#compression)\n8. [OData Support](#odata-support)\n9. [Creating and Updating Data](#creating-and-updating-data)\n10. [Concurrency Checking](#concurrency-checking)\n11. [Permissions](#permissions)\n12. [Error Codes](#error-codes)\n\n**APIs in this documentation:** Members, Transactions, Classifications, Conditions, Contact Types, Property Types, Sources of Business.\n\nThe Lone Wolf API is a language independent resource and will work with such languages as Java, JavaScript, PHP and .NET.\n\nThe base URL for all calls to the production version of the API is `https://api.globalwolfweb.com`. The base URL for all calls to the test version of the API is `https://api-sb.globalwolfweb.com`.\n\n## Authentication\n\nAuthentication begins with a consumer key, secret key, and an API token key, which will be provided by Lone Wolf Technologies.\n\nThe secret key is a string of characters used to seed or salt the signature of all requests made to the API. The secret key should be guarded in the same way you would guard your bank account password.\n\n## Creating a Request\n\nTo properly authenticate an API request, there are 2 headers that must be added: `Authorization` and `Content-MD5`.\n\n### Authorization Header\n\nThe Authorization header will be of the form:\n\n```\nAuthorization: [Scheme] [Authorization String]\n```\n\nThe scheme portion of the Authorization header tells the API how it should authenticate the request by telling the API how to interpret the authorization string portion of the header. The authorization string is a series of strings separated by a colon.\n\n```\nAuthorization: LoneWolfKey [Consumer Key]:[Signature]:[Date]\n```\n\n| Part | Description |\n|---|---|\n| Consumer Key | Your consumer key provided to you by Lone Wolf. |\n| Signature | The signature for the request (detailed below). |\n| Date | A string representing the **UTC** date and time of the request in the format specified below. |\n\nThe `LoneWolfKey` authorization scheme will be used when calling resources that deal with your API account.\n\n```\nAuthorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]\n```\n\n| Part | Description |\n|---|---|\n| API Token | The API token is provided by Lone Wolf. |\n| Client Code | The code given to the office or office family that the request will pertain to. |\n| Signature | The signature for the request (detailed below). |\n| Date | A string representing the **UTC** date and time of the request in the format specified below. |\n\nThe `LoneWolfToken` authorization scheme will be used when calling resources that access your actual data.\n\nThere is never a scenario where you would send more than one type of authorization scheme.\n\n### Authorization Header Date and Time Format\n\nThe date and time format for any date specified in the Authorization header is:\n\n```\n[4 digit year]-[2 digit month starting at 01 for January]-[2 digit day of the month starting at 01]-[2 digit hour in 24 hour format from 00-23]-[2 digit minute from 00-59]-[2 digit second from 00-59]-[3 digit millisecond from 000-999][Single letter time zone for UTC]\n```\n\nThe actual string should all be on one line with a dash separating each part of the date/time. The Z at the end of the string represents the UTC time zone.\n\nTo format the date in .NET, use the string `yyyy-MM-dd-HH-mm-ss-fffK`.\n\nTo format the date in Java, use the string `yyyy-MM-dd-HH-mm-ss-SSSX`.\n\nTIP: If the language you are working with does not support milliseconds, use 000 every time.\n\nFor example, the date *January 1st, 2014 at 3:45:33.554 PM EST* would be represented as:\n\n```\n2014-01-01-20-45-33-554Z\n```\n\nNotice that the hour portion of the string has been changed from Eastern to Greenwich Mean Time.\n\n### Content-MD5 Header\n\nThe Content-MD5 header holds the base 64 encoded MD5 hash of the body of the request as described by the HTTP specification for normal PUT and POST requests.\n\nHowever not all requests will have a body: for instance, GET or DELETE requests. When this is the case the Content-MD5 header should only contain the base 64 encoded MD5 hash of an empty string:\n\n```\nContent-MD5: 1B2M2Y8AsgTpgAmY7PhCfg==\n```\n\nAnother circumstance in which the value for the Content-MD5 header is different is when a multipart request is made. Multipart requests will be used when streaming files to the API. The base 64 encoded MD5 hash of an empty string should be used for multipart requests as well.\n\nTo ensure generation of the correct value for the Content-MD5 header it is good practice setting the body of the request then passing the body of the request into a function that will perform the hash. This will ensure that what you put in the request is the exact same thing you are using to create the hash.\n\n```csharp\nprivate string CreateContentMD5Header(string bodyContent)\n{\n    byte[] md5 = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(bodyContent));\n    return Convert.ToBase64String(md5);\n}\n```\n\nA common mistake when generating the Content-MD5 header is base 64 encoding a string representation of the MD5 hash. You must keep the MD5 hash as a byte array and then base 64 encode that byte array.\n\n## Creating the Signature for the Authorization Header\n\nThe signature portion of the Authorization header is the HMACSHA256 hash of the following string:\n\n```\n[HTTP Method]:[Resource URI]:[Date]:[Content-MD5]\n```\n\n| Part | Description |\n|---|---|\n| HTTP Method | The HTTP method. GET, PUT, POST, DELETE. |\n| Resource URI | The non URL encoded resource URI without the host name. **This must start with a slash and does not include the `https://api.globalwolfweb.com` portion.** |\n| Date | A string representing the **UTC** date and time of the request in the format specified above. This should be the same string that is used in the Authorization header. |\n| Content-MD5 | The value in the Content-MD5 header. |\n\nFor example, to get the data for a transaction with id `WVnG90WFTSK2g9d_L7yd6g==` on *January 1st, 2014 at 3:45:33.554 PM EST*, the signature string to hash would be:\n\n```\nGET:/wolfconnect/transactions/v1/WVnG90WFTSK2g9d_L7yd6g==:2014-01-01-20-45-33-554Z:1B2M2Y8AsgTpgAmY7PhCfg==\n```\n\nNotice that the time string has been changed from EST to UTC. The Content-MD5 portion of the string to hash is the base 64 encoded MD5 hash of an empty string since this is a GET request.\n\nYou need to first create this string for the requested resource and then use your secret key to seed the HMACSHA256 hash function. The value that comes back would then be used as the signature for the Authorization header.\n\n```csharp\nstring stringToHash = \"GET:/wolfconnect/transactions/v1/WVnG90WFTSK2g9d_L7yd6g==:2014-01-01-20-45-33-554Z:1B2M2Y8AsgTpgAmY7PhCfg==\";\nvar hasher = new HMACSHA256(Encoding.UTF8.GetBytes([Your Secret Key]));\nbyte[] bytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(stringToHash));\nStringBuilder signature = new StringBuilder();\nforeach(byte b in bytes)\n{\n    signature.AppendFormat(\"{0:x2}\", b);\n}\n// The signature variable now contains the value to use in the Authorization header.\n```\n\n### URL Encoding\n\nIf you URL encode the above resource URI, you would get:\n\n```\n/wolfconnect/transactions/v1/WVnG90WFTSK2g9d%5fL7yd6g%3d%3d\n```\n\nThis is perfectly valid when making the request to the API. However, when constructing the string to hash for the signature, the Resource URI must **not** be URL encoded.\n\n### Using a different Hash Algorithm\n\nThe default hash algorithm is HMACSHA256. However, the API also supports the use of HMACSHA384 and HMACSHA512 if you wish to increase security. To tell the API that you wish to use a different hash algorithm simply append it to the authorization scheme portion of the Authorization header separated by a dash.\n\n```\nAuthorization: LoneWolfToken-HMACSHA512 [Authorization string]\n```\n\n### Hash Examples\n\nThe following tables list HMAC SHA hashes for the specified strings. The table is there for your convenience to make sure you have your hashing algorithm code correctly setup. All hashes were created with the seed (or secret key in the context of the API) `LoneWolf`.\n\nHash of the string `Lone Wolf Real Estate Technologies`:\n\n| Algorithm | Hash |\n|---|---|\n| HMACSHA256 | cc62f4a577cd76277a97018bf7b476fc911823fac1cdc4ea3f672e8d4b84bac2 |\n| HMACSHA384 | 95d1805b87daf9f6259cec06a20c8051dd5894a160e7af2d1a371569a6fa5fcb7a0be67e825486e27d42d6b2e71829c1 |\n| HMACSHA512 | 814e10262e8bf47dcd103dabca0e44736e902beb15b1a10c561fcb3818d9d6b7c2eeb076b1c4d9a4f9d90909e406028066683a92ca2a6deec186aec456993342 |\n\nHash of the string `The Complete Enterprise Solution`:\n\n| Algorithm | Hash |\n|---|---|\n| HMACSHA256 | 358cde6aeb0cfb0750665e9b54efbaca1665621a0d7c71a2184fcf6e5c022c8f |\n| HMACSHA384 | 2936f83a7c1aff99fea0deefec6039c483834d74c7f3adf0e6e2854319b14592c588c7266dc2f4df5d8854a272ee59ba |\n| HMACSHA512 | 0d1c669ddd64f5bb1bc1d8377f8297f0f8a32416e69f4943a7883ad6dc9582229ebbde6eac037dedce85e408ec8b006c58f57ebde7e71182bf7318da19e910d8 |\n\n## Handling a Response\n\nLone Wolf API responses use the standard HTTP status codes to tell you how you should handle the content of the response. In general, there are 2 types of responses. Success and Error responses. Success responses will use the HTTP status codes OK (200) and Created (201). All other status codes indicate an error.\n\nTypically when a success message is received the response content will contain an object that relates to the accessed resource. When an error response is received it will contain a ClientError object. This object will contain its own Code value that will represent the problem that caused the error response. This means that you can use the standard HTTP response code to handle the error or ignore it all together and use the Lone Wolf Code to handle the error.\n\n## Handling Time Zones\n\nTime zones must be handled correctly as the API can return and accept dates with times. To make it easy all dates with times returned from the API will be sent back in UTC time. As a corollary, all dates and times sent to the API must include the time zone offset. If the time zone is not specified, UTC time is assumed.\n\nThe individual resource documentation will specify the type of date the property is. You do not have to perform the UTC conversion if it is just a date; the time portion of the Date property will be ignored if specified.\n\n## Supported Data Formats\n\nThe API supports JSON and XML data formats. Each individual API section has the definitions for the objects that it supports. These object definitions can be used to create classes in any language that can then be serialized to JSON or XML and passed to the API. The response from the API can then be deserialized into these same objects.\n\n### Date and Timestamp Properties\n\nDate and Timestamp properties have slight differences in how the API is expecting them. Dates are in the following format (all on one line) for both JSON and XML formats:\n\n```\n[4 digit year]-[2 digit month starting at 01]-[2 digit day of the month starting at 01]\n```\n\n.NET format string: `yyyy-MM-dd` — Java format string: `yyyy-MM-dd`\n\nIf you pass the time to the API during an update for a Date property it will be ignored when saving it to the database.\n\nA Timestamp value should be in ISO 8601 or Round-trip format (all on one line):\n\n```\n[4 digit year]-[2 digit month starting at 01]-[2 digit day of the month starting at 01]T[2 digit hour between 00-23]:[2 digit minute between 00-59]:[2 digit second between 00-59].[7 digit sub-second between 0000000-9999999]%2B00:00\n```\n\n.NET format string: `yyyy-MM-dd'T'HH:mm:ss.fffffffK` — Java format string: `yyyy-MM-dd'T'HH:mm:ss.SSSXXX`\n\nNOTE: The Java SimpleDateFormat class does not handle more than 3 sub-seconds. As of Java 7, you can use `javax.xml.bind.DatatypeConverter.parseDateTime(timestampString)` to get a Calendar object back. You do not need to specify the format in the `DatatypeConverter.parseDateTime()` function. If using Java 6 or earlier, you will have to write your own parser to handle the timestamp returned from the API. The above format should be used when sending a timestamp value to the API in any Java version.\n\nTimestamp values will always be in UTC time when retrieved from the API and must always specify the time zone when updating a time. If no time zone is specified, the API will assume UTC time.\n\n## Compression\n\nThe API supports gzip and deflate compression of the request and response. If you plan to send compressed requests to the API, make sure that the Content-Encoding request header is included and holds the type of compression used. If you want compressed responses, include the Accept-Encoding request header for the type of compression you support.\n\nNOTE: Compressed Multi-part requests are not supported at this time.\n\n## OData Support\n\nThe API supports OData style filtering for resources using the HTTP GET method. OData is a standard query string language used for filtering resources on REST APIs. Much more detailed information can be found at [www.odata.org](http://www.odata.org). The API currently supports the OData 4.0 specification for URL conventions but does not support the full range of query parameters.\n\n### Supported OData Parameters\n\nIf any parameter is not supported for a particular resource it will be noted in that resource's documentation. Otherwise it is safe to assume that all of these parameters are supported for all resources using the GET HTTP method.\n\n| Parameter | Description |\n|---|---|\n| $filter | Filters data on properties related to the resource. NOTE: Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.). |\n| $orderby | Orders the objects returned in the response by a property related to the resource. |\n| $top | Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. |\n| $skip | Skips the specified number of records before returning the results. $orderby must be specified for $top to be used. |\n| $search | Allows for free form text to be searched. Each API will note which fields are included in the free form search when this parameter is available. |\n| $expand | Instructs the API to include a child object or collection in the response. Please see the section below for more details on how to use this parameter. |\n\nThe maximum number of objects returned from any resource is 1,000. If the $top parameter is not passed in the query string, $top=1000 is assumed. If a value greater than 1,000 is specified an error will be thrown. If the response holds 1,000 objects, you must implement paging (described below) to make sure you retrieve all the records.\n\nOnly the $expand OData query parameter is supported for resources that return one specific object rather than allow you to filter many objects; all other OData query parameters will be ignored.\n\n### Usage of the $expand Query Parameter\n\nThe $expand parameter is used a little differently than the OData specification: if the $expand parameter is omitted from the query string then ALL child objects and collections will be returned. In the case of a Transaction object this would mean that the Tiers, ClientContacts, BusinessContacts, Classification, etc. child objects and collections will also be returned (provided you have permission to see those objects). If you want to return only the Transaction object pass in `$expand=` in the query string (the $expand parameter but with no values specified).\n\nThe reason for this difference is to maintain backward and forward compatibility. Before OData support, calls to the Transactions Resource had no way to tell the API to return only specific objects of a Transaction so the entire object including any child objects would be returned. Returning the full object maintains forward compatibility so if a new child object or collection is added to the Transaction object then not passing the $expand parameter will include the new child object or collection automatically. If you wish to only return the Transaction object and are already passing in `$expand=` in the query string then the new object or collection will still not be returned to you.\n\n### Implementing Paging\n\nThe $top and $skip query parameters can be used to implement paging for a given resource. However, each call to the API performs a new query so there is a chance that new records could be inserted or values updated between each API call.\n\n### Examples\n\nThe following URL returns transactions created on or after April 1st, 2014 (the full transaction object is returned because the $expand parameter is omitted):\n\n```\n/wolfconnect/transactions/v1?$filter=CreatedTimestamp ge datetimeoffset'2014-04-01T00:00:00Z'\n```\n\nThe following URL returns the top 10 transactions with the highest sell price (only the Transaction objects are returned because the $expand parameter is specified but empty):\n\n```\n/wolfconnect/transactions/v1?$top=10&$orderby=SellPrice desc&$expand=\n```\n\nThe following URL returns the transaction with id `98agdji99jasdof908==`. The Transaction object returned will include the ClientContacts and BusinessContacts. Classification, PropertyType, Tiers, etc. will all be null:\n\n```\n/wolfconnect/transactions/v1/98agdji99jasdof908==?$expand=ClientContacts,BusinessContacts\n```\n\n## Creating and Updating Data\n\nCreating and updating data with the API is pretty straight forward. If you set a property to a value the corresponding property in the database will be set to that value.\n\nHowever NULL-valued properties are handled differently. When creating a new record with a NULL-valued property its default value will be saved in the database. The default value will be returned to you in the response. When updating an existing record its current value will NOT be updated in the database and the original value will be returned to you in the response.\n\nThe other way to use the default value when creating data is to not send the property in the request at all. This also works when attempting to not update the current value when updating. We allow the use of NULL for this scenario to ease creating classes that can be serialized to a request.\n\nThere is one caveat to this rule: if a NULL value is an acceptable value for a given property then the NULL value will be saved in the database. Get the API to use the default value when creating data by not sending that property in the request at all. This also works when attempting to not update the existing value when updating. This will occur most often with Date, DateTime and Numeric data but it is possible for String data as well.\n\nAn example of this would be the Member.InactiveDate property: having a NULL value for the InactiveDate is valid and indicates that the member is still active. If you were using the Members Resource to update data for a member that is **inactive**, you have two options: send the value currently stored for InactiveDate (effectively updating it to the same value) or do not include the InactiveDate property in the request at all.\n\nThese types of properties are noted in the object definitions by the word (Nullable) in the property description. If you see a property described as (Nullable) then you know you must handle the property in this special way.\n\n### Collection Properties (Lists and Arrays)\n\nCollection properties will typically hold \"child\" records of a given parent object. If the property that holds a collection is null the current values for that collection are not changed. If the property is not sent in the request at all the current values are not updated. Send an empty collection to delete the collection for the given property. If the current state of the database had 3 items for a given collection but you only wanted to keep 1 of them, then you would send a collection containing only the one you wanted to keep; the other 2 items would be deleted.\n\nFor example, if you were updating a transaction but did not want to update the conditions associated to that transaction, simply set the Transaction.Conditions property to NULL or do not send that property in the request. If you wanted to delete all of the conditions from a transaction, you would set the Transaction.Conditions property to an empty collection. If the transaction had 3 conditions currently associated to it but you only wanted to keep the second one then you would set the Transaction.Conditions property to a collection containing only the second condition; conditions 1 and 3 would then be deleted.\n\n### Object Properties\n\nObject properties will typically hold an associated \"child\" object. They will have 2 properties associated to them. One for the Id of the object and the other for the object itself. When creating or updating an Object property you only need to send the Id property. The object property will be returned to you in the response.\n\nFor example: ClientContact objects. The ClientContact object has 2 properties for source of business. The ClientContact.SourceOfBusinessId property is of type string and holds the Lone Wolf Id for the source of business. The ClientContact.SourceOfBusiness property is of type SourceOfBusiness and holds the source of business object.\n\nWhen creating or updating a ClientContact object you only need to pass the SourceOfBusinessId value to the API. Whatever value is in ClientContact.SourceOfBusiness is ignored. However ClientContact.SourceOfBusiness will be available in the response and will reflect the source of business record for the sent SourceOfBusinessId. Set the SourceOfBusinessId value to NULL to leave the current source of business for a given ClientContact object. Send an empty string for SourceOfBusinessId to remove the source of business record from the ClientContact object.\n\n### String Properties\n\nString properties are no different than any other property in how they behave but since NULL is such a common value for a string property they deserve their own section. Set the string property to NULL or do not pass the string property in the request to use the default value when creating or keep the current value when updating. You must send an empty string for the property if you wish to clear the corresponding value in the database.\n\nFor example, if you were updating data for a given member and did not want to change the current value for the middle name, send NULL for Member.MiddleName or leave it out of the request all together. If the current value was \"Anne\" and you wanted to clear it then you would set Member.MiddleName to an empty string.\n\n## Concurrency Checking\n\nThe API supports concurrency checking. It is strongly recommended that you implement concurrency checking whenever updating data through the API as it will eliminate the possibility of overwriting someone else's changes. Let's take the following scenario:\n\n- A transaction is retrieved using the API and stored in a third party database. The close date for this transaction is 01/01/2015 and the price is $100,000.\n- A user opens up that same transaction on the EDS page in WOLFconnect and changes the price to $110,000.\n- The same transaction is then updated using the API. The API call changes the close date to 01/05/2015 but in doing so sends the price that it knows about which is $100,000. The user's change in WOLFconnect has just been overwritten.\n\nThere are 2 ways to avoid this scenario. The first is to only send the data that you want updated in the request. If you just want the close date updated, only set the Transaction.CloseDate property and leave the other properties as null or exclude them from the request all together.\n\nThe second way is to use the RowVersion property on the Transaction object. Any object that supports concurrency checking will have a RowVersion property associated to it. The RowVersion property holds the version of a particular record in the database. In the same scenario above, if the RowVersion was passed in the update in Step 3, it would not match the row version currently stored in the database. The API call would then fail with a Conflict HTTP Status.\n\nNOTE: If the RowVersion property is passed to the API as NULL, no concurrency check will take place and the data passed in the API call will be updated in the database.\n\nConcurrency checking may not need to be used in every scenario but there is no downside to implementing it. If there is even the slightest chance that data could be overwritten, it is strongly recommended that you implement concurrency checking.\n\n## Permissions\n\nLone Wolf has the ability to set read and edit permissions on a property-by-property basis for any object. Attempting to create or delete an object for which you do not have permission will return an error. Attempting to update a value for which you do not have permission will return an error. Retrieving an object without read permission for a given property will be NULL in the response.\n\nCollection properties will contain an empty collection if you do have read permission but no objects exist. For example, if you do not have read permission for the Transaction.Conditions property it will always be passed back in the response as NULL.\n\nIf you have read permission for object properties but no object exists then the Id property will be an empty string and the object property will be NULL. For example, if you do not have read permission for the ClientContact.SourceOfBusiness property the ClientContact.SourceOfBusinessId and ClientContact.SourceOfBusiness properties will both be null in the response. If you have read permission but the source of business is not set for the ClientContact then ClientContact.SourceOfBusinessId will be set to an empty string and the ClientContact.SourceOfBusiness property will be null.\n\nWith this in mind, if you are retrieving data from the Lone Wolf API to update your own system and the data comes back as NULL DO NOT update your own system with a NULL value. A NULL value will typically mean that you do not have access to that property.\n\nThe same exception applies to this rule as when updating certain values: if you do have access to a given property but NULL is a valid value for that property then NULL will be returned in the response. If NULL is a valid value for a property but you do not have read permission to that property then the property will not be included in the response.\n\n## Error Codes\n\nThe ClientError object is used to give detailed information whenever an API request fails. This is the object that will be sent back in the response. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL.\n\n| Code | Description |\n|---|---|\n| 1000 | Unknown error. This is typically accompanied with an Internal Server Error HTTP status code (500). Please contact Lone Wolf support if you receive this error. |\n| 1001 | Invalid Parameter. |\n| 1002 | Missing Parameter. |\n| 1003 | The request must be a multipart request. |\n| 1004 | No files were sent with the request. |\n| 1005 | The maximum files allowed for the request was exceeded. |\n| 1006 | Validation failed when trying to save a resource. This will occur when a requirement for the data passed to the API has not been met. |\n| 1007 | Member authentication failed. This will occur when a member tries to log in but has been deactivated or they have not finished resetting their password. |\n| 1008 | Invalid Operation. You most likely don't have access to perform said operation. |\n\nResponses for the standard HTTP status codes of BadRequest (400), Unauthorized (401), NotFound (404) and Conflict (409) will all have an object of type ClientError sent back in the response. If they do not then that is a good indication that the URL you are accessing is invalid. For generic BadRequest, Unauthorized, NotFound and Conflict responses the ClientError Code property will be the same as the HTTP status code."
+servers:
+- url: https://api.globalwolfweb.com
+  description: Production
+- url: https://api-sb.globalwolfweb.com
+  description: Test
+security:
+- LoneWolfToken: []
+tags:
+- name: Members
+  description: 'The Members resource is a RESTful web resource running on Microsoft''s Web API allowing third parties to access member data.
+
+
+    The following actions are currently supported:
+
+
+    - Retrieve a member or a collection of members
+
+    - Retrieve the profile image of a member
+
+    - Retrieve the public profile image of a member
+
+    - Set the In/Out status of a member
+
+    - Get the In/Out status of a member
+
+    - Get the In/Out status of all active members
+
+
+    Use of the above resource will require the appropriate authentication headers to be present. Construction of authentication headers is outlined in the Authentication section above.'
+paths:
+  /wolfconnect/members/v1:
+    get:
+      tags:
+      - Members
+      summary: Retrieve a Collection of Members
+      operationId: getMembers
+      description: 'Retrieves a collection of members within the current client code. OData can be used to filter, order and page through the list.
+
+
+        **OData Support:** $expand, $filter, $orderby, $skip, $top'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      - $ref: '#/components/parameters/ODataFilter'
+      - $ref: '#/components/parameters/ODataOrderBy'
+      - $ref: '#/components/parameters/ODataSkip'
+      - $ref: '#/components/parameters/ODataTop'
+      responses:
+        '200':
+          description: A collection of Member objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+    post:
+      tags:
+      - Members
+      summary: Create a Member
+      operationId: createMember
+      description: 'Creates a new member within the client code. The response will contain the newly created member object populated with all of the data to which you have read access. You can use the OData $expand parameter to limit the data that is returned.
+
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+
+        **OData Support:** $expand'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      requestBody:
+        required: true
+        description: A Member object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+      responses:
+        '201':
+          description: The newly created Member object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+  /wolfconnect/members/v1/{memberId}:
+    parameters:
+    - $ref: '#/components/parameters/MemberId'
+    get:
+      tags:
+      - Members
+      summary: Retrieve a Member
+      operationId: getMember
+      description: 'Retrieves a Member. The data in the response will contain all of the data to which you have read access. Properties with values of NULL typically mean that you do not have read access to that property. Please see the Permissions section of the introduction for more information.
+
+
+        HEAD is also supported for this resource.
+
+
+        **OData Support:** $expand'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      responses:
+        '200':
+          description: A Member object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error Code 404: The member could not be found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+    put:
+      tags:
+      - Members
+      summary: Update a Member
+      operationId: updateMember
+      description: 'It is best practice to only send data that you want updated as it will return a much faster response. For instance, if you only need to update the FirstName value, then you should set all other Member properties to null so that only the First Name update is attempted.
+
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+
+        The response will contain the updated member object populated with all of the data to which you have read access regardless of the properties sent in the request. For instance, if you sent a Member object with the EmailAddresses property set to null but the Member contained an email address, the Member.EmailAddresses property of the response will contain the email address. You can use the OData $expand parameter to limit the data that is returned.
+
+
+        The value for the Member.Id property in the Member object sent in the request is ignored.
+
+
+        **OData Support:** $expand'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      requestBody:
+        required: true
+        description: A Member object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+      responses:
+        '200':
+          description: A Member object holding all the updated data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+  /wolfconnect/members/v1/{memberId}/profile-image:
+    parameters:
+    - $ref: '#/components/parameters/MemberId'
+    get:
+      tags:
+      - Members
+      summary: Retrieve the Profile Image of a Member
+      operationId: getMemberProfileImage
+      description: 'Retrieves the profile image for the member that was uploaded through the member profile page in WOLFconnect.
+
+
+        This resource supports the If-Modified-Since request header and will return a 304 Not Modified response if the image has not been modified since the time specified.
+
+
+        HEAD is also supported for this resource.
+
+
+        *NOTE: The size and width parameters should not be used at the same time.*'
+      parameters:
+      - name: size
+        in: query
+        required: false
+        description: 'The size of the image returned. normal: 150 X 200 (Default), small: 100 X 133, tiny: 70 X 93'
+        schema:
+          type: string
+          enum:
+          - normal
+          - small
+          - tiny
+          default: normal
+      - name: width
+        in: query
+        required: false
+        description: Specifies a custom width for the returned image. The height will be adjusted to keep the same aspect ratio. The width can only be a number less than or equal to 150 as that is the max width of any stored image.
+        schema:
+          type: integer
+          maximum: 150
+      responses:
+        '200':
+          description: An image file.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '304':
+          description: Not Modified. The image has not been modified since the time specified in the If-Modified-Since request header.
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error Code 404: The member or profile image for the member could not be found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+    post:
+      tags:
+      - Members
+      summary: Set the Profile Image of a Member
+      operationId: setMemberProfileImage
+      description: 'Sets the profile image for a member. The request must be a multi-part request containing the original image and the coordinates to use to crop the image. PUT is also supported for this resource.
+
+
+        The coordinates should be specified in an aspect ratio of 3:4. For instance, if you have an image that is 800 X 800, and you want the center of the image selected for the profile image, you would pass in the following for the coordinates:
+
+
+        - Left: 100
+
+        - Top: 0
+
+        - Width: 600
+
+        - Bottom: 800
+
+
+        This will set the profile image to start 100 pixels from the left and go 600 pixels wide. 600 X 800 is in the 3:4 ratio.
+
+
+        You can specify 0 for all the coordinates and the API will create the biggest possible image from the original image. It would save the same image as above if all parameters were set to 0. It will center the rectangle horizontally if the original image is too wide and it will use the top of the original image if it is too long.'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                left:
+                  type: integer
+                  description: The left image coordinate of the cropping rectangle.
+                top:
+                  type: integer
+                  description: The top image coordinate of the cropping rectangle.
+                width:
+                  type: integer
+                  description: The width of the cropping rectangle.
+                height:
+                  type: integer
+                  description: The height of the cropping rectangle.
+                profileImage:
+                  type: string
+                  format: binary
+                  description: The original image file to use for the profile image. This is the image that will be cropped using the coordinates above.
+              required:
+              - left
+              - top
+              - width
+              - height
+              - profileImage
+      responses:
+        '200':
+          description: The profile image was set. No response content.
+        '400':
+          description: 'Error Code 1002: A parameter was missing.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error Code 404: The member could not be found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+    delete:
+      tags:
+      - Members
+      summary: Delete the Profile Image of a Member
+      operationId: deleteMemberProfileImage
+      description: 'Deletes the profile image for the member.
+
+
+        NOTE: This resource returns OK even if the member does not have a profile image.'
+      responses:
+        '200':
+          description: The profile image was deleted. No response content.
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error Code 404: The member could not be found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+  /wolfconnect/members/v1/{memberId}/public-profile-image:
+    parameters:
+    - $ref: '#/components/parameters/MemberId'
+    get:
+      tags:
+      - Members
+      summary: Retrieve the Public Profile Image of a Member
+      operationId: getMemberPublicProfileImage
+      description: 'Retrieves the public profile image for the member that was uploaded through the public profile page in WOLFconnect. Members can have different images for their internal profile as opposed to their public profiles. By default, if no public profile image has been uploaded, then the member profile image is returned.
+
+
+        HEAD is also supported for this resource.
+
+
+        *NOTE: The size and width parameters should not be used at the same time.*'
+      parameters:
+      - name: publicProfileOnly
+        in: query
+        required: false
+        description: 'Flag to tell the API whether or not to return the internal profile image if the public profile image does not exist. true: Do not return the internal profile image when no public profile image exists. false: Return the internal profile image when no public profile image exists. (Default)'
+        schema:
+          type: boolean
+          default: false
+      - name: size
+        in: query
+        required: false
+        description: 'The size of the image returned. normal: 150 X 200 (Default)'
+        schema:
+          type: string
+          enum:
+          - normal
+          default: normal
+      - name: width
+        in: query
+        required: false
+        description: Specifies a custom width for the returned image. The height will be adjusted to keep the same aspect ratio. The width can only be a number less than or equal to 150 as that is the max width of any stored image.
+        schema:
+          type: integer
+          maximum: 150
+      responses:
+        '200':
+          description: An image file.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error Code 404: The member or profile image for the member could not be found.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+  /wolfconnect/members/v1/{memberId}/in-out-status:
+    parameters:
+    - $ref: '#/components/parameters/MemberId'
+    get:
+      tags:
+      - Members
+      summary: Get the In/Out Status of a Member
+      operationId: getMemberInOutStatus
+      description: Gets the in/out status (displayed in the top-left corner of WOLFconnect) and the notes and detailed notes for the member (if enabled, displayed on the In/Out popup window that appears when first logging in).
+      responses:
+        '200':
+          description: A MemberInOutStatus object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberInOutStatus'
+        '400':
+          description: 'Error Code 1001: The memberId parameter is invalid.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: The member could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+    put:
+      tags:
+      - Members
+      summary: Set the In/Out Status of a Member
+      operationId: setMemberInOutStatus
+      description: Sets the in/out status (displayed in the top-left corner of WOLFconnect) and updates the notes and detailed notes for the member (if enabled, displayed on the In/Out popup window that appears when first logging in).
+      requestBody:
+        required: true
+        description: A MemberInOutStatus object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberInOutStatus'
+      responses:
+        '200':
+          description: The updated MemberInOutStatus object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberInOutStatus'
+        '400':
+          description: 'Error Code 1001: The memberId parameter is invalid. Error Code 1006: Validation failed.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: The member could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+  /wolfconnect/members/v1/in-out-status:
+    get:
+      tags:
+      - Members
+      summary: Get the In/Out Status of All the Members
+      operationId: getAllMembersInOutStatus
+      description: Returns the in/out statuses and the notes and detailed notes for all *active* members for a given client code.
+      responses:
+        '200':
+          description: A collection of MemberInOutStatus objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemberInOutStatus'
+components:
+  schemas:
+    Address:
+      type: object
+      required:
+      - City
+      - CountryCode
+      - Line1
+      - PostalCode
+      - ProvinceCode
+      - TypeCode
+      properties:
+        City:
+          type: string
+          maxLength: 50
+          description: The city.
+        Confidential:
+          type: boolean
+          description: True if the address is confidential.
+        Country:
+          type: string
+          readOnly: true
+          description: The name of the country. This field is read only.
+        CountryCode:
+          type: string
+          maxLength: 2
+          description: The two digit ISO code for the country.
+        Line1:
+          type: string
+          maxLength: 200
+          description: The first line for the address.
+        Line2:
+          type: string
+          maxLength: 200
+          description: The second line for the address.
+        Line3:
+          type: string
+          maxLength: 200
+          description: The third line for the address.
+        Line4:
+          type: string
+          maxLength: 200
+          description: The fourth line for the address.
+        PostalCode:
+          type: string
+          maxLength: 20
+          description: The unformatted postal or zip code.
+        Province:
+          type: string
+          readOnly: true
+          description: The name of the province or state. This field is read only.
+        ProvinceCode:
+          type: string
+          maxLength: 20
+          description: The province code or postal abbreviation of the province or state.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of address. This field is read only.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of address. P: Physical, M: Mailing, H: Home, B: Business, W: Work, O: Other'
+    Website:
+      type: object
+      required:
+      - TypeCode
+      - Url
+      properties:
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of website.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of website. B: Blog, C: Community, FB: Facebook, G: General, L: Linkedin, S: Sports, T: Tourism, TW: Twitter, YT: YouTube'
+        Url:
+          type: string
+          maxLength: 100
+          description: The url of the website.
+    ClientError:
+      type: object
+      description: The ClientError object is used to give detailed information whenever an API request fails. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL. See the Error Codes section of the introduction for the full list of Lone Wolf Error Codes.
+      properties:
+        Code:
+          type: integer
+          readOnly: true
+          description: The Lone Wolf Error Code. See the Error Codes section of the introduction.
+        Message:
+          type: string
+          readOnly: true
+          description: The message that corresponds to the Code value.
+        Details:
+          type: string
+          readOnly: true
+          description: The exact problem that occurred to give this error response.
+    MLSBoard:
+      type: object
+      properties:
+        MLSId:
+          type: string
+          readOnly: true
+          description: The MLS Id of the member for the MLS Board specified by the MLSAreaId.
+        MLSAreaId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the MLS area.
+    PhoneNumber:
+      type: object
+      required:
+      - Number
+      - TypeCode
+      properties:
+        Confidential:
+          type: boolean
+          description: True if the phone number is confidential.
+        Extension:
+          type: string
+          maxLength: 5
+          description: The extension for the phone number.
+        Number:
+          type: string
+          maxLength: 20
+          description: The unformatted phone number.
+        Primary:
+          type: boolean
+          description: True if this is the primary phone number.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of phone number.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of phone number. A: Assistant, B: Business, BF: Business Fax, CB: Callback, C: Company, X: Extension, H: Home, HF: Home Fax, ISDN: ISDN, M: Mobile, P: Pager, R: Radio, T: Telex, TF: Toll Free, TTY: TTY/TDD, O: Other, OF: Other Fax'
+    MemberInOutStatus:
+      type: object
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The Lone Wolf Id of the member.
+        In:
+          type: boolean
+          description: True if the member is marked in. False otherwise. Required when updating the In/Out status of a member.
+        Notes:
+          type: string
+          maxLength: 500
+          description: Quick notes about why the member is out.
+        DetailedNotes:
+          type: string
+          maxLength: 5000
+          description: More detailed notes about why the member is out.
+    EmailAddress:
+      type: object
+      required:
+      - Address
+      - TypeCode
+      properties:
+        Address:
+          type: string
+          maxLength: 100
+          description: The email address.
+        Confidential:
+          type: boolean
+          description: True if the email address is confidential.
+        Primary:
+          type: boolean
+          description: True if this is the primary email address.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of email address.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address. H: Home, B: Business, W: Work, S: Secondary, O: Other'
+    Office:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the office.
+        Name:
+          type: string
+          readOnly: true
+          description: The name.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
+    Integrations:
+      type: object
+      properties:
+        PartnerCode:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The code for the Partner. Usually the Partner's name.
+        Id:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The Id for the Partner's matching Member.
+    Member:
+      type: object
+      required:
+      - FirstName
+      - LastName
+      - Addresses
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The Lone Wolf Id of the member.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was modified.
+        MemberChangedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member or any associated record of the member was modified.
+        FirstName:
+          type: string
+          maxLength: 50
+          description: The first name of the member.
+        MiddleName:
+          type: string
+          maxLength: 50
+          description: The middle name of the member.
+        LastName:
+          type: string
+          maxLength: 50
+          description: The last name of the member.
+        Number:
+          type: string
+          maxLength: 12
+          description: The number assigned to the member by its office.
+        Title:
+          type: string
+          maxLength: 100
+          description: The title of the member.
+        BirthDate:
+          type: string
+          format: date
+          description: The birth date of the member.
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date the member went inactive. (Nullable)
+        OfficeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the office to which the member belongs. Required for creating only - it will be ignored when updating a member.
+        Office:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/Office'
+          description: The office object.
+        MLSBoards:
+          type: array
+          items:
+            $ref: '#/components/schemas/MLSBoard'
+          description: A collection of the MLS boards to which the member belongs.
+        Addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The collection of addresses for the member. Currently supported address types: M: Mailing, P: Physical'
+        EmailAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The collection of email addresses for the member. Currently supported email address types: B: Business, S: Secondary'
+        PhoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: The collection of phone numbers for the member.
+        Websites:
+          type: array
+          items:
+            $ref: '#/components/schemas/Website'
+          description: The collection of websites for the member.
+        PublicProfiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicProfile'
+          description: The collection of public profiles for the member.
+        MemberTypeId:
+          type: string
+          description: The Type of member (eg. Agent, Staff). Required for creating only - it will be ignored when updating a member.
+        Suffix:
+          type: string
+          description: Suffix of the member.
+        Nickname:
+          type: string
+          description: The Nickname of the member.
+        LegalName:
+          type: string
+          description: Legal Name of the member.
+        Username:
+          type: string
+          description: The username of the member.
+        LoadingDocsUsername:
+          type: string
+          description: The loadingDOCS username of the member.
+        GenderCode:
+          type: string
+          description: The Gender of the member.
+        AnniversaryDate:
+          type: string
+          format: date
+          description: The Date of their Anniversary.
+        StartDate:
+          type: string
+          format: date
+          description: The Start Date of the member.
+        CommencementDate:
+          type: string
+          format: date
+          description: The Commencement Date of the member.
+        MovingWolfEnabled:
+          type: boolean
+          description: The movingWOLF subscription status of the member.
+        Integrations:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Integrations'
+          description: The collection of partner integrations for the member.
+    PublicProfile:
+      type: object
+      properties:
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was modified.
+        Name:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The name of the public profile.
+        FirstName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The first name of the member.
+        MiddleName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The middle name of the member.
+        LastName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The last name of the member.
+        Title:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The title of the member.
+        Addresses:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The collection of addresses for the member. Currently supported address types: M: Mailing, P: Physical'
+        EmailAddresses:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The collection of email addresses for the member. Currently supported email address types: B: Business, S: Secondary'
+        PhoneNumbers:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: The collection of phone numbers for the member.
+        Websites:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Website'
+          description: The collection of websites for the member.
+  parameters:
+    MemberId:
+      name: memberId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the member.
+      schema:
+        type: string
+    ODataOrderBy:
+      name: $orderby
+      in: query
+      required: false
+      description: Orders the objects returned in the response by a property related to the resource.
+      schema:
+        type: string
+    ODataFilter:
+      name: $filter
+      in: query
+      required: false
+      description: Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.).
+      schema:
+        type: string
+    ODataExpand:
+      name: $expand
+      in: query
+      required: false
+      description: Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction.
+      schema:
+        type: string
+    ODataSkip:
+      name: $skip
+      in: query
+      required: false
+      description: Skips the specified number of records before returning the results. $orderby must be specified for $skip to be used.
+      schema:
+        type: integer
+    ODataTop:
+      name: $top
+      in: query
+      required: false
+      description: Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. The maximum number of objects returned from any resource is 1,000. If not passed, $top=1000 is assumed.
+      schema:
+        type: integer
+        maximum: 1000
+  securitySchemes:
+    LoneWolfToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Custom HMAC-signed authorization scheme used when calling resources that access your actual data:
+
+
+        ```
+
+        Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+
+        ```
+
+
+        A `Content-MD5` header is also required on every request (base 64 encoded MD5 hash of the request body, or of an empty string for requests without a body: `1B2M2Y8AsgTpgAmY7PhCfg==`).
+
+
+        The signature is the HMACSHA256 hash (seeded with your secret key) of `[HTTP Method]:[Resource URI]:[Date]:[Content-MD5]`. HMACSHA384 and HMACSHA512 are also supported by appending the algorithm to the scheme (e.g. `LoneWolfToken-HMACSHA512`).
+
+
+        See the Authentication, Creating a Request, and Creating the Signature sections of the introduction for full details, date format, and worked examples. A separate `LoneWolfKey` scheme exists for resources that deal with your API account; there is never a scenario where you would send more than one type of authorization scheme.'

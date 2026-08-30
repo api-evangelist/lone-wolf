@@ -1,0 +1,131 @@
+openapi: 3.2.0
+info:
+  title: Transaction Templates API
+  version: 1.0.0
+  description: "# Transact API\n\n\n> **For AI assistants and coding agents:** a machine-readable OpenAPI 3.0.3 definition of this API is available at the `.json` download link on this page (or directly at `https://bump.sh/<org>/doc/transact/download`). <!-- TODO: replace with the real raw spec URL --> Prefer the raw specification over scraping this rendered page.\n\nThe Transact API provides programmatic access to Lone Wolf's transaction management platform. It covers the full transaction lifecycle: creating and updating transactions, managing offers, contacts, folders and documents, sharing transactions across teams via share groups, attaching forms from form libraries, and sending documents out for e-signature through Authentisign.\n\n## Index\n\n1. [Quickstart](#quickstart)\n2. [Authentication](#authentication)\n3. [Conventions](#conventions)\n4. [Universal Global Fields](#universal-global-fields)\n5. [Services](#services)\n\n## Quickstart\n\nGet from zero to a first successful call in two requests.\n\n**1. Get an access token**\n\n```bash\ncurl -X POST https://gateway.lwolf.com/oauth/token \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"grant_type\": \"client_credentials\",\n    \"client_id\": \"<your client id>\",\n    \"client_secret\": \"<your client secret>\",\n    \"audience\": \"https://api.lwolf.com\",\n    \"lwt_client_id\": \"<your Lone Wolf client GUID>\"\n  }'\n```\n\nCopy the `access_token` from the response.\n\n**2. Make an authenticated call**\n\nEvery request needs **both** the Bearer token and the subscription key:\n\n```bash\ncurl \"https://gateway.lwolf.com/transact-workflow/v1/users/<userId>/transactions\" \\\n  -H \"Authorization: Bearer <access_token>\" \\\n  -H \"lw-subscription-key: <your subscription key>\"\n```\n\nA `200` with a JSON list of transactions means you're fully set up. A `401` usually means the token is missing or expired; a `403` usually means the `lw-subscription-key` header is missing or invalid.\n\n\n## Authentication\n\nAll endpoints (except the token endpoint itself) require **two** credentials on every request:\n\n| Credential | Where | Description |\n|---|---|---|\n| Access token | `Authorization: Bearer <token>` header | JWT obtained via the OAuth 2.0 client credentials flow |\n| Subscription key | `lw-subscription-key` header | API subscription key issued by Lone Wolf |\n\n### Obtaining an access token\n\nSend a `POST` request to `https://gateway.lwolf.com/oauth/token` with a JSON body:\n\n```json\n{\n    \"grant_type\": \"client_credentials\",\n    \"client_id\": \"<your client id>\",\n    \"client_secret\": \"<your client secret>\",\n    \"audience\": \"https://api.lwolf.com\",\n    \"lwt_client_id\": \"<your Lone Wolf client GUID>\"\n}\n```\n\nThe response contains an `access_token` to be sent as a Bearer token on subsequent calls. Tokens are short-lived; request a new token when the current one expires.\n\n## Conventions\n\n- **User scoping** — most resources are addressed under `/users/{userId}/…`. The `userId` is the GUID of the user on whose behalf the operation is performed.\n- **OData queries** — collection endpoints on the Transact Workflow service support OData query options. Use `$filter` to restrict results (e.g. `$filter=opportunityId eq <guid>`) and `$expand` to embed related entities (e.g. `$expand=members, opportunities` on share groups).\n- **Partial updates** — `PATCH` endpoints accept a partial resource representation; only the fields provided are updated.\n- **Content type** — request bodies are JSON unless noted otherwise. Document upload and signing creation use `multipart/form-data`.\n\n## Universal Global Fields\n\nA consolidated reference of the transaction-related fields that can be updated through the API. These fields correspond to the request schemas of the create/update endpoints below.\n\n### 1. Property fields — `POST /Transactions`, `PATCH /users/{userId}/transactions/{transactionId}`\n\n`type`, `address1`–`address4`, `locality`, `region`, `subRegion`, `postalCode`, `country`, `legalDescription`, `propertyIncludes`, `propertyExcludes`, `taxNumber`, `mlsNumber`, `note`, `schoolDistrict`, `zoningClass`, `yearBuilt`, `phase`, `propertyType`, `asking`, `deposit`, `taxes`, `closingDate`, `listingExpiration`, `listingGoesLive`\n\n### 2. Transaction dates & financials — `POST /Offers`, `PATCH /users/{userId}/Offers/{offerId}`\n\n`closingDate`, `finalWalkthroughDate`, `possessionDate`, `offerDate`, `expirationDate`, `acceptanceDate`, `purchasePrice`, `deposit`\n\n### 3. Contact fields — `POST /Contacts`, `PATCH /users/{userId}/Contacts/{contactId}`\n\n`contactType`, `slot`, `prefix`, `suffix`, `firstname`, `middlename`, `lastname`, `email`, `phone`, `cellPhone`, `workPhone`, `fax`, `agentId`, `agentLicense`, `companyName`, `officeId`, `officeLicense`, `escrowNumber`, `address1`–`address4`, `locality`, `region`, `postalCode`, `country`, `llcPoa`\n\nThe `slot` field determines the ordering of contacts of the same type (`1` = Buyer 1 / Seller 1, `2` = Buyer 2 / Seller 2). The full `contactType` enumeration (0–21, from Buyer to PestControlCompany) is documented on the Contact schemas.\n\n## Services\n\nThe API is composed of several services routed through the same gateway host:\n\n| Service | Base path | Purpose |\n|---|---|---|\n| Platform | `/platform/v1` | Client users and offices |\n| Transact Workflow | `/transact-workflow/v1` | Transactions, offers, contacts, folders, documents, share groups, templates |\n| Forms Design | `/forms-design/api` | Form libraries and library forms |\n| Forms Editor | `/forms-editor/api/v1` | Forms attached to a transaction (form packages) |\n| Authentisign | `/authentisign/v3` | E-signature signings, participants, and signed documents |\n"
+  contact:
+    name: Lone Wolf Technologies
+    url: https://www.lwolf.com
+servers:
+- url: https://gateway.lwolf.com
+  description: Production API gateway
+- url: '{tw_host}'
+  description: Environment-specific host (e.g. pre-production)
+  variables:
+    tw_host:
+      default: https://api.pre.lwolf.com
+      description: Base host for the target environment.
+security:
+- bearerAuth: []
+  subscriptionKey: []
+tags:
+- name: Transaction Templates
+  description: Read transaction templates available to a user.
+paths:
+  /transact-workflow/v1/users/{userId}/templates:
+    get:
+      tags:
+      - Transaction Templates
+      summary: List templates
+      description: Returns the transaction templates available to the specified user.
+      operationId: getTemplates
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+  /transact-workflow/v1/users/{userId}/templates/{templateId}:
+    get:
+      tags:
+      - Transaction Templates
+      summary: Get a template
+      description: Returns a single transaction template by its key.
+      operationId: getTemplateByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: templateId
+        in: path
+        required: true
+        description: GUID of the transaction template.
+        schema:
+          type: string
+          format: uuid
+components:
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT access token obtained from the `/oauth/token` endpoint, sent as `Authorization: Bearer <token>`.'
+    subscriptionKey:
+      type: apiKey
+      in: header
+      name: lw-subscription-key
+      description: API subscription key issued by Lone Wolf, sent on every request.

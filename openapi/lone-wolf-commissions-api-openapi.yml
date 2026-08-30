@@ -1,0 +1,916 @@
+openapi: 3.2.0
+info:
+  title: Back Office Commissions API
+  version: '1.0'
+  description: 'Represents the commissions and the related agent''s within the brokerage that receive those commissions.
+
+    For commissions related to agent''s that are not part of the brokerage, use external commissions.'
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Commissions
+  description: 'Represents the commissions and the related agent''s within the brokerage that receive those commissions.
+
+    For commissions related to agent''s that are not part of the brokerage, use external commissions.'
+paths:
+  /v1/transactions/{transactionId}/tiers/{tierId}/commissions:
+    get:
+      tags:
+      - Commissions
+      summary: Get Commissions
+      description: 'Retrieves the list of commissions for a specific transaction and tier. This will only return the list of commissions to which you have
+
+        access. It may not be the full list of commissions associated with the transaction.'
+      operationId: get-v1-transactions-transactionid-tiers-tierid-commissions
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: tierId
+        in: path
+        description: The id of the tier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Commission'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    post:
+      tags:
+      - Commissions
+      summary: Create Commission
+      operationId: post-v1-transactions-transactionid-tiers-tierid-commissions
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: tierId
+        in: path
+        description: The id of the tier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The commission to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Commission'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              agentId: string
+              officeId: string
+              amount: 0
+              percentage: 0
+              endCode: B
+              endCount: 0
+              calculationMethodCode: A
+              taxAmount: 0
+              totalFeeAmount: 0
+              totalFeeTaxAmount: 0
+              fees:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                percentage: 0
+                amount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                taxPercentage: 0
+                paymentMethodCode: string
+                fee:
+                  shortName: string
+                  name: string
+              agent:
+                firstName: string
+                middleName: string
+                lastName: string
+              office:
+                name: string
+                code: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commission'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/commissions/{id}:
+    get:
+      tags:
+      - Commissions
+      summary: Get Commission
+      operationId: get-v1-commissions-id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the commission.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commission'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    delete:
+      tags:
+      - Commissions
+      summary: Delete Commission
+      operationId: delete-v1-commissions-id
+      parameters:
+      - name: id
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commission'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Commissions
+      summary: Update Commission
+      operationId: patch-v1-commissions-id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the commission.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the commission to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionPatchRequest'
+            example:
+              agentId: string
+              amount: 0
+              percentage: 0
+              endCode: B
+              endCount: 0
+              calculationMethodCode: A
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commission'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    EmployeeReadOnly:
+      type: object
+      properties:
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the agent.
+          readOnly: true
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: The middle name of the agent.
+          readOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the agent.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an agent.
+    Commission:
+      required:
+      - agentId
+      - endCode
+      - endCount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        agentId:
+          type: string
+          description: The unique id of the agent that gets the commission.
+          format: uuid
+        officeId:
+          type: string
+          description: The unique id of the office with which the agent is associated.
+          format: uuid
+          readOnly: true
+        amount:
+          type: number
+          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
+          format: currency
+        percentage:
+          type: number
+          description: The percentage of the total commission for the agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code representing the end or side of the transaction.
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this commission represents.
+          format: double
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the calculation method used for the commission. This will be "A" for amount or "P" for percentage.
+        taxAmount:
+          type: number
+          description: The total amount in tax applied to the commission.
+          format: currency
+        totalFeeAmount:
+          type: number
+          description: The total amount of fees applied to the commission.
+          format: currency
+        totalFeeTaxAmount:
+          type: number
+          description: The total amount in tax applied to just the fees for the commission.
+          format: currency
+        fees:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CommissionFee'
+          description: The list of fees associated with the commission.
+        agent:
+          $ref: '#/components/schemas/EmployeeReadOnly'
+        office:
+          $ref: '#/components/schemas/OfficeReadOnly'
+      additionalProperties: false
+      description: Represents a commission for an agent on a transaction.
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
+    CommissionPatchRequest:
+      type: object
+      properties:
+        agentId:
+          type: string
+          description: The unique id of the agent that gets the commission.
+          format: uuid
+          writeOnly: true
+        amount:
+          type: number
+          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
+          format: currency
+          writeOnly: true
+        percentage:
+          type: number
+          description: The percentage of the total commission for the agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The code representing the end or side of the transaction.
+          writeOnly: true
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this commission represents.
+          format: double
+          writeOnly: true
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the calculation method used for the commission. This will be "A" for amount or "P" for percentage.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a commission.
+    CommissionFee:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        percentage:
+          type: number
+          description: The percentage of the commission. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the fee.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the fee.
+        taxAmount:
+          type: number
+          description: The amount of tax applied to the fee.
+          format: currency
+        taxPercentage:
+          type: number
+          description: The tax rate applied to the fee. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to pay the fee.
+        fee:
+          $ref: '#/components/schemas/FeeReadOnly'
+      additionalProperties: false
+      description: Represents a fee that is related to a commission.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

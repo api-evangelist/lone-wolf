@@ -1,0 +1,298 @@
+openapi: 3.2.0
+info:
+  title: Authentisign SSO API
+  description: Authentisign API
+  version: '1.0'
+servers:
+- url: https://api.lwolf.com/authentisign
+tags:
+- name: Sso
+paths:
+  /api/v1/sso/signing/{signingId}:
+    get:
+      tags:
+      - Sso
+      summary: Retrieve an SSO URL for a specific signing. This endpoint generates an SSO URL that directly lands the user into the design phase of the signing.
+      description: "Sample request:\n            \n    GET /api/v1/sso/signing/{signingId}?redirectUrl=https://example.com"
+      operationId: DesignSso
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which the SSO URL is to be generated.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: redirectUrl
+        in: query
+        description: The URL where the user will be redirected to upon exiting the design phase.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/sso/layout/{layoutId}:
+    post:
+      tags:
+      - Sso
+      summary: SSO into the layout design phase with account update. This endpoint allows customization of the layout and setting up signature blocks.
+      description: "Sample request:\n            \n    POST /api/v1/sso/layout/{layoutId}\n    {\n        \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"firstName\": \"John\",\n        \"middleName\": \"D\",\n        \"lastName\": \"Doe\",\n        \"email\": \"john.doe@example.com\",\n        \"phone\": \"555-5555\",\n        \"company\": \"JD Inc\",\n        \"clientId\": \"Client123\",\n        \"clientFullName\": \"John Doe\",\n        \"clientShortName\": \"JD\",\n        \"timeZone\": \"EST\",\n        \"gmtOffset\": -5,\n        \"applyDST\": true,\n        \"isExpired\": false,\n        \"isValid\": true,\n        \"isDisabled\": false,\n        \"isDeleted\": false,\n        \"language\": \"en\",\n        \"isInitialized\": true,\n        \"hasMoxiContacts\": false,\n        \"lwaId\": \"LWA12345\"\n    }"
+      operationId: LayoutSso
+      parameters:
+      - name: layoutId
+        in: path
+        description: The identifier for the layout.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: redirectUrl
+        in: query
+        description: Redirect URL after customization.
+        schema:
+          type: string
+      - name: Id
+        in: query
+        description: Get or Set Account ID. This property represents the unique identifier of the account.
+      - name: FirstName
+        in: query
+        description: Get or Set First Name. This property represents the first name of the account holder.
+      - name: MiddleName
+        in: query
+        description: Get or Set Middle Name. This property represents the middle name of the account holder.
+      - name: LastName
+        in: query
+        description: Get or Set Last Name. This property represents the last name of the account holder.
+      - name: Email
+        in: query
+        description: Get or Set Email. This property represents the email address associated with the account.
+      - name: Phone
+        in: query
+        description: Get or Set Phone. This property represents the phone number associated with the account.
+      - name: Company
+        in: query
+        description: Get or Set Company. This property represents the company associated with the account.
+      - name: ClientId
+        in: query
+        description: Get or Set Client ID. This property represents the identifier of the client associated with the account.
+      - name: ClientFullName
+        in: query
+        description: Get or Set Client Full Name. This property represents the full name of the client associated with the account.
+      - name: ClientShortName
+        in: query
+        description: Get or Set Client Short Name. This property represents the short name of the client associated with the account.
+      - name: TimeZone
+        in: query
+        description: Get or Set Time Zone. This property represents the time zone of the account.
+      - name: GMTOffset
+        in: query
+        description: Get or Set GMT Offset. This property represents the Greenwich Mean Time (GMT) offset of the account's time zone.
+      - name: ApplyDST
+        in: query
+        description: Get or Set Apply DST. This property indicates whether Daylight Saving Time (DST) is applied to the account's time zone.
+      - name: IsExpired
+        in: query
+        description: Get or Set Is Expired. This property indicates whether the account is expired.
+      - name: IsValid
+        in: query
+        description: Get or Set Is Valid. This property indicates whether the account is valid.
+      - name: IsDisabled
+        in: query
+        description: Get or Set Is Disabled. This property indicates whether the account is disabled.
+      - name: IsDeleted
+        in: query
+        description: Get or Set Is Deleted. This property indicates whether the account is deleted.
+      - name: Language
+        in: query
+        description: Get or Set Language. This property represents the preferred language of the account holder.
+      - name: IsInitialized
+        in: query
+        description: Get or Set Is Initialized. This property indicates whether the account has been initialized.
+      - name: HasMoxiContacts
+        in: query
+        description: Get or Set Has Moxi Contacts. This property indicates whether the account has contacts in Moxi.
+      - name: LwaId
+        in: query
+        description: Get or Set LWA ID. This property represents the identifier used for linking with an external system, if applicable.
+      requestBody:
+        description: Account details for SSO.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.AccountDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.AccountDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.AccountDto'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    get:
+      tags:
+      - Sso
+      summary: SSO into the layout design phase. This endpoint allows customization of the layout and setting up signature blocks.
+      description: "Sample request:\n            \n    GET /api/v1/sso/layout/{layoutId}?redirectUrl=https://example.com&language=en"
+      operationId: LayoutSso
+      parameters:
+      - name: layoutId
+        in: path
+        description: The identifier for the layout.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: redirectUrl
+        in: query
+        description: Redirect URL after customization.
+        schema:
+          type: string
+      - name: language
+        in: query
+        description: Optional language parameter. If not supplied the language setting of the account will be used.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+components:
+  schemas:
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.AccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type:
+          - string
+          - 'null'
+        middleName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+        phone:
+          type:
+          - string
+          - 'null'
+        company:
+          type:
+          - string
+          - 'null'
+        clientId:
+          type:
+          - string
+          - 'null'
+        clientFullName:
+          type:
+          - string
+          - 'null'
+        clientShortName:
+          type:
+          - string
+          - 'null'
+        timeZone:
+          type:
+          - string
+          - 'null'
+        gmtOffset:
+          type: number
+          format: float
+        applyDST:
+          type: boolean
+        isExpired:
+          type: boolean
+        isValid:
+          type: boolean
+        isDisabled:
+          type: boolean
+        isDeleted:
+          type: boolean
+        language:
+          type:
+          - string
+          - 'null'
+        isInitialized:
+          type: boolean
+        hasMoxiContacts:
+          type: boolean
+        lwaId:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

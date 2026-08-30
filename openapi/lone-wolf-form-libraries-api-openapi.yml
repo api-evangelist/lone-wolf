@@ -1,0 +1,450 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Form Libraries API
+  version: '1.0'
+  description: 'Operations tagged Form Libraries across 2 of this provider''s published API definitions: lone-wolf-transact-api-openapi.yml, lone-wolf-zipform-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://gateway.lwolf.com
+  description: Production API gateway
+- url: '{tw_host}'
+  description: Environment-specific host (e.g. pre-production)
+  variables:
+    tw_host:
+      default: https://api.pre.lwolf.com
+      description: Base host for the target environment.
+- url: https://ws.zipformplus.com/api
+  description: Production
+- url: https://api.pre.zipformplus.com/api
+  description: Staging/QA
+tags:
+- name: Form Libraries
+  description: Browse form libraries and library forms (Forms Design service).
+paths:
+  /forms-design/api/users/{userId}/libraries:
+    get:
+      tags:
+      - Form Libraries
+      summary: List form libraries
+      description: Returns the form libraries available to the specified user, including field schema information.
+      operationId: getLibraries
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /forms-design/api/users/{userId}/forms:
+    get:
+      tags:
+      - Form Libraries
+      summary: List library forms
+      description: Returns the forms in the specified library.
+      operationId: getForms
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: libId
+        in: query
+        required: true
+        description: GUID of the form library to list forms from.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /forms-design/api/users/{userId}/forms/{libId}/{formId}:
+    get:
+      tags:
+      - Form Libraries
+      summary: Get a library form
+      description: Returns a single form from the specified library.
+      operationId: getLibraryForm
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: libId
+        in: path
+        required: true
+        description: GUID of the form library.
+        schema:
+          type: string
+          format: uuid
+      - name: formId
+        in: path
+        required: true
+        description: GUID of the form.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /forms-design/api/users/{userId}/images/{imageId}/{pageNum}:
+    get:
+      tags:
+      - Form Libraries
+      summary: Stream a form page image
+      description: Streams the rendered image of a single page of a form.
+      operationId: getFormPageImage
+      responses:
+        '200':
+          description: Form page image.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: imageId
+        in: path
+        required: true
+        description: GUID of the form image resource.
+        schema:
+          type: string
+          format: uuid
+      - name: pageNum
+        in: path
+        required: true
+        description: 1-based page number to stream.
+        schema:
+          type: integer
+          minimum: 1
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /agents/libraries:
+    get:
+      summary: Get Agent Libraries
+      description: Returns the list of form libraries available to the authenticated user. Each user may have access to one or more libraries through their entitlements or purchases.
+      tags:
+      - Form Libraries
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: pagesize
+        schema:
+          type: integer
+      - in: query
+        name: orderby
+        schema:
+          type: string
+          enum:
+          - name
+          - state
+      - in: query
+        name: sortorder
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      responses:
+        '200':
+          description: Library list returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Library'
+        '401':
+          description: Unauthorized
+      security:
+      - contextAuth: []
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+  /libraries/{libraryId}/{libraryName}/{libraryVersion}:
+    parameters:
+    - name: libraryId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Library ID
+    - name: libraryName
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Library Name
+    - name: libraryVersion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Library Version
+    get:
+      summary: Get Library Forms
+      description: Returns the list of forms available in a specific library. Since this method is about forms, `contentType` always has a value of `form` in the response.
+      tags:
+      - Form Libraries
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: pagesize
+        schema:
+          type: integer
+      - in: query
+        name: orderby
+        schema:
+          type: string
+          enum:
+          - name
+          - ContentType
+      - in: query
+        name: sortorder
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      responses:
+        '200':
+          description: Library forms returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentItem'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Library not found
+      security:
+      - contextAuth: []
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+components:
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
+    Library:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        state:
+          type: string
+        isActive:
+          type: boolean
+    DocumentItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Document ID or Form GUID
+        name:
+          type: string
+        description:
+          type: string
+        contentType:
+          type: string
+          description: form, PDF, doc, etc.
+        version:
+          type: string
+        signed:
+          type: integer
+          description: 0=not signed, 1=Docusign, 2=zipLogix Digital Ink, 3=zipLogix Digital Ink TouchSign
+        size:
+          type: integer
+          description: Size in bytes (0 for forms)
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT access token obtained from the `/oauth/token` endpoint, sent as `Authorization: Bearer <token>`.'
+    subscriptionKey:
+      type: apiKey
+      in: header
+      name: lw-subscription-key
+      description: API subscription key issued by Lone Wolf, sent on every request.
+    contextAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ContextId
+      description: Context Id obtained from an authentication endpoint. Must be used together with X-Auth-SharedKey.
+    sharedKey:
+      type: apiKey
+      in: header
+      name: X-Auth-SharedKey
+      description: Shared Key provided by zipLogix to authenticate the partner application.
+    externalIdAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ExternalId
+      description: External Id for partners authorized to use the External Id authentication scheme. Must be used together with X-Auth-SharedKey.
+x-refined-from:
+- lone-wolf-transact-api-openapi.yml
+- lone-wolf-zipform-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

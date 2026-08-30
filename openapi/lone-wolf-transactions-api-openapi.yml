@@ -1,0 +1,5345 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Transactions API
+  version: '1.0'
+  description: 'Operations tagged Transactions across 4 of this provider''s published API definitions: lone-wolf-back-office-online-api-openapi.yml, lone-wolf-transact-api-openapi.yml, lone-wolf-wolfconnect-api-openapi.yml, lone-wolf-zipform-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.lwolf.com/backoffice
+- url: https://gateway.lwolf.com
+  description: Production API gateway
+- url: '{tw_host}'
+  description: Environment-specific host (e.g. pre-production)
+  variables:
+    tw_host:
+      default: https://api.pre.lwolf.com
+      description: Base host for the target environment.
+- url: https://api.globalwolfweb.com
+  description: Production
+- url: https://api-sb.globalwolfweb.com
+  description: Test
+- url: https://ws.zipformplus.com/api
+  description: Production
+- url: https://api.pre.zipformplus.com/api
+  description: Staging/QA
+tags:
+- name: Transactions
+  description: Represents a transaction.
+paths:
+  /v1/transactions:
+    get:
+      tags:
+      - Transactions
+      summary: Get Transactions
+      operationId: get-v1-transactions
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                number: string
+                mlsNumber: string
+                statusCode: C
+                addressStreetNumber: string
+                addressStreetName: string
+                addressStreetDirection: string
+                addressUnitNumber: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                offerDate: string
+                closeDate: string
+                entryDate: string
+                firmDate: string
+                finalizeDate: string
+                legalDescription: string
+                closePrice: 0
+                classificationId: string
+                propertyTypeId: string
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                propertyType:
+                  name: string
+                  shortName: string
+                  code: string
+                  classCode: C
+                  rental: true
+                conditions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  description: string
+                  dueDate: string
+                  completeDate: string
+                deposits:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  date: string
+                  amount: 0
+                  received: true
+                  interest: true
+                  held: true
+                  heldBy: string
+                  direct: true
+                  reference: string
+                tiers:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  name: string
+                  closePrice: 0
+                  closeDate: string
+                  statusCode: C
+                  classificationId: string
+                  sellingCommissionAmount: 0
+                  sellingCommissionPercentage: 0
+                  sellingCommissionCalculationMethodCode: A
+                  buyingCommissionAmount: 0
+                  buyingCommissionPercentage: 0
+                  buyingCommissionCalculationMethodCode: A
+                  classification:
+                    name: string
+                    code: string
+                    endCount: 0
+                    endTypeCode: B
+                  commissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    agentId: string
+                    officeId: string
+                    amount: 0
+                    percentage: 0
+                    endCode: B
+                    endCount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    totalFeeAmount: 0
+                    totalFeeTaxAmount: 0
+                    fees:
+                    - id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      percentage: 0
+                      amount: 0
+                      calculationMethodCode: A
+                      taxAmount: 0
+                      taxPercentage: 0
+                      paymentMethodCode: string
+                      fee:
+                        shortName: string
+                        name: string
+                    agent:
+                      firstName: string
+                      middleName: string
+                      lastName: string
+                    office:
+                      name: string
+                      code: string
+                  externalCommissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    paymentMethodCode: B
+                    externalAgentId: string
+                    externalAgent:
+                      id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      endCode: B
+                      typeCode: B
+                      paymentMethodCode: B
+                      firstName: string
+                      lastName: string
+                      companyName: string
+                      addressLine1: string
+                      addressLine2: string
+                      addressCity: string
+                      addressPostalCode: string
+                      addressProvinceCode: string
+                      addressCountryCode: string
+                      phoneNumberMain: string
+                      phoneNumberBusiness: string
+                      faxNumberMain: string
+                      emailAddressMain: string
+                      emailAddressBusiness: string
+                externalAgents:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  typeCode: B
+                  paymentMethodCode: B
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressBusiness: string
+                clientContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+                businessContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    post:
+      tags:
+      - Transactions
+      summary: Create Transaction
+      operationId: post-v1-transactions
+      requestBody:
+        description: The transaction to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              number: string
+              mlsNumber: string
+              statusCode: C
+              addressStreetNumber: string
+              addressStreetName: string
+              addressStreetDirection: string
+              addressUnitNumber: string
+              addressCity: string
+              addressProvinceCode: string
+              addressPostalCode: string
+              offerDate: string
+              closeDate: string
+              entryDate: string
+              firmDate: string
+              finalizeDate: string
+              legalDescription: string
+              closePrice: 0
+              classificationId: string
+              propertyTypeId: string
+              classification:
+                name: string
+                code: string
+                endCount: 0
+                endTypeCode: B
+              propertyType:
+                name: string
+                shortName: string
+                code: string
+                classCode: C
+                rental: true
+              conditions:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                description: string
+                dueDate: string
+                completeDate: string
+              deposits:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                date: string
+                amount: 0
+                received: true
+                interest: true
+                held: true
+                heldBy: string
+                direct: true
+                reference: string
+              tiers:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                closePrice: 0
+                closeDate: string
+                statusCode: C
+                classificationId: string
+                sellingCommissionAmount: 0
+                sellingCommissionPercentage: 0
+                sellingCommissionCalculationMethodCode: A
+                buyingCommissionAmount: 0
+                buyingCommissionPercentage: 0
+                buyingCommissionCalculationMethodCode: A
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                commissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  agentId: string
+                  officeId: string
+                  amount: 0
+                  percentage: 0
+                  endCode: B
+                  endCount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  totalFeeAmount: 0
+                  totalFeeTaxAmount: 0
+                  fees:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    taxPercentage: 0
+                    paymentMethodCode: string
+                    fee:
+                      shortName: string
+                      name: string
+                  agent:
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                  office:
+                    name: string
+                    code: string
+                externalCommissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  paymentMethodCode: B
+                  externalAgentId: string
+                  externalAgent:
+                    id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    typeCode: B
+                    paymentMethodCode: B
+                    firstName: string
+                    lastName: string
+                    companyName: string
+                    addressLine1: string
+                    addressLine2: string
+                    addressCity: string
+                    addressPostalCode: string
+                    addressProvinceCode: string
+                    addressCountryCode: string
+                    phoneNumberMain: string
+                    phoneNumberBusiness: string
+                    faxNumberMain: string
+                    emailAddressMain: string
+                    emailAddressBusiness: string
+              externalAgents:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                typeCode: B
+                paymentMethodCode: B
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressBusiness: string
+              clientContacts:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+              businessContacts:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                number: string
+                mlsNumber: string
+                statusCode: C
+                addressStreetNumber: string
+                addressStreetName: string
+                addressStreetDirection: string
+                addressUnitNumber: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                offerDate: string
+                closeDate: string
+                entryDate: string
+                firmDate: string
+                finalizeDate: string
+                legalDescription: string
+                closePrice: 0
+                classificationId: string
+                propertyTypeId: string
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                propertyType:
+                  name: string
+                  shortName: string
+                  code: string
+                  classCode: C
+                  rental: true
+                conditions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  description: string
+                  dueDate: string
+                  completeDate: string
+                deposits:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  date: string
+                  amount: 0
+                  received: true
+                  interest: true
+                  held: true
+                  heldBy: string
+                  direct: true
+                  reference: string
+                tiers:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  name: string
+                  closePrice: 0
+                  closeDate: string
+                  statusCode: C
+                  classificationId: string
+                  sellingCommissionAmount: 0
+                  sellingCommissionPercentage: 0
+                  sellingCommissionCalculationMethodCode: A
+                  buyingCommissionAmount: 0
+                  buyingCommissionPercentage: 0
+                  buyingCommissionCalculationMethodCode: A
+                  classification:
+                    name: string
+                    code: string
+                    endCount: 0
+                    endTypeCode: B
+                  commissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    agentId: string
+                    officeId: string
+                    amount: 0
+                    percentage: 0
+                    endCode: B
+                    endCount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    totalFeeAmount: 0
+                    totalFeeTaxAmount: 0
+                    fees:
+                    - id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      percentage: 0
+                      amount: 0
+                      calculationMethodCode: A
+                      taxAmount: 0
+                      taxPercentage: 0
+                      paymentMethodCode: string
+                      fee:
+                        shortName: string
+                        name: string
+                    agent:
+                      firstName: string
+                      middleName: string
+                      lastName: string
+                    office:
+                      name: string
+                      code: string
+                  externalCommissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    paymentMethodCode: B
+                    externalAgentId: string
+                    externalAgent:
+                      id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      endCode: B
+                      typeCode: B
+                      paymentMethodCode: B
+                      firstName: string
+                      lastName: string
+                      companyName: string
+                      addressLine1: string
+                      addressLine2: string
+                      addressCity: string
+                      addressPostalCode: string
+                      addressProvinceCode: string
+                      addressCountryCode: string
+                      phoneNumberMain: string
+                      phoneNumberBusiness: string
+                      faxNumberMain: string
+                      emailAddressMain: string
+                      emailAddressBusiness: string
+                externalAgents:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  typeCode: B
+                  paymentMethodCode: B
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressBusiness: string
+                clientContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+                businessContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /v1/transactions/{transactionId}:
+    get:
+      tags:
+      - Transactions
+      summary: Get Transaction
+      operationId: get-v1-transactions-transactionid
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                number: string
+                mlsNumber: string
+                statusCode: C
+                addressStreetNumber: string
+                addressStreetName: string
+                addressStreetDirection: string
+                addressUnitNumber: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                offerDate: string
+                closeDate: string
+                entryDate: string
+                firmDate: string
+                finalizeDate: string
+                legalDescription: string
+                closePrice: 0
+                classificationId: string
+                propertyTypeId: string
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                propertyType:
+                  name: string
+                  shortName: string
+                  code: string
+                  classCode: C
+                  rental: true
+                conditions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  description: string
+                  dueDate: string
+                  completeDate: string
+                deposits:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  date: string
+                  amount: 0
+                  received: true
+                  interest: true
+                  held: true
+                  heldBy: string
+                  direct: true
+                  reference: string
+                tiers:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  name: string
+                  closePrice: 0
+                  closeDate: string
+                  statusCode: C
+                  classificationId: string
+                  sellingCommissionAmount: 0
+                  sellingCommissionPercentage: 0
+                  sellingCommissionCalculationMethodCode: A
+                  buyingCommissionAmount: 0
+                  buyingCommissionPercentage: 0
+                  buyingCommissionCalculationMethodCode: A
+                  classification:
+                    name: string
+                    code: string
+                    endCount: 0
+                    endTypeCode: B
+                  commissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    agentId: string
+                    officeId: string
+                    amount: 0
+                    percentage: 0
+                    endCode: B
+                    endCount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    totalFeeAmount: 0
+                    totalFeeTaxAmount: 0
+                    fees:
+                    - id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      percentage: 0
+                      amount: 0
+                      calculationMethodCode: A
+                      taxAmount: 0
+                      taxPercentage: 0
+                      paymentMethodCode: string
+                      fee:
+                        shortName: string
+                        name: string
+                    agent:
+                      firstName: string
+                      middleName: string
+                      lastName: string
+                    office:
+                      name: string
+                      code: string
+                  externalCommissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    paymentMethodCode: B
+                    externalAgentId: string
+                    externalAgent:
+                      id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      endCode: B
+                      typeCode: B
+                      paymentMethodCode: B
+                      firstName: string
+                      lastName: string
+                      companyName: string
+                      addressLine1: string
+                      addressLine2: string
+                      addressCity: string
+                      addressPostalCode: string
+                      addressProvinceCode: string
+                      addressCountryCode: string
+                      phoneNumberMain: string
+                      phoneNumberBusiness: string
+                      faxNumberMain: string
+                      emailAddressMain: string
+                      emailAddressBusiness: string
+                externalAgents:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  typeCode: B
+                  paymentMethodCode: B
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressBusiness: string
+                clientContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+                businessContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Transactions
+      summary: Update Transaction
+      operationId: patch-v1-transactions-transactionid
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the transaction to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionPatchRequest'
+            example:
+              number: string
+              mlsNumber: string
+              statusCode: C
+              addressStreetNumber: string
+              addressStreetName: string
+              addressStreetDirection: string
+              addressUnitNumber: string
+              addressCity: string
+              addressProvinceCode: string
+              addressPostalCode: string
+              offerDate: string
+              closeDate: string
+              entryDate: string
+              firmDate: string
+              finalizeDate: string
+              legalDescription: string
+              closePrice: 0
+              classificationId: string
+              propertyTypeId: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                number: string
+                mlsNumber: string
+                statusCode: C
+                addressStreetNumber: string
+                addressStreetName: string
+                addressStreetDirection: string
+                addressUnitNumber: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                offerDate: string
+                closeDate: string
+                entryDate: string
+                firmDate: string
+                finalizeDate: string
+                legalDescription: string
+                closePrice: 0
+                classificationId: string
+                propertyTypeId: string
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                propertyType:
+                  name: string
+                  shortName: string
+                  code: string
+                  classCode: C
+                  rental: true
+                conditions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  description: string
+                  dueDate: string
+                  completeDate: string
+                deposits:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  date: string
+                  amount: 0
+                  received: true
+                  interest: true
+                  held: true
+                  heldBy: string
+                  direct: true
+                  reference: string
+                tiers:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  name: string
+                  closePrice: 0
+                  closeDate: string
+                  statusCode: C
+                  classificationId: string
+                  sellingCommissionAmount: 0
+                  sellingCommissionPercentage: 0
+                  sellingCommissionCalculationMethodCode: A
+                  buyingCommissionAmount: 0
+                  buyingCommissionPercentage: 0
+                  buyingCommissionCalculationMethodCode: A
+                  classification:
+                    name: string
+                    code: string
+                    endCount: 0
+                    endTypeCode: B
+                  commissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    agentId: string
+                    officeId: string
+                    amount: 0
+                    percentage: 0
+                    endCode: B
+                    endCount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    totalFeeAmount: 0
+                    totalFeeTaxAmount: 0
+                    fees:
+                    - id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      percentage: 0
+                      amount: 0
+                      calculationMethodCode: A
+                      taxAmount: 0
+                      taxPercentage: 0
+                      paymentMethodCode: string
+                      fee:
+                        shortName: string
+                        name: string
+                    agent:
+                      firstName: string
+                      middleName: string
+                      lastName: string
+                    office:
+                      name: string
+                      code: string
+                  externalCommissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    paymentMethodCode: B
+                    externalAgentId: string
+                    externalAgent:
+                      id: string
+                      createdTimestamp: string
+                      modifiedTimestamp: string
+                      endCode: B
+                      typeCode: B
+                      paymentMethodCode: B
+                      firstName: string
+                      lastName: string
+                      companyName: string
+                      addressLine1: string
+                      addressLine2: string
+                      addressCity: string
+                      addressPostalCode: string
+                      addressProvinceCode: string
+                      addressCountryCode: string
+                      phoneNumberMain: string
+                      phoneNumberBusiness: string
+                      faxNumberMain: string
+                      emailAddressMain: string
+                      emailAddressBusiness: string
+                externalAgents:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  typeCode: B
+                  paymentMethodCode: B
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressBusiness: string
+                clientContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+                businessContacts:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  contactTypeId: string
+                  endCode: B
+                  prefix: string
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  phoneNumberMobile: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressWork: string
+                  contactType:
+                    name: string
+                    code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /v1/transactions/{transactionId}/summary:
+    get:
+      tags:
+      - Transactions
+      summary: Get Transaction Summary
+      operationId: get-v1-transactions-transactionid-summary
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionSummary'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                number: string
+                mlsNumber: string
+                statusCode: string
+                addressStreetNumber: string
+                addressStreetName: string
+                addressStreetDirection: string
+                addressUnitNumber: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                classificationId: string
+                classificationName: string
+                propertyTypeId: string
+                propertyTypeName: string
+                offerDate: string
+                closeDate: string
+                closePrice: 0
+                finalizeDate: string
+                firmDate: string
+                tiers:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  name: string
+                  commissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    agentId: string
+                    officeId: string
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                    officeName: string
+                    amount: 0
+                    percentage: 0
+                    endCode: B
+                    endCount: 0
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /v1/transactions/summary:
+    get:
+      tags:
+      - Transactions
+      summary: Get Transaction Summaries
+      operationId: get-v1-transactions-summary
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionSummary'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                number: string
+                mlsNumber: string
+                statusCode: string
+                addressStreetNumber: string
+                addressStreetName: string
+                addressStreetDirection: string
+                addressUnitNumber: string
+                addressCity: string
+                addressProvinceCode: string
+                addressPostalCode: string
+                classificationId: string
+                classificationName: string
+                propertyTypeId: string
+                propertyTypeName: string
+                offerDate: string
+                closeDate: string
+                closePrice: 0
+                finalizeDate: string
+                firmDate: string
+                tiers:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  name: string
+                  commissions:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    agentId: string
+                    officeId: string
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                    officeName: string
+                    amount: 0
+                    percentage: 0
+                    endCode: B
+                    endCount: 0
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /transact-workflow/v1/Transactions:
+    post:
+      tags:
+      - Transactions
+      summary: Create a transaction
+      description: Creates a new transaction for the user specified in the request body.
+      operationId: createTransaction
+      responses:
+        '201':
+          description: Transaction created.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCreate'
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /transact-workflow/v1/users/{userId}/transactions:
+    get:
+      tags:
+      - Transactions
+      summary: List transactions
+      description: Returns the transactions visible to the specified user. Supports OData `$filter` (e.g. `$filter=opportunityId eq <guid>`).
+      operationId: getTransactions
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: $filter
+        in: query
+        required: false
+        description: OData filter expression used to restrict the result set.
+        schema:
+          type: string
+        example: opportunityId eq 5a283c97-44a9-45a9-2f3a-08de10e96589
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /transact-workflow/v1/users/{userId}/transactions/{transactionId}:
+    get:
+      tags:
+      - Transactions
+      summary: Get a transaction
+      description: Returns a single transaction by its key.
+      operationId: getTransactionByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    patch:
+      tags:
+      - Transactions
+      summary: Update a transaction
+      description: Applies a partial update to a transaction. Only the fields present in the body are modified.
+      operationId: updateTransaction
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionUpdate'
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    delete:
+      tags:
+      - Transactions
+      summary: Delete a transaction
+      description: Deletes the specified transaction.
+      operationId: deleteTransaction
+      responses:
+        '204':
+          description: Transaction deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionId
+        in: path
+        required: true
+        description: GUID of the transaction.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /wolfconnect/transactions/v1:
+    get:
+      tags:
+      - Transactions
+      summary: Retrieve a Collection of Transactions
+      operationId: getTransactions
+      description: 'Retrieves a collection of transactions within the current client code. OData can be used to filter, order and page through the list.
+
+
+        **OData Support:** $expand, $filter, $orderby, $skip, $top
+
+
+        ### Common OData Queries
+
+
+        Find all transactions for a given office:
+
+
+        ```
+
+        $filter=Tiers/any(x:x/AgentCommissions/any(y:y/OfficeId eq ''[Lone Wolf Office Id]''))
+
+        ```
+
+
+        Find all transactions for a given agent:
+
+
+        ```
+
+        $filter=Tiers/any(x:x/AgentCommissions/any(y:y/AgentId eq ''[Lone Wolf Member Id]''))
+
+        ```
+
+
+        Find all transactions modified after January 1st, 2015 at 4:00 PM EST:
+
+
+        ```
+
+        $filter=TransactionChangedTimestamp lt datetimeoffset''2015-01-01T21:00:00.0000000%2B00:00''
+
+        ```
+
+
+        Note the time was changed to UTC time. Also, the plus sign separating the time zone has been changed to the URL encoded version of %2B. This is a requirement when specifying datetimeoffset OData values.
+
+
+        Find all contingent transactions (any conditions that have an approved date of null):
+
+
+        ```
+
+        $filter=Conditions/any(x:x/ApprovedDate eq null)
+
+        ```
+
+
+        Find all firm transactions (no conditions or all the conditions have a valid approved date):
+
+
+        ```
+
+        $filter=Conditions/any() eq false or Conditions/all(x:x/ApprovedDate ne null) eq true
+
+        ```'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      - $ref: '#/components/parameters/ODataFilter'
+      - $ref: '#/components/parameters/ODataOrderBy'
+      - $ref: '#/components/parameters/ODataSkip'
+      - $ref: '#/components/parameters/ODataTop'
+      responses:
+        '200':
+          description: A collection of Transaction objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction_2'
+      security:
+      - LoneWolfToken: []
+    post:
+      tags:
+      - Transactions
+      summary: Create a Transaction
+      operationId: createTransaction
+      description: 'A new Transaction must have one Tier associated to it and that Tier must have at least one AgentCommission associated to it; you will receive a validation error if you send a Transaction object without that data.
+
+
+        Transaction.Number should be set to NULL unless the primary office for the transaction allows manual entry of a transaction number.
+
+
+        The response will contain the newly created transaction object populated with all of the data to which you have read access. You can use the OData $expand parameter to limit the data that is returned.
+
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+
+        **OData Support:** $expand'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      requestBody:
+        required: true
+        description: A Transaction object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction_2'
+      responses:
+        '201':
+          description: The newly created Transaction object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction_2'
+        '400':
+          description: 'Error Code 1006: Validation failed. See the Details property of the response for information on why the validation failed. Error Code 1008: Invalid operation. This typically happens when you are trying to create an object without the required permission (eg. you don''t have create permission for Conditions but you pass through a list of Conditions in the Transaction.Conditions property). See the Details property of the response for more information.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: A child object was not found (eg. you attempt to set the classification of a transaction with a ClassificationId that does not exist).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+      security:
+      - LoneWolfToken: []
+    servers:
+    - url: https://api.globalwolfweb.com
+      description: Production
+    - url: https://api-sb.globalwolfweb.com
+      description: Test
+  /wolfconnect/transactions/v1/{transactionId}:
+    parameters:
+    - name: transactionId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the transaction. This will be the value in the Transaction.Id property when the transaction was created.
+      schema:
+        type: string
+    get:
+      tags:
+      - Transactions
+      summary: Retrieve a Transaction
+      operationId: getTransaction
+      description: 'Retrieves a transaction. The data in the response will contain all of the data to which you have read access. Properties with values of NULL typically mean that you do not have read access to that property. Please see the Permissions section of the introduction for more information.
+
+
+        **OData Support:** $expand'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      responses:
+        '200':
+          description: A Transaction object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction_2'
+        '400':
+          description: 'Error Code 1001: The transaction Id is invalid.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: The transaction could not be found. The primary office for the transaction must be an office with the Client Code used in the API authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+      security:
+      - LoneWolfToken: []
+    put:
+      tags:
+      - Transactions
+      summary: Update a Transaction
+      operationId: updateTransaction
+      description: 'It is best practice to only send data that you want updated as it will return a much faster response. For instance, if you only need to update the Transaction.CloseDate value, then you should set all other Transaction properties to null so that only a close date update is attempted.
+
+
+        Unless the primary office allows manual entry for a transaction number and you actually want to change the transaction number, it is best to always set the Transaction.Number property to NULL before sending the request. This will guarantee that the transaction number is not updated.
+
+
+        The status of a transaction cannot be updated using this resource. The status is a read only property. You must use the finalize resource to change the status.
+
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to set property values.
+
+
+        The response will contain the updated transaction object populated with all of the data to which you have read access regardless of the properties sent in the request. For instance, if you sent a Transaction object with the Conditions property set to null but the transaction contained 2 conditions, the Transaction.Conditions property of the response will contain those 2 conditions. You can use the OData $expand parameter to limit the data that is returned.
+
+
+        The value for the Transaction.Id property in the Transaction object sent in the request is ignored.
+
+
+        **OData Support:** $expand'
+      parameters:
+      - $ref: '#/components/parameters/ODataExpand'
+      requestBody:
+        required: true
+        description: A Transaction object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction_2'
+      responses:
+        '200':
+          description: A Transaction object holding all the updated data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction_2'
+        '400':
+          description: 'Error Code 1006: Validation failed. See the Details property of the response for information on why the validation failed. Error Code 1008: Invalid operation. This occurs when attempting to update or create an object without the required permission. For instance, if you don''t have create permission for Conditions but you pass through a list of Conditions in the Transaction.Conditions property or if you attempt to update the Transaction.CloseDate but do not have edit permissions for that field. See the Details property of the response for more information.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: Either the transaction or a child object was not found. For instance, if you attempt to set the classification of a transaction with a ClassificationId that does not exist. The primary office for the transaction must be an office with the Client Code used in the API authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+      security:
+      - LoneWolfToken: []
+    servers:
+    - url: https://api.globalwolfweb.com
+      description: Production
+    - url: https://api-sb.globalwolfweb.com
+      description: Test
+  /wolfconnect/transactions/v1/{transactionId}/finalize:
+    parameters:
+    - name: transactionId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the transaction to update.
+      schema:
+        type: string
+    put:
+      tags:
+      - Transactions
+      summary: Finalize a Transaction
+      operationId: finalizeTransaction
+      description: 'The status of a transaction cannot be updated through the normal update process as you must call this resource to change the status. This resource will finalize all of the associated transaction tiers with the specified status code as well.
+
+
+        The list of valid status codes is defined in the Transaction.StatusCode property in the schema definitions.'
+      requestBody:
+        required: true
+        description: A string holding the status code for the finalized transaction.
+        content:
+          application/json:
+            schema:
+              type: string
+              description: The status code for the finalized transaction.
+      responses:
+        '200':
+          description: The transaction was finalized. No response content.
+        '400':
+          description: 'Error Code 1006: Validation failed. See the Details property of the response for information on why the validation failed. Error Code 1008: Invalid operation. A common reason for this error is if the transaction has been synched with brokerWOLF.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+        '404':
+          description: The transaction could not be found. The primary office for the transaction must be an office with the Client Code used in the API authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+      security:
+      - LoneWolfToken: []
+    servers:
+    - url: https://api.globalwolfweb.com
+      description: Production
+    - url: https://api-sb.globalwolfweb.com
+      description: Test
+  /wolfconnect/transactions/v1/search:
+    post:
+      tags:
+      - Transactions
+      summary: Search for Transactions
+      operationId: searchTransactions
+      deprecated: true
+      description: '**NOTE: This resource has been deprecated in favor of using OData with the `/wolfconnect/transactions/v1` resource. See Retrieve a Collection of Transactions for more information.**
+
+
+        This retrieves all of the transactions that meet the search criteria. The SearchRequest object''s Criteria property should contain an instance of a TransactionSearchCriteria object.
+
+
+        You will only be able to filter search criteria on fields to which you have read access. For example, if you don''t have read access to see the close date of a transaction and you set the close date range in the TransactionSearchCriteria object that range will be ignored.
+
+
+        The search could take longer to complete if the TransactionSearchCriteria.FullDetail flag is set to true as it has to completely populate the information in the Transaction object. If the flag is set to false, only a subset of the transaction data containing commonly used data is returned.
+
+
+        The SearchResult object''s ResultSet property will contain a list of Transaction objects.'
+      requestBody:
+        required: true
+        description: A SearchRequest object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: A SearchResult object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+      security:
+      - LoneWolfToken: []
+    servers:
+    - url: https://api.globalwolfweb.com
+      description: Production
+    - url: https://api-sb.globalwolfweb.com
+      description: Test
+  /transactions:
+    get:
+      summary: Get Transaction List
+      description: Returns the list of transactions available for the authenticated user. Supports optional filter parameters.
+      tags:
+      - Transactions
+      parameters:
+      - in: query
+        name: since
+        schema:
+          type: string
+          format: date-time
+        description: Return transactions created from this date onwards
+      - in: query
+        name: modifiedSince
+        schema:
+          type: string
+          format: date-time
+        description: Return transactions modified from this date onwards
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: 'Filter by status: active (default), pending, closed, inactive, locked, all, all:active, all:pending, all:closed, all:inactive, all:locked'
+      - in: query
+        name: agentId
+        schema:
+          type: string
+        description: Filter transactions by agent ID (brokerage/team scenarios)
+      - in: query
+        name: filterBy
+        schema:
+          type: string
+        description: Text filter applied to property address, city, zip, transaction name, or buyer/seller name
+      - in: query
+        name: teamId
+        schema:
+          type: string
+        description: Filter by team ID, or use 'all' for all teams the agent belongs to
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: pagesize
+        schema:
+          type: integer
+      - in: query
+        name: orderby
+        schema:
+          type: string
+          enum:
+          - name
+          - created
+      - in: query
+        name: sortorder
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction_3'
+        '401':
+          description: Unauthorized
+      security:
+      - contextAuth: []
+    post:
+      summary: Create Transaction
+      description: Creates a new transaction for the authenticated user. `name` is required. `data` can include key-value pairs from the Transaction Data Keys appendix. `transactionType` and `propertyType` accept string or integer enum values.
+      tags:
+      - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  example: 123 Main Street
+                status:
+                  type: string
+                  example: active
+                transactionType:
+                  type: string
+                  enum:
+                  - Listing
+                  - Purchase
+                  - Lease
+                  - LeaseListing
+                  description: 'Integer values: Listing=0, Purchase=1, Lease=2, LeaseListing=3'
+                propertyType:
+                  type: string
+                  enum:
+                  - Residential
+                  - Commercial
+                  - Industrial
+                  - VacantLand
+                  - MultiUnit
+                  - FarmAndRanch
+                  - Condominium
+                  - ManufacturedHome
+                  - Coop
+                  - Unlisted
+                  description: 'Integer values: Residential=0, Commercial=1, Industrial=2, VacantLand=3, MultiUnit=4, FarmAndRanch=5, Condominium=6, ManufacturedHome=7, Coop=8, Unlisted=9'
+                data:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: Key-value pairs of transaction data. See Transaction Data Keys in the introduction.
+      responses:
+        '201':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction_3'
+        '401':
+          description: Unauthorized
+      security:
+      - contextAuth: []
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+  /transactions/{transactionId}:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    get:
+      summary: Get Transaction Metadata
+      description: Returns the metadata for a specific transaction. Useful for a quick lookup of a transaction by its GUID.
+      tags:
+      - Transactions
+      responses:
+        '200':
+          description: Transaction metadata returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction_3'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+      security:
+      - contextAuth: []
+    delete:
+      summary: Delete Transaction
+      description: Deletes the specified transaction for the authenticated user.
+      tags:
+      - Transactions
+      responses:
+        '200':
+          description: Transaction deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+      security:
+      - contextAuth: []
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+  /transactions/{transactionId}/data:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    get:
+      summary: Get Transaction Data
+      description: Returns the data (key-value pairs) for a given transaction. See the Transaction Data Keys appendix in the introduction for the full list of available keys.
+      tags:
+      - Transactions
+      responses:
+        '200':
+          description: Transaction data returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+      security:
+      - contextAuth: []
+    post:
+      summary: Set Transaction Data
+      description: Sets the data for a given transaction. The `mode` parameter controls whether supplied data is merged with existing data (default) or replaces it entirely.
+      tags:
+      - Transactions
+      parameters:
+      - in: query
+        name: mode
+        schema:
+          type: string
+          enum:
+          - Merge
+          - Replace
+          default: Merge
+        description: Merge (default) adds to existing data; Replace removes existing data and sets the new values.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+              description: Key-value pairs of transaction data. See Transaction Data Keys in the introduction.
+      responses:
+        '200':
+          description: Transaction data updated successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+      security:
+      - contextAuth: []
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+components:
+  schemas:
+    ExternalAgent:
+      required:
+      - endCode
+      - firstName
+      - lastName
+      - typeCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code end or side of the transaction.
+        typeCode:
+          enum:
+          - B
+          - R
+          type: string
+          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method use to pay the external agent.
+        firstName:
+          type: string
+          description: The first name of the external agent.
+        lastName:
+          type: string
+          description: The last name of the external agent.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company for which the external agent works.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The address unit number.
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character country code.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main phone number.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business phone number.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main fax number.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main email address.
+        emailAddressBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business email address.
+      additionalProperties: false
+      description: Represents an agent involved in the transaction that does not work for the brokerage.
+    TransactionPatchRequest:
+      type: object
+      properties:
+        number:
+          type:
+          - string
+          - 'null'
+          description: The number assigned to the transaction.
+          writeOnly: true
+        mlsNumber:
+          type:
+          - string
+          - 'null'
+          description: The MLS number for the listing associated to the transaction.
+          writeOnly: true
+        statusCode:
+          enum:
+          - C
+          - D
+          - F
+          - O
+          - P
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the transaction.
+          writeOnly: true
+        addressStreetNumber:
+          type:
+          - string
+          - 'null'
+          description: The street number.
+          writeOnly: true
+        addressStreetName:
+          type:
+          - string
+          - 'null'
+          description: The street name.
+          writeOnly: true
+        addressStreetDirection:
+          type:
+          - string
+          - 'null'
+          description: The street direction.
+          writeOnly: true
+        addressUnitNumber:
+          type:
+          - string
+          - 'null'
+          description: The unit number.
+          writeOnly: true
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city.
+          writeOnly: true
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+          writeOnly: true
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code. This will be unformatted.
+          writeOnly: true
+        offerDate:
+          type:
+          - string
+          - 'null'
+          description: The date of the offer that started the transaction.
+          format: date
+          writeOnly: true
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction closed.
+          format: date
+          writeOnly: true
+        entryDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was put into the system.
+          format: date
+          writeOnly: true
+        firmDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was firmed up, meaning all conditions were met and the transaction is moving forward.
+          format: date
+          writeOnly: true
+        finalizeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was finalized, meaning all the agents were paid.
+          format: date
+          writeOnly: true
+        legalDescription:
+          type:
+          - string
+          - 'null'
+          description: The legal description of the property related to the transaction.
+          writeOnly: true
+        closePrice:
+          type: number
+          description: The price.
+          format: double
+          writeOnly: true
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this transaction.
+          format: uuid
+          writeOnly: true
+        propertyTypeId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the property type associated with this transaction.
+          format: uuid
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a condition.
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        number:
+          type:
+          - string
+          - 'null'
+          description: The number assigned to the transaction.
+        mlsNumber:
+          type:
+          - string
+          - 'null'
+          description: The MLS number for the listing associated to the transaction.
+        statusCode:
+          enum:
+          - C
+          - D
+          - F
+          - O
+          - P
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the transaction.
+        addressStreetNumber:
+          type:
+          - string
+          - 'null'
+          description: The street number.
+        addressStreetName:
+          type:
+          - string
+          - 'null'
+          description: The street name.
+        addressStreetDirection:
+          type:
+          - string
+          - 'null'
+          description: The street direction.
+        addressUnitNumber:
+          type:
+          - string
+          - 'null'
+          description: The unit number.
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code. This will be unformatted.
+        offerDate:
+          type:
+          - string
+          - 'null'
+          description: The date of the offer that started the transaction.
+          format: date
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction closed.
+          format: date
+        entryDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was put into the system.
+          format: date
+        firmDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was firmed up, meaning all conditions were met and the transaction is moving forward.
+          format: date
+        finalizeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was finalized, meaning all the agents were paid.
+          format: date
+        legalDescription:
+          type:
+          - string
+          - 'null'
+          description: The legal description of the property related to the transaction.
+        closePrice:
+          type: number
+          description: The price.
+          format: double
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this transaction.
+          format: uuid
+        propertyTypeId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the property type associated with this transaction.
+          format: uuid
+        classification:
+          $ref: '#/components/schemas/ClassificationReadOnly'
+        propertyType:
+          $ref: '#/components/schemas/PropertyTypeReadOnly'
+        conditions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Condition'
+          description: A collection of all the conditions.
+        deposits:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Deposit'
+          description: A collection of all the deposits.
+        tiers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Tier'
+          description: A collection of all the tiers.
+        externalAgents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ExternalAgent'
+          description: A collection of all the external agents.
+        clientContacts:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ClientContact'
+          description: A collection of all the client contacts.
+        businessContacts:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/BusinessContact'
+          description: A collection of all the business contacts.
+      additionalProperties: false
+      description: Represents a transaction.
+    CommissionFee:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        percentage:
+          type: number
+          description: The percentage of the commission. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the fee.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the fee.
+        taxAmount:
+          type: number
+          description: The amount of tax applied to the fee.
+          format: currency
+        taxPercentage:
+          type: number
+          description: The tax rate applied to the fee. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to pay the fee.
+        fee:
+          $ref: '#/components/schemas/FeeReadOnly'
+      additionalProperties: false
+      description: Represents a fee that is related to a commission.
+    ContactTypeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The unique code for the contact type.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a contact type.
+    ClassificationReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the classification.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the classification.
+          readOnly: true
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this classification represents. This value will be either 0, 1 or 2.
+          format: double
+          readOnly: true
+        endTypeCode:
+          enum:
+          - B
+          - D
+          - M
+          - S
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code representing the end or side for the classification.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a transaction classification.
+    ClientContact:
+      required:
+      - contactTypeId
+      - endCode
+      - firstName
+      - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        contactTypeId:
+          type: string
+          description: The unique id of the contact type.
+          format: uuid
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The end or side of the transaction with which the contact is associated.
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
+        firstName:
+          type: string
+          description: The first name of the contact.
+        lastName:
+          type: string
+          description: The last name of the contact.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company if the buyer or seller is a company and not an individual.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The full street address for the company of the contact.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the street address, if applicable (e.g., suite number).
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the contact's address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the contact's address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the province or state.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the country of the contact's address.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number for the contact. This will be unformatted.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the business for the contact. This will be unformatted.
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile or cell phone number for the contact. This will be unformatted.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main fax number for the contact. This will be unformatted.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        emailAddressWork:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        contactType:
+          $ref: '#/components/schemas/ContactTypeReadOnly'
+      additionalProperties: false
+      description: Represents a buyer or seller on a transaction. For companies or business contacts, see Business Contact.
+    Condition:
+      required:
+      - description
+      - dueDate
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        description:
+          type: string
+          description: A description of the commission.
+        dueDate:
+          type: string
+          description: The date the condition is due.
+          format: date
+        completeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the condition was completed.
+          format: date
+      additionalProperties: false
+      description: Represents a condition on a transaction.
+    EmployeeReadOnly:
+      type: object
+      properties:
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the agent.
+          readOnly: true
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: The middle name of the agent.
+          readOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the agent.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an agent.
+    Commission:
+      required:
+      - agentId
+      - endCode
+      - endCount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        agentId:
+          type: string
+          description: The unique id of the agent that gets the commission.
+          format: uuid
+        officeId:
+          type: string
+          description: The unique id of the office with which the agent is associated.
+          format: uuid
+          readOnly: true
+        amount:
+          type: number
+          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
+          format: currency
+        percentage:
+          type: number
+          description: The percentage of the total commission for the agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code representing the end or side of the transaction.
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this commission represents.
+          format: double
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the calculation method used for the commission. This will be "A" for amount or "P" for percentage.
+        taxAmount:
+          type: number
+          description: The total amount in tax applied to the commission.
+          format: currency
+        totalFeeAmount:
+          type: number
+          description: The total amount of fees applied to the commission.
+          format: currency
+        totalFeeTaxAmount:
+          type: number
+          description: The total amount in tax applied to just the fees for the commission.
+          format: currency
+        fees:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CommissionFee'
+          description: The list of fees associated with the commission.
+        agent:
+          $ref: '#/components/schemas/EmployeeReadOnly'
+        office:
+          $ref: '#/components/schemas/OfficeReadOnly'
+      additionalProperties: false
+      description: Represents a commission for an agent on a transaction.
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
+    BusinessContact:
+      required:
+      - contactTypeId
+      - endCode
+      - firstName
+      - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        contactTypeId:
+          type: string
+          description: The unique id of the contact type.
+          format: uuid
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The end or side of the transaction with which the contact is associated.
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
+        firstName:
+          type: string
+          description: The first name of the contact.
+        lastName:
+          type: string
+          description: The last name of the contact.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The full street address for the company of the contact.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the street address, if applicable (e.g., suite number).
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the contact's address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the contact's address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the province or state.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the country of the contact's address.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number for the contact. This will be unformatted.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the business for the contact. This will be unformatted.
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile or cell phone number for the contact. This will be unformatted.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main fax number for the contact. This will be unformatted.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        emailAddressWork:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        contactType:
+          $ref: '#/components/schemas/ContactTypeReadOnly'
+      additionalProperties: false
+      description: Represents a company or business contact like a Lawyer or Title Company. See client contacts for buyers and sellers.
+    Tier:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the tier.
+        closePrice:
+          type: number
+          description: The close price for the tier.
+          format: double
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the tier closed.
+          format: date
+        statusCode:
+          enum:
+          - C
+          - F
+          - O
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the tier.
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this tier.
+          format: uuid
+        sellingCommissionAmount:
+          type: number
+          description: The total commission amount for the selling end or side of the tier.
+          format: currency
+        sellingCommissionPercentage:
+          type: number
+          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        sellingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the selling commission.
+        buyingCommissionAmount:
+          type: number
+          description: The total commission amount for the buying end or side of the tier.
+          format: currency
+        buyingCommissionPercentage:
+          type: number
+          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        buyingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the buying commission.
+        classification:
+          $ref: '#/components/schemas/ClassificationReadOnly'
+        commissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Commission'
+          description: A collection of commissions associated with the tier.
+        externalCommissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ExternalCommission'
+          description: A collection of external commissions associated with the tier.
+      additionalProperties: false
+      description: Represents a sub transaction.
+    TierSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+          readOnly: true
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+          readOnly: true
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the tier.
+          readOnly: true
+        commissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CommissionSummary'
+          description: A collection of commissions related to the tier.
+          readOnly: true
+      additionalProperties: false
+      description: Represents a summary of a tier in a transaction.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
+    Deposit:
+      required:
+      - date
+      - amount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        date:
+          type: string
+          description: The date the deposit was received.
+          format: date
+        amount:
+          type: number
+          description: The amount of the deposit.
+          format: currency
+        received:
+          type: boolean
+          description: If the deposit has been received or not.
+        interest:
+          type: boolean
+          description: If the deposit accumulates interest.
+        held:
+          type: boolean
+          description: If the deposit is held or not.
+        heldBy:
+          type:
+          - string
+          - 'null'
+          description: Who the deposit is held by.
+        direct:
+          type: boolean
+          description: If the deposit is direct or not.
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The reference number for the deposit.
+      additionalProperties: false
+      description: Represents a deposit associated to a transaction.
+    CommissionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+          readOnly: true
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+          readOnly: true
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+          readOnly: true
+        agentId:
+          type: string
+          description: The unique id of the agent that gets the commission.
+          format: uuid
+          readOnly: true
+        officeId:
+          type: string
+          description: The unique id of the office with which the agent is associated.
+          format: uuid
+          readOnly: true
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the agent.
+          readOnly: true
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: The middle name of the agent.
+          readOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the agent.
+          readOnly: true
+        officeName:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        amount:
+          type: number
+          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
+          format: currency
+          readOnly: true
+        percentage:
+          type: number
+          description: The percentage of the total commission for the agent.
+          format: double
+          readOnly: true
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The code representing the end or side of the transaction.
+          readOnly: true
+        endCount:
+          type: number
+          description: The total number of ends or sides this commission represents.
+          format: double
+          readOnly: true
+      additionalProperties: false
+      description: A summary of the commission for an agent.
+    TransactionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+          readOnly: true
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+          readOnly: true
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+          readOnly: true
+        number:
+          type:
+          - string
+          - 'null'
+          description: The number assigned to the transaction.
+          readOnly: true
+        mlsNumber:
+          type:
+          - string
+          - 'null'
+          description: The MLS number for the listing associated with the transaction.
+          readOnly: true
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the transaction.
+          readOnly: true
+        addressStreetNumber:
+          type:
+          - string
+          - 'null'
+          description: The street number.
+          readOnly: true
+        addressStreetName:
+          type:
+          - string
+          - 'null'
+          description: The street name.
+          readOnly: true
+        addressStreetDirection:
+          type:
+          - string
+          - 'null'
+          description: The street direction.
+          readOnly: true
+        addressUnitNumber:
+          type:
+          - string
+          - 'null'
+          description: The unit number.
+          readOnly: true
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city.
+          readOnly: true
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+          readOnly: true
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code. This will be unformatted.
+          readOnly: true
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The id of the classification.
+          format: uuid
+          readOnly: true
+        classificationName:
+          type:
+          - string
+          - 'null'
+          description: The name of the classification.
+          readOnly: true
+        propertyTypeId:
+          type:
+          - string
+          - 'null'
+          description: The id of the property type.
+          format: uuid
+          readOnly: true
+        propertyTypeName:
+          type:
+          - string
+          - 'null'
+          description: The name of the property type.
+          readOnly: true
+        offerDate:
+          type:
+          - string
+          - 'null'
+          description: The date an offer was made.
+          format: date
+          readOnly: true
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction closed.
+          format: date
+          readOnly: true
+        closePrice:
+          type:
+          - number
+          - 'null'
+          description: The price.
+          format: double
+          readOnly: true
+        finalizeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was finalized and all the agents were paid.
+          format: date
+          readOnly: true
+        firmDate:
+          type:
+          - string
+          - 'null'
+          description: The date the transaction was firmed up, meaning all conditions were met and the transaction is moving forward.
+          format: date
+          readOnly: true
+        tiers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TierSummary'
+          description: A collection of tiers.
+          readOnly: true
+      additionalProperties: false
+      description: Represents a summary of a transaction.
+    ExternalCommission:
+      required:
+      - externalAgentId
+      - endCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code for the end or side of the transaction.
+        percentage:
+          type: number
+          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the commission paid to the external agent.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the commission.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method of payment for the commission.
+        externalAgentId:
+          type: string
+          description: The unique id of the external agent associated with this commission.
+          format: uuid
+        externalAgent:
+          $ref: '#/components/schemas/ExternalAgent'
+      additionalProperties: false
+      description: Represents a commission paid to an external agent involved in a transaction.
+    PropertyTypeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the property type.
+          readOnly: true
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the property type.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The unique code of the property type.
+          readOnly: true
+        classCode:
+          enum:
+          - C
+          - R
+          type:
+          - string
+          - 'null'
+          description: The code for the class of property type. This will be either "C" for commercial or "R" for residential.
+          readOnly: true
+        rental:
+          type: boolean
+          description: Indicates whether the property type is for rental property transactions.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a property type.
+    TransactionCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the transaction.
+      - $ref: '#/components/schemas/TransactionBase'
+      description: Payload for creating a new transaction.
+    TransactionBase:
+      type: object
+      properties:
+        type:
+          type: integer
+          description: 'Transaction type code. Observed value: `1`. **TODO: document the full list of code values and their meanings.**'
+          example: 1
+        address1:
+          type: string
+          description: Property street address, line 1.
+        address2:
+          type: string
+          description: Property street address, line 2.
+        address3:
+          type: string
+          description: Property street address, line 3 (e.g. unit number).
+        address4:
+          type: string
+          description: Property street address, line 4.
+        locality:
+          type: string
+          description: City / locality.
+        region:
+          type: string
+          description: State or province code.
+          example: 'ON'
+        subRegion:
+          type: string
+          description: County or sub-region.
+        postalCode:
+          type: string
+          description: Postal / ZIP code.
+        country:
+          type: string
+          description: Country.
+        legalDescription:
+          type: string
+          description: Legal description of the property.
+        propertyIncludes:
+          type: string
+          description: Items included with the property.
+        propertyExcludes:
+          type: string
+          description: Items excluded from the property.
+        taxNumber:
+          type: string
+          description: Property tax number.
+        mlsNumber:
+          type: string
+          description: MLS listing number.
+        note:
+          type: string
+          description: Free-form note.
+        schoolDistrict:
+          type: string
+          description: School district.
+        zoningClass:
+          type: string
+          description: Zoning classification.
+        yearBuilt:
+          type: integer
+          example: 1980
+          description: Year the property was built.
+        phase:
+          type: integer
+          description: 'Transaction phase code. Observed value: `1`. **TODO: document the full list of code values and their meanings.**'
+          example: 1
+        propertyType:
+          type: integer
+          description: 'Property type code. Observed value: `0`. **TODO: document the full list of code values and their meanings.**'
+          example: 0
+        asking:
+          type: number
+          description: Asking price.
+          example: 250000
+        deposit:
+          type: number
+          description: Deposit amount.
+          example: 10000
+        taxes:
+          type: number
+          description: Annual taxes.
+          example: 5000
+        closingDate:
+          type: string
+          format: date-time
+          description: Closing date.
+        listingExpiration:
+          type: string
+          format: date-time
+          description: Listing expiration date.
+        listingGoesLive:
+          type: string
+          format: date-time
+          description: Date the listing goes live.
+    TransactionUpdate:
+      allOf:
+      - $ref: '#/components/schemas/TransactionBase'
+      description: Partial transaction representation. Only the provided fields are updated.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
+    ExternalAgent_2:
+      type: object
+      required:
+      - ContactTypeId
+      - EndCode
+      - AddressTypeCode
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the external agent for a specific transaction tier. If you have the same external agent on different transaction tiers, they will have different Id values. Please see ExternalAgentCommission.ExternalAgentId for information on why this is not required.
+        CRMId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        CRMCompanyContactId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        FirstName:
+          type: string
+          maxLength: 200
+          description: The first name.
+        MiddleName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        LastName:
+          type: string
+          maxLength: 200
+          description: The last name.
+        ContactTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the contact type. This is an Id that is retrieved from the contact types resource. Only ContactType objects with TypeCode E should be used.
+        ContactType:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/ContactType'
+          description: The contact type. See the Contact Types API section for the object definition.
+        EndCode:
+          type: string
+          maxLength: 1
+          description: 'The code of the end or side the external agent is used on. L: Listing, S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        CompanyName:
+          type: string
+          maxLength: 200
+          description: The business contact's company.
+        Addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The list of addresses for the external agent. Currently supported address types: B: Business (The agent''s business address)'
+        PhoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: 'The list of phone numbers for the external agent. Currently supported phone number types: B: Business (The agent''s office phone number), BF: Business Fax (The agent''s office fax number), H: Home (The agent''s home number), M: Mobile (The agent''s mobile number)'
+        EmailAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The list of email addresses for the external agent. Currently supported email address types: B: Business (The agent''s office''s email address), W: Work (The agent''s work email address)'
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+        AddressTypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address for the external agent. B: Business'
+    PropertyType:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the property type.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this property type. This must be unique within an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the property type (Duplex, Townhouse, Commercial, etc).
+        Default:
+          type: boolean
+          readOnly: true
+          description: True if this should be the default property type for new transactions and tiers.
+        ClassCode:
+          type: string
+          readOnly: true
+          description: 'The code for the class. R: Residential, C: Commercial'
+        Class:
+          type: string
+          readOnly: true
+          description: The name of the class (Commercial, Residential).
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: The date the property type became inactive. (Nullable)
+    Task:
+      type: object
+      description: Tasks cannot currently be updated by the Transactions API. They will be ignored in any resource call to create or update a transaction.
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the task.
+        LoadingDocsTaskId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the loadingDOCS task.
+        Title:
+          type: string
+          readOnly: true
+          description: The title of the task.
+        DueDate:
+          type: string
+          format: date
+          readOnly: true
+          description: The date the task must be completed by.
+        Reminder:
+          type: boolean
+          readOnly: true
+          description: True if a reminder has been setup for this task.
+        ReminderSentTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the reminder was sent.
+        CompletedDate:
+          type: string
+          format: date
+          readOnly: true
+          description: The date the task was completed.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the task was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the task was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    Agent:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the agent.
+        OfficeId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the office the agent belongs to.
+        FirstName:
+          type: string
+          readOnly: true
+          description: The first name.
+        MiddleName:
+          type: string
+          readOnly: true
+          description: The middle name.
+        LastName:
+          type: string
+          readOnly: true
+          description: The last name.
+    Transaction_2:
+      type: object
+      required:
+      - PropertyTypeId
+      - ClassificationId
+      - CloseDate
+      - OfferDate
+      - SellPrice
+      - MLSAddress
+      - Tiers
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the transaction. Required for updates only. It will be ignored when creating a new transaction.
+        Number:
+          type: string
+          maxLength: 15
+          description: The transaction number. In most cases, the transaction number will be automatically generated. This is only required if the primary office for the trade allows manual transaction number entry and it has not setup a sequence for transaction numbers.
+        MLSNumber:
+          type: string
+          maxLength: 15
+          description: The MLS number for the listing associated to the transaction.
+        PropertyTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the property type. This is an Id that is retrieved from the property types resource.
+        PropertyType:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/PropertyType'
+          description: The property type. See the Property Types API section for the object definition.
+        ClassificationId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the classification. This is an Id that is retrieved from the classifications resource.
+        Classification:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/Classification'
+          description: The classification. See the Classifications API section for the object definition.
+        StatusCode:
+          type: string
+          readOnly: true
+          description: 'The code for the status. N: Open, A: Closed, P: Partially closed (not all but at least one tier has been finalized), B: Fallen through because of a condition, C: Fallen through'
+        Status:
+          type: string
+          readOnly: true
+          description: The name of the status. This field is read only.
+        EntryDate:
+          type: string
+          format: date
+          description: The date the transaction was entered. This is not the date that the transaction record was created (though in most cases, it will be the same value). This is a client specified date. If not specified, then the current date is used.
+        CloseDate:
+          type: string
+          format: date
+          description: The date the transaction closed.
+        OfferDate:
+          type: string
+          format: date
+          description: The date an offer was made on the transaction.
+        SellPrice:
+          type: number
+          description: The final sale price.
+        LegalDescription:
+          type: string
+          maxLength: 100
+          description: Any legal notices for the transaction.
+        MLSAddress:
+          allOf:
+          - $ref: '#/components/schemas/MLSAddress'
+          description: The MLS style address for the transaction. The $expand OData parameter will have no effect on this property; it will always be returned with the transaction data.
+        Tiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tier_2'
+          description: The list of different tiers for the transactions. At least 1 is required.
+        ClientContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientContact_2'
+          description: The list of client contacts for the transaction.
+        BusinessContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessContact_2'
+          description: The list of business contacts for the transaction.
+        Conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionCondition'
+          description: The list of conditions for the transaction.
+        Task:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Task'
+          description: The list of tasks for the transaction.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the transaction was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the transaction was last modified.
+        TransactionChangedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the transaction or any of its associated objects were last changed. For instance, if a commission was added to a tier, the TransactionChangedTimestamp would hold the time that the commission was added. Any change to any object associated to the transaction will update this field. It is very useful when querying for transactions that have been modified since a particular date and time.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    NumericRange:
+      type: object
+      properties:
+        From:
+          type:
+          - number
+          - 'null'
+          description: The minimum value for the given range. If NULL then there is no lower bound for the numeric range. (Nullable)
+        To:
+          type:
+          - number
+          - 'null'
+          description: The maximum value for the given range. If NULL then there is no upper bound for the numeric range. (Nullable)
+    SearchOrder:
+      type: object
+      properties:
+        Property:
+          type: integer
+          description: The property within the Object contained in the SearchResult ResultSet property to order the results on. This value will differ depending on which resource is being searched. Please see the individual search function documentation to set this value.
+        Ascending:
+          type: boolean
+          description: True if the results should be returned in ascending order.
+    EmailAddress:
+      type: object
+      required:
+      - Address
+      - TypeCode
+      properties:
+        Address:
+          type: string
+          maxLength: 100
+          description: The email address.
+        Confidential:
+          type: boolean
+          description: True if the email address is confidential.
+        Primary:
+          type: boolean
+          description: True if this is the primary email address.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of email address.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address. H: Home, B: Business, W: Work, S: Secondary, O: Other'
+    PhoneNumber:
+      type: object
+      required:
+      - Number
+      - TypeCode
+      properties:
+        Confidential:
+          type: boolean
+          description: True if the phone number is confidential.
+        Extension:
+          type: string
+          maxLength: 5
+          description: The extension for the phone number.
+        Number:
+          type: string
+          maxLength: 20
+          description: The unformatted phone number.
+        Primary:
+          type: boolean
+          description: True if this is the primary phone number.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of phone number.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of phone number. A: Assistant, B: Business, BF: Business Fax, CB: Callback, C: Company, X: Extension, H: Home, HF: Home Fax, ISDN: ISDN, M: Mobile, P: Pager, R: Radio, T: Telex, TF: Toll Free, TTY: TTY/TDD, O: Other, OF: Other Fax'
+    ClientContact_2:
+      type: object
+      required:
+      - ContactTypeId
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the client contact for a specific transaction. If you have the same client contact on different transactions, they will have different Id values. Required for updates only. This should be null when creating a new client contact.
+        CRMId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        FirstName:
+          type: string
+          maxLength: 200
+          description: The first name.
+        MiddleName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        LastName:
+          type: string
+          maxLength: 200
+          description: The last name.
+        ContactTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the contact type. This is an Id that is retrieved from the contact types resource. Only ContactType objects with TypeCode C should be used.
+        ContactType:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/ContactType'
+          description: The contact type. See the Contact Types API section for the object definition.
+        Title:
+          type: string
+          maxLength: 100
+          description: Not implemented yet.
+        Prefix:
+          type: string
+          maxLength: 20
+          description: Not implemented yet.
+        Suffix:
+          type: string
+          maxLength: 20
+          description: Not implemented yet.
+        CompanyName:
+          type: string
+          maxLength: 40
+          description: The name of the company for the client contact.
+        MarketingName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        NickName:
+          type: string
+          maxLength: 50
+          description: The nick name of the client contact.
+        LegalName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        FormerName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        GenderCode:
+          type: string
+          maxLength: 1
+          description: Not implemented yet.
+        Gender:
+          type: string
+          readOnly: true
+          description: Not implemented yet.
+        SourceOfBusinessId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the source of business. This is an Id that is retrieved from the sources of business resource. Setting this value to NULL will not clear the source of business for the client contact. You must pass an empty string to clear the source of business.
+        SourceOfBusiness:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/SourceOfBusiness'
+          description: The source of business. See the Sources of Business API section for the object definition.
+        Addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The list of addresses for the client contact. Currently supported address types: H: Home (The contact''s home address).'
+        PhoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: 'The list of phone numbers for the client contact. Currently supported phone number types: B: Business (The contact''s work number), H: Home (The contact''s home number), HF: Home Fax (The contact''s home fax number), M: Mobile (The contact''s mobile number)'
+        EmailAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The list of email addresses for the client contact. Currently supported email address types: H: Home (The contact''s home email address).'
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the client contact was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the client contact was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+        SendMovingWolfEmails:
+          type: boolean
+          description: The movingWOLF status of the client contact.
+        ShouldReceiveMovingWolfEmails:
+          type:
+          - boolean
+          - 'null'
+          readOnly: true
+          description: The movingWOLF email subscription status of the client contact. This field is not a database field and is calculated based on different values. As such, it is not compatible with OData queries and will return an error if an attempt is made to filter on it. (Nullable)
+        MovingWolfEmailsSendingAgentId:
+          type:
+          - integer
+          - 'null'
+          readOnly: true
+          description: The Agent ID of the Agent from which the movingWOLF emails will be sent. This field is not a database field and is calculated based on different values. As such, it is not compatible with OData queries and will return an error if an attempt is made to filter on it. (Nullable)
+    TransactionCondition:
+      type: object
+      required:
+      - Description
+      description: 'A condition attached to a transaction. Note: this differs from the Condition lookup object returned by the Conditions API.
+
+
+        Please see the Creating and Updating Data section of the introduction for more information on how to handle the DueDate and ApprovedDate properties.'
+      properties:
+        Id:
+          type: string
+          description: The Lone Wolf Id of the condition. Required for updates only. It will be ignored when creating a new condition.
+        Description:
+          type: string
+          description: The description of the condition.
+        DueDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date the condition must be met. (Nullable)
+        ApprovedDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date the condition was approved. (Nullable)
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the condition was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the condition was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    BusinessContact_2:
+      type: object
+      required:
+      - ContactTypeId
+      - EndCode
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the business contact for a specific transaction. If you have the same business contact on different transactions, they will have different Id values. Required for updates only. It will be ignored when creating a new business contact.
+        CRMId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        CRMCompanyContactId:
+          type: string
+          maxLength: 50
+          description: Not implemented yet.
+        FirstName:
+          type: string
+          maxLength: 200
+          description: The first name.
+        MiddleName:
+          type: string
+          maxLength: 200
+          description: Not implemented yet.
+        LastName:
+          type: string
+          maxLength: 200
+          description: The last name.
+        ContactTypeId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the contact type. This is an Id that is retrieved from the contact types resource. Only ContactType objects with TypeCode B should be used.
+        ContactType:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/ContactType'
+          description: The contact type. See the Contact Types API section for the object definition.
+        EndCode:
+          type: string
+          maxLength: 1
+          description: 'The code of the end or side the business contact is used on. L: Listing, S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        CompanyName:
+          type: string
+          maxLength: 200
+          description: The company for the business contact.
+        Addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The list of addresses for the business contact. Currently supported address types: B: Business (The contact''s business address).'
+        PhoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: 'The list of phone numbers for the business contact. Currently supported phone number types: B: Business (The contact''s office phone number), BF: Business Fax (The contact''s office fax number), H: Home (The contact''s home number), M: Mobile (The contact''s mobile number)'
+        EmailAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The list of email addresses for the business contact. Currently supported email address types: B: Business (The contact''s business''s email address), W: Work (The contact''s work email address)'
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the business contact was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the business contact was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    Tier_2:
+      type: object
+      required:
+      - ClassificationId
+      - SellPrice
+      - CloseDate
+      - AgentCommissions
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the tier. Required for updates only. It will be ignored when creating a new tier.
+        Name:
+          type: string
+          maxLength: 1
+          description: The name of the tier.
+        ClassificationId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the classification. This is an Id that is retrieved from the classifications resource.
+        Classification:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/Classification'
+          description: The classification. See the Classifications API section for the object definition.
+        StatusCode:
+          type: string
+          readOnly: true
+          description: 'The code for the status. N: Open, A: Closed, B: Fallen through because of a condition, C: Fallen through'
+        Status:
+          type: string
+          readOnly: true
+          description: The name of the status.
+        SellPrice:
+          type: number
+          description: The final sale price for the tier.
+        CloseDate:
+          type: string
+          format: date
+          description: The close date for the tier.
+        SellingCommission:
+          type: number
+          readOnly: true
+          description: The total selling commission for the tier.
+        BuyingCommission:
+          type: number
+          readOnly: true
+          description: The total buying commission for the tier.
+        TotalCommission:
+          type: number
+          readOnly: true
+          description: The total commission for the tier.
+        AgentCommissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentCommission'
+          description: The list of commissions for the tier. At least 1 is required.
+        ExternalAgentCommissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalAgentCommission'
+          description: The list of external agent commissions for the tier.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the tier was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the tier was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    MLSAddress:
+      type: object
+      required:
+      - StreetNumber
+      - StreetName
+      - City
+      - ProvinceCode
+      - PostalCode
+      - CountryCode
+      properties:
+        StreetNumber:
+          type: string
+          maxLength: 12
+          description: The street number.
+        StreetName:
+          type: string
+          maxLength: 50
+          description: The street name.
+        StreetDirection:
+          type: string
+          maxLength: 20
+          description: The street direction.
+        Unit:
+          type: string
+          maxLength: 50
+          description: The unit or building number.
+        City:
+          type: string
+          maxLength: 50
+          description: The city.
+        ProvinceCode:
+          type: string
+          maxLength: 20
+          description: The province code or postal abbreviation of the province or state.
+        Province:
+          type: string
+          readOnly: true
+          description: The name of the province or state.
+        PostalCode:
+          type: string
+          maxLength: 15
+          description: The unformatted postal or zip code. If this is passed in to the API with formatting, the formatting will be removed before saving to the database. It will be returned unformatted.
+        CountryCode:
+          type: string
+          maxLength: 2
+          description: The two character ISO code for the country.
+        Country:
+          type: string
+          readOnly: true
+          description: The name of the country.
+    Address:
+      type: object
+      required:
+      - City
+      - CountryCode
+      - Line1
+      - PostalCode
+      - ProvinceCode
+      - TypeCode
+      properties:
+        City:
+          type: string
+          maxLength: 50
+          description: The city.
+        Confidential:
+          type: boolean
+          description: True if the address is confidential.
+        Country:
+          type: string
+          readOnly: true
+          description: The name of the country. This field is read only.
+        CountryCode:
+          type: string
+          maxLength: 2
+          description: The two digit ISO code for the country.
+        Line1:
+          type: string
+          maxLength: 200
+          description: The first line for the address.
+        Line2:
+          type: string
+          maxLength: 200
+          description: The second line for the address.
+        Line3:
+          type: string
+          maxLength: 200
+          description: The third line for the address.
+        Line4:
+          type: string
+          maxLength: 200
+          description: The fourth line for the address.
+        PostalCode:
+          type: string
+          maxLength: 20
+          description: The unformatted postal or zip code.
+        Province:
+          type: string
+          readOnly: true
+          description: The name of the province or state. This field is read only.
+        ProvinceCode:
+          type: string
+          maxLength: 20
+          description: The province code or postal abbreviation of the province or state.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of address. This field is read only.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of address. P: Physical, M: Mailing, H: Home, B: Business, W: Work, O: Other'
+    ExternalAgentCommission:
+      type: object
+      required:
+      - EndCode
+      - Commission
+      - ExternalAgent
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the external agent commission record. Required for updates only. It will be ignored when creating a new external agent commission.
+        ExternalAgentId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the external agent. ExternalAgentCommission objects can only have one ExternalAgent object associated to them making the ExternalAgentId column irrelevant.
+        EndCode:
+          type: string
+          description: 'The code of the end or side for the commission. L: Listing, S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        Commission:
+          type: number
+          description: The total commission for the external agent for the associated transaction tier.
+        ExternalAgent:
+          allOf:
+          - $ref: '#/components/schemas/ExternalAgent_2'
+          description: The external agent getting this commission. The ExternalAgent property is required when creating a new external agent commission. If changes need to be made to the external agent associated to the external agent commission, then include the ExternalAgent property when updating the ExternalAgentCommission object. If you do not need to update the external agent leave the ExternalAgent property NULL as you normally would.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the commission was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the commission was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    SearchResult:
+      type: object
+      description: 'Paging is currently not implemented. Therefore PageSize will always be the number of objects in the ResultSet and TotalPages will always be 1. Write your client application as if paging were implemented. Once it is implemented your application should work as if paging were implemented all along.
+
+
+        If the results all fit onto 1 page then the Id property will be NULL, PageNumber will be 1 and TotalPages will be 1. PageSize will still contain the value of the page size that would have been used if more pages were needed.'
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Id of the search. This will be used when getting the next page of results for a previous search.
+        PageSize:
+          type: integer
+          readOnly: true
+          description: The page size for the response. This can also be thought of as the number of objects that will be returned in the ResultSet collection if it requires a full page.
+        PageNumber:
+          type: integer
+          readOnly: true
+          description: The page number for the response.
+        TotalPages:
+          type: integer
+          readOnly: true
+          description: The total number of pages in the search results.
+        TotalResults:
+          type: integer
+          readOnly: true
+          description: The total number of results across all pages.
+        ResultSet:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Transaction_2'
+          description: The list of objects for the search result. The type of objects returned depend on which search function was called. For instance, the Transaction Search function will return Transaction objects.
+    TransactionSearchCriteria:
+      type: object
+      properties:
+        Numbers:
+          type: array
+          items:
+            type: string
+          description: The list of transaction numbers.
+        AgentIds:
+          type: array
+          items:
+            type: string
+          description: The collection of agentIds (memberIds) that are associated to the commissions for the transaction.
+        OfficeIds:
+          type: array
+          items:
+            type: string
+          description: The collection of officeIds. If a transaction is associated to an agent that is in an office with an Id in this collection, then the transaction will be included in the result set.
+        MLSNumbers:
+          type: array
+          items:
+            type: string
+          description: The list of MLS numbers.
+        TransactionChangedTimestamp:
+          allOf:
+          - $ref: '#/components/schemas/TimestampRange'
+          description: The timestamp range of transaction changed timestamps.
+        EntryDate:
+          allOf:
+          - $ref: '#/components/schemas/DateRange'
+          description: The date range of entry dates.
+        CloseDate:
+          allOf:
+          - $ref: '#/components/schemas/DateRange'
+          description: The date range of close dates.
+        OfferDate:
+          allOf:
+          - $ref: '#/components/schemas/DateRange'
+          description: The date range of offer dates.
+        SellPrice:
+          allOf:
+          - $ref: '#/components/schemas/NumericRange'
+          description: The numeric range of sell prices.
+        StatusCodes:
+          type: array
+          items:
+            type: string
+          description: The list of status codes.
+        ClassCodes:
+          type: array
+          items:
+            type: string
+          description: The list of class codes.
+        ClassificationIds:
+          type: array
+          items:
+            type: string
+          description: The list of classification codes.
+        PropertyTypeIds:
+          type: array
+          items:
+            type: string
+          description: The list of property type codes.
+        EndCode:
+          type: string
+          description: The end (or side). This doesn't have much use alone. It should typically be used in conjunction with other criteria dealing with commission records. For instance, AgentIds.
+        FullDetail:
+          type: boolean
+          default: false
+          description: True if the transaction should be fully populated when it is returned. The default is False.
+        SearchOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchOrder'
+          description: 'The list of search order columns. This is used to order the search results. The SearchOrder.Property property should be one of the following. 1: Number, 2: MLS Number, 3: Entry Date, 4: Close Date, 5: Offer Date, 6: Sell Price'
+    SearchRequest:
+      type: object
+      required:
+      - Criteria
+      properties:
+        PageSize:
+          type: integer
+          description: 'The number of objects to return per page in the response. The maximum value for PageSize is currently 1000. If you pass 0 in for this parameter, the maximum PageSize value will be used. NOTE: The PageSize returned in the SearchResponse object is not guaranteed to be equal to this value even if it is less than or equal to the max page size. Please use the PageSize value in the SearchResponse object when processing the response. Paging is currently not implemented; therefore, the PageSize value has no bearing on the response.'
+        Limit:
+          type: integer
+          description: The maximum number of objects to return in the results. This value can go across pages. For instance, if you set PageSize to 10 and Limit to 25 and the search finds 50 records, the top 25 will be returned on 3 different pages.
+        Criteria:
+          allOf:
+          - $ref: '#/components/schemas/TransactionSearchCriteria'
+          description: The object holding the criteria for the search. This object will differ depending on the search resource that is being called. For instance, a Transactions search request would set this property to a TransactionSearchCriteria object.
+    TimestampRange:
+      type: object
+      description: The TimestampRange object is used to compare Timestamp fields, not Date fields. To compare Date fields, use DateRange.
+      properties:
+        From:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The minimum value for the given range. If NULL then there is no lower bound for the timestamp range. (Nullable)
+        To:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The maximum value for the given range. If NULL then there is no upper bound for the timestamp range. (Nullable)
+    AgentCommission:
+      type: object
+      required:
+      - AgentId
+      - EndCode
+      - EndCount
+      - Commission
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the agent commission. Required for updates only. It will be ignored when creating a new agent commission.
+        AgentId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the agent to associate to this commission. This is the same Id that would be used in the Members API.
+        TeamLeaderId:
+          type: string
+          maxLength: 50
+          description: The Lone Wolf Id of the agent's team leader. This is the same Id that would be used in the Members API.
+        EndCode:
+          type: string
+          maxLength: 1
+          description: 'The code of the end or side for the commission. L: Listing, S: Selling'
+        End:
+          type: string
+          readOnly: true
+          description: The name of the end or side.
+        EndCount:
+          type: number
+          description: The end count for the tier.
+        CommissionPercentage:
+          type: number
+          readOnly: true
+          description: The percentage of the total commission for the tier. This is a value between 0 and 1.
+        Commission:
+          type: number
+          description: The total commission for the agent for this tier.
+        Agent:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/Agent'
+          description: The agent getting this commission.
+        TeamLeader:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/Agent'
+          description: The team leader for this commission record.
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the agent commission was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the agent commission was last modified.
+        RowVersion:
+          type: integer
+          format: int64
+          description: The version of the record in the database.
+    ClientError:
+      type: object
+      description: The ClientError object is used to give detailed information whenever an API request fails. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL. See the Error Codes section of the introduction for the full list of Lone Wolf Error Codes.
+      properties:
+        Code:
+          type: integer
+          readOnly: true
+          description: The Lone Wolf Error Code. See the Error Codes section of the introduction.
+        Message:
+          type: string
+          readOnly: true
+          description: The message that corresponds to the Code value.
+        Details:
+          type: string
+          readOnly: true
+          description: The exact problem that occurred to give this error response.
+    Classification:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the classification.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this classification. This must be unique within an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the classification (Listing, Selling, Agent Double Ender, etc).
+        EndCount:
+          type: number
+          readOnly: true
+          description: The end count for the classification. For instance, if this is an Agent Double Ender, the end count would be 2.0. If it's a Listing classification, the end count would be 1.0.
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: The date the classification became inactive. (Nullable)
+    DateRange:
+      type: object
+      description: The DateRange object is used to compare Date fields, not Timestamp fields. To compare Timestamp fields, use TimestampRange.
+      properties:
+        From:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The minimum date for the given range. If NULL then there is no lower bound for the date range. (Nullable)
+        To:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The maximum date for the given range. If NULL then there is no upper bound for the date range. (Nullable)
+    SourceOfBusiness:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the source of business.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synched with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this source of business. This must be unique within an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the source of business (Newspaper, Referral, Website, etc).
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: The date the source of business became inactive. (Nullable)
+    ContactType:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the contact type.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this contact type. This must be unique within an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the contact type (Buyer, Seller, Lawyer, Outside Broker, etc).
+        CategoryCode:
+          type: string
+          readOnly: true
+          description: 'The category for the contact type. B: Business contact, C: Client contact, E: External agent'
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: The date the contact type became inactive. (Nullable)
+    Transaction_3:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Transaction GUID
+        name:
+          type: string
+          example: 1060 Mountain St
+        status:
+          type: string
+          enum:
+          - active
+          - pending
+          - closed
+          - inactive
+          - locked
+          example: active
+        expiration:
+          type: string
+          format: date-time
+        transactionType:
+          type: string
+          enum:
+          - Listing
+          - Purchase
+          - Lease
+          - LeaseListing
+        propertyType:
+          type: string
+          enum:
+          - Residential
+          - Commercial
+          - Industrial
+          - VacantLand
+          - MultiUnit
+          - FarmAndRanch
+          - Condominium
+          - ManufacturedHome
+          - Coop
+          - Unlisted
+        hasFiles:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+        lastUpdated:
+          type: string
+          format: date-time
+        ownerName:
+          type: string
+        number:
+          type: integer
+          example: 1033771
+        seller:
+          type: string
+        buyer:
+          type: string
+        propertyAddress:
+          type: string
+          description: Full address in one value
+        address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        isSigned:
+          type: boolean
+          description: Whether the transaction has signed documents
+        EncryptedOwnerId:
+          type: string
+          format: uuid
+          description: GUID of the agent who owns this transaction
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ODataExpand:
+      name: $expand
+      in: query
+      required: false
+      description: Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction.
+      schema:
+        type: string
+    ODataOrderBy:
+      name: $orderby
+      in: query
+      required: false
+      description: Orders the objects returned in the response by a property related to the resource.
+      schema:
+        type: string
+    ODataTop:
+      name: $top
+      in: query
+      required: false
+      description: Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. The maximum number of objects returned from any resource is 1,000. If not passed, $top=1000 is assumed.
+      schema:
+        type: integer
+        maximum: 1000
+    ODataSkip:
+      name: $skip
+      in: query
+      required: false
+      description: Skips the specified number of records before returning the results. $orderby must be specified for $skip to be used.
+      schema:
+        type: integer
+    ODataFilter:
+      name: $filter
+      in: query
+      required: false
+      description: Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.).
+      schema:
+        type: string
+    transactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction GUID
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT access token obtained from the `/oauth/token` endpoint, sent as `Authorization: Bearer <token>`.'
+    subscriptionKey:
+      type: apiKey
+      in: header
+      name: lw-subscription-key
+      description: API subscription key issued by Lone Wolf, sent on every request.
+    LoneWolfToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Custom HMAC-signed authorization scheme used when calling resources that access your actual data:
+
+
+        ```
+
+        Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+
+        ```
+
+
+        A `Content-MD5` header is also required on every request (base 64 encoded MD5 hash of the request body, or of an empty string for requests without a body: `1B2M2Y8AsgTpgAmY7PhCfg==`).
+
+
+        The signature is the HMACSHA256 hash (seeded with your secret key) of `[HTTP Method]:[Resource URI]:[Date]:[Content-MD5]`. HMACSHA384 and HMACSHA512 are also supported by appending the algorithm to the scheme (e.g. `LoneWolfToken-HMACSHA512`).
+
+
+        See the Authentication, Creating a Request, and Creating the Signature sections of the introduction for full details, date format, and worked examples. A separate `LoneWolfKey` scheme exists for resources that deal with your API account; there is never a scenario where you would send more than one type of authorization scheme.'
+    contextAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ContextId
+      description: Context Id obtained from an authentication endpoint. Must be used together with X-Auth-SharedKey.
+    sharedKey:
+      type: apiKey
+      in: header
+      name: X-Auth-SharedKey
+      description: Shared Key provided by zipLogix to authenticate the partner application.
+    externalIdAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ExternalId
+      description: External Id for partners authorized to use the External Id authentication scheme. Must be used together with X-Auth-SharedKey.
+x-refined-from:
+- lone-wolf-back-office-online-api-openapi.yml
+- lone-wolf-transact-api-openapi.yml
+- lone-wolf-wolfconnect-api-openapi.yml
+- lone-wolf-zipform-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

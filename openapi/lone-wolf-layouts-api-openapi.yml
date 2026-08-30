@@ -1,0 +1,175 @@
+openapi: 3.2.0
+info:
+  title: Authentisign Layouts API
+  description: Authentisign API
+  version: '1.0'
+servers:
+- url: https://api.lwolf.com/authentisign
+tags:
+- name: Layouts
+paths:
+  /api/v1/layouts:
+    get:
+      tags:
+      - Layouts
+      summary: Get layouts by language. This endpoint retrieves all layouts created under the account based on the specified language.
+      description: "Sample request:\n            \n    GET /layouts?language=en"
+      operationId: GetLayouts
+      parameters:
+      - name: language
+        in: query
+        description: The language used in the API call.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    post:
+      tags:
+      - Layouts
+      summary: Create a new layout. This endpoint allows you to create a signature layout for future signing.
+      description: "Sample request:\n            \n    POST /layouts\n    {\n        \"name\": \"Test Layout\"\n    }"
+      operationId: CreateLayout
+      parameters:
+      - name: Name
+        in: query
+        description: Get or Set the Layout Name. This property represents the descriptive name of the layout.
+      requestBody:
+        description: The layout details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.LayoutDtoExternal'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.LayoutDtoExternal'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.LayoutDtoExternal'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/layouts/{id}/copy:
+    post:
+      tags:
+      - Layouts
+      summary: Copy an existing layout. This endpoint lets you duplicate a layout for reuse.
+      description: "Sample request:\n            \n    POST /layouts/{layoutId}/copy"
+      operationId: CopyLayout
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the layout to copy.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+  /api/v1/layouts/{id}:
+    delete:
+      tags:
+      - Layouts
+      summary: Delete a specific layout. This endpoint removes a layout based on its ID.
+      description: "Sample request:\n            \n    DELETE /layouts/{LayoutId}"
+      operationId: DeleteLayout
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the layout to delete.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+components:
+  schemas:
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.LayoutDtoExternal:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

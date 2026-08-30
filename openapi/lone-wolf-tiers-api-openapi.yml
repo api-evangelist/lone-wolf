@@ -1,0 +1,1649 @@
+openapi: 3.2.0
+info:
+  title: Back Office Tiers API
+  version: '1.0'
+  description: Represents a tier or sub-transaction for a given transaction. All transactions must have at least one tier.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Tiers
+  description: Represents a tier or sub-transaction for a given transaction. All transactions must have at least one tier.
+paths:
+  /v1/transactions/{transactionId}/tiers:
+    get:
+      tags:
+      - Tiers
+      summary: Get Tiers
+      operationId: get-v1-transactions-transactionid-tiers
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tier'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                closePrice: 0
+                closeDate: string
+                statusCode: C
+                classificationId: string
+                sellingCommissionAmount: 0
+                sellingCommissionPercentage: 0
+                sellingCommissionCalculationMethodCode: A
+                buyingCommissionAmount: 0
+                buyingCommissionPercentage: 0
+                buyingCommissionCalculationMethodCode: A
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                commissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  agentId: string
+                  officeId: string
+                  amount: 0
+                  percentage: 0
+                  endCode: B
+                  endCount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  totalFeeAmount: 0
+                  totalFeeTaxAmount: 0
+                  fees:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    taxPercentage: 0
+                    paymentMethodCode: string
+                    fee:
+                      shortName: string
+                      name: string
+                  agent:
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                  office:
+                    name: string
+                    code: string
+                externalCommissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  paymentMethodCode: B
+                  externalAgentId: string
+                  externalAgent:
+                    id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    typeCode: B
+                    paymentMethodCode: B
+                    firstName: string
+                    lastName: string
+                    companyName: string
+                    addressLine1: string
+                    addressLine2: string
+                    addressCity: string
+                    addressPostalCode: string
+                    addressProvinceCode: string
+                    addressCountryCode: string
+                    phoneNumberMain: string
+                    phoneNumberBusiness: string
+                    faxNumberMain: string
+                    emailAddressMain: string
+                    emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    post:
+      tags:
+      - Tiers
+      summary: Create Tier
+      operationId: post-v1-transactions-transactionid-tiers
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The tier to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tier'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              name: string
+              closePrice: 0
+              closeDate: string
+              statusCode: C
+              classificationId: string
+              sellingCommissionAmount: 0
+              sellingCommissionPercentage: 0
+              sellingCommissionCalculationMethodCode: A
+              buyingCommissionAmount: 0
+              buyingCommissionPercentage: 0
+              buyingCommissionCalculationMethodCode: A
+              classification:
+                name: string
+                code: string
+                endCount: 0
+                endTypeCode: B
+              commissions:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+              externalCommissions:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                percentage: 0
+                amount: 0
+                calculationMethodCode: A
+                paymentMethodCode: B
+                externalAgentId: string
+                externalAgent:
+                  id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  typeCode: B
+                  paymentMethodCode: B
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressBusiness: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tier'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                closePrice: 0
+                closeDate: string
+                statusCode: C
+                classificationId: string
+                sellingCommissionAmount: 0
+                sellingCommissionPercentage: 0
+                sellingCommissionCalculationMethodCode: A
+                buyingCommissionAmount: 0
+                buyingCommissionPercentage: 0
+                buyingCommissionCalculationMethodCode: A
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                commissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  agentId: string
+                  officeId: string
+                  amount: 0
+                  percentage: 0
+                  endCode: B
+                  endCount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  totalFeeAmount: 0
+                  totalFeeTaxAmount: 0
+                  fees:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    taxPercentage: 0
+                    paymentMethodCode: string
+                    fee:
+                      shortName: string
+                      name: string
+                  agent:
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                  office:
+                    name: string
+                    code: string
+                externalCommissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  paymentMethodCode: B
+                  externalAgentId: string
+                  externalAgent:
+                    id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    typeCode: B
+                    paymentMethodCode: B
+                    firstName: string
+                    lastName: string
+                    companyName: string
+                    addressLine1: string
+                    addressLine2: string
+                    addressCity: string
+                    addressPostalCode: string
+                    addressProvinceCode: string
+                    addressCountryCode: string
+                    phoneNumberMain: string
+                    phoneNumberBusiness: string
+                    faxNumberMain: string
+                    emailAddressMain: string
+                    emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/tiers/{tierId}:
+    get:
+      tags:
+      - Tiers
+      summary: Get Tier
+      operationId: get-v1-tiers-tierid
+      parameters:
+      - name: tierId
+        in: path
+        description: The id of the tier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tier'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                closePrice: 0
+                closeDate: string
+                statusCode: C
+                classificationId: string
+                sellingCommissionAmount: 0
+                sellingCommissionPercentage: 0
+                sellingCommissionCalculationMethodCode: A
+                buyingCommissionAmount: 0
+                buyingCommissionPercentage: 0
+                buyingCommissionCalculationMethodCode: A
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                commissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  agentId: string
+                  officeId: string
+                  amount: 0
+                  percentage: 0
+                  endCode: B
+                  endCount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  totalFeeAmount: 0
+                  totalFeeTaxAmount: 0
+                  fees:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    taxPercentage: 0
+                    paymentMethodCode: string
+                    fee:
+                      shortName: string
+                      name: string
+                  agent:
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                  office:
+                    name: string
+                    code: string
+                externalCommissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  paymentMethodCode: B
+                  externalAgentId: string
+                  externalAgent:
+                    id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    typeCode: B
+                    paymentMethodCode: B
+                    firstName: string
+                    lastName: string
+                    companyName: string
+                    addressLine1: string
+                    addressLine2: string
+                    addressCity: string
+                    addressPostalCode: string
+                    addressProvinceCode: string
+                    addressCountryCode: string
+                    phoneNumberMain: string
+                    phoneNumberBusiness: string
+                    faxNumberMain: string
+                    emailAddressMain: string
+                    emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Tiers
+      summary: Update Tier
+      operationId: patch-v1-tiers-tierid
+      parameters:
+      - name: tierId
+        in: path
+        description: The id of the tier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the tier to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TierPatchRequest'
+            example:
+              name: string
+              closePrice: 0
+              closeDate: string
+              statusCode: C
+              classificationId: string
+              sellingCommissionAmount: 0
+              sellingCommissionPercentage: 0
+              sellingCommissionCalculationMethodCode: A
+              buyingCommissionAmount: 0
+              buyingCommissionPercentage: 0
+              buyingCommissionCalculationMethodCode: A
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tier'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                closePrice: 0
+                closeDate: string
+                statusCode: C
+                classificationId: string
+                sellingCommissionAmount: 0
+                sellingCommissionPercentage: 0
+                sellingCommissionCalculationMethodCode: A
+                buyingCommissionAmount: 0
+                buyingCommissionPercentage: 0
+                buyingCommissionCalculationMethodCode: A
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                commissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  agentId: string
+                  officeId: string
+                  amount: 0
+                  percentage: 0
+                  endCode: B
+                  endCount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  totalFeeAmount: 0
+                  totalFeeTaxAmount: 0
+                  fees:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    taxPercentage: 0
+                    paymentMethodCode: string
+                    fee:
+                      shortName: string
+                      name: string
+                  agent:
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                  office:
+                    name: string
+                    code: string
+                externalCommissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  paymentMethodCode: B
+                  externalAgentId: string
+                  externalAgent:
+                    id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    typeCode: B
+                    paymentMethodCode: B
+                    firstName: string
+                    lastName: string
+                    companyName: string
+                    addressLine1: string
+                    addressLine2: string
+                    addressCity: string
+                    addressPostalCode: string
+                    addressProvinceCode: string
+                    addressCountryCode: string
+                    phoneNumberMain: string
+                    phoneNumberBusiness: string
+                    faxNumberMain: string
+                    emailAddressMain: string
+                    emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/tiers/calculate-tier:
+    post:
+      tags:
+      - Tiers
+      summary: Calculate Tier
+      description: 'Calculates the commissions and fees for a tier. No data is saved during this call and the only data that is
+
+        used in the calculations is the data that is passed in the tier object.'
+      operationId: post-v1-tiers-calculate-tier
+      requestBody:
+        description: The tier object holding all the data to use in the calculation.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tier'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              name: string
+              closePrice: 0
+              closeDate: string
+              statusCode: C
+              classificationId: string
+              sellingCommissionAmount: 0
+              sellingCommissionPercentage: 0
+              sellingCommissionCalculationMethodCode: A
+              buyingCommissionAmount: 0
+              buyingCommissionPercentage: 0
+              buyingCommissionCalculationMethodCode: A
+              classification:
+                name: string
+                code: string
+                endCount: 0
+                endTypeCode: B
+              commissions:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                agentId: string
+                officeId: string
+                amount: 0
+                percentage: 0
+                endCode: B
+                endCount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                totalFeeAmount: 0
+                totalFeeTaxAmount: 0
+                fees:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  taxPercentage: 0
+                  paymentMethodCode: string
+                  fee:
+                    shortName: string
+                    name: string
+                agent:
+                  firstName: string
+                  middleName: string
+                  lastName: string
+                office:
+                  name: string
+                  code: string
+              externalCommissions:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                endCode: B
+                percentage: 0
+                amount: 0
+                calculationMethodCode: A
+                paymentMethodCode: B
+                externalAgentId: string
+                externalAgent:
+                  id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  typeCode: B
+                  paymentMethodCode: B
+                  firstName: string
+                  lastName: string
+                  companyName: string
+                  addressLine1: string
+                  addressLine2: string
+                  addressCity: string
+                  addressPostalCode: string
+                  addressProvinceCode: string
+                  addressCountryCode: string
+                  phoneNumberMain: string
+                  phoneNumberBusiness: string
+                  faxNumberMain: string
+                  emailAddressMain: string
+                  emailAddressBusiness: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tier'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                closePrice: 0
+                closeDate: string
+                statusCode: C
+                classificationId: string
+                sellingCommissionAmount: 0
+                sellingCommissionPercentage: 0
+                sellingCommissionCalculationMethodCode: A
+                buyingCommissionAmount: 0
+                buyingCommissionPercentage: 0
+                buyingCommissionCalculationMethodCode: A
+                classification:
+                  name: string
+                  code: string
+                  endCount: 0
+                  endTypeCode: B
+                commissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  agentId: string
+                  officeId: string
+                  amount: 0
+                  percentage: 0
+                  endCode: B
+                  endCount: 0
+                  calculationMethodCode: A
+                  taxAmount: 0
+                  totalFeeAmount: 0
+                  totalFeeTaxAmount: 0
+                  fees:
+                  - id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    percentage: 0
+                    amount: 0
+                    calculationMethodCode: A
+                    taxAmount: 0
+                    taxPercentage: 0
+                    paymentMethodCode: string
+                    fee:
+                      shortName: string
+                      name: string
+                  agent:
+                    firstName: string
+                    middleName: string
+                    lastName: string
+                  office:
+                    name: string
+                    code: string
+                externalCommissions:
+                - id: string
+                  createdTimestamp: string
+                  modifiedTimestamp: string
+                  endCode: B
+                  percentage: 0
+                  amount: 0
+                  calculationMethodCode: A
+                  paymentMethodCode: B
+                  externalAgentId: string
+                  externalAgent:
+                    id: string
+                    createdTimestamp: string
+                    modifiedTimestamp: string
+                    endCode: B
+                    typeCode: B
+                    paymentMethodCode: B
+                    firstName: string
+                    lastName: string
+                    companyName: string
+                    addressLine1: string
+                    addressLine2: string
+                    addressCity: string
+                    addressPostalCode: string
+                    addressProvinceCode: string
+                    addressCountryCode: string
+                    phoneNumberMain: string
+                    phoneNumberBusiness: string
+                    faxNumberMain: string
+                    emailAddressMain: string
+                    emailAddressBusiness: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    EmployeeReadOnly:
+      type: object
+      properties:
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the agent.
+          readOnly: true
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: The middle name of the agent.
+          readOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the agent.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an agent.
+    ExternalAgent:
+      required:
+      - endCode
+      - firstName
+      - lastName
+      - typeCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code end or side of the transaction.
+        typeCode:
+          enum:
+          - B
+          - R
+          type: string
+          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method use to pay the external agent.
+        firstName:
+          type: string
+          description: The first name of the external agent.
+        lastName:
+          type: string
+          description: The last name of the external agent.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company for which the external agent works.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The address unit number.
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character country code.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main phone number.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business phone number.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main fax number.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main email address.
+        emailAddressBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business email address.
+      additionalProperties: false
+      description: Represents an agent involved in the transaction that does not work for the brokerage.
+    Commission:
+      required:
+      - agentId
+      - endCode
+      - endCount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        agentId:
+          type: string
+          description: The unique id of the agent that gets the commission.
+          format: uuid
+        officeId:
+          type: string
+          description: The unique id of the office with which the agent is associated.
+          format: uuid
+          readOnly: true
+        amount:
+          type: number
+          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
+          format: currency
+        percentage:
+          type: number
+          description: The percentage of the total commission for the agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code representing the end or side of the transaction.
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this commission represents.
+          format: double
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the calculation method used for the commission. This will be "A" for amount or "P" for percentage.
+        taxAmount:
+          type: number
+          description: The total amount in tax applied to the commission.
+          format: currency
+        totalFeeAmount:
+          type: number
+          description: The total amount of fees applied to the commission.
+          format: currency
+        totalFeeTaxAmount:
+          type: number
+          description: The total amount in tax applied to just the fees for the commission.
+          format: currency
+        fees:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CommissionFee'
+          description: The list of fees associated with the commission.
+        agent:
+          $ref: '#/components/schemas/EmployeeReadOnly'
+        office:
+          $ref: '#/components/schemas/OfficeReadOnly'
+      additionalProperties: false
+      description: Represents a commission for an agent on a transaction.
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
+    Tier:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the tier.
+        closePrice:
+          type: number
+          description: The close price for the tier.
+          format: double
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the tier closed.
+          format: date
+        statusCode:
+          enum:
+          - C
+          - F
+          - O
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the tier.
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this tier.
+          format: uuid
+        sellingCommissionAmount:
+          type: number
+          description: The total commission amount for the selling end or side of the tier.
+          format: currency
+        sellingCommissionPercentage:
+          type: number
+          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        sellingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the selling commission.
+        buyingCommissionAmount:
+          type: number
+          description: The total commission amount for the buying end or side of the tier.
+          format: currency
+        buyingCommissionPercentage:
+          type: number
+          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        buyingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the buying commission.
+        classification:
+          $ref: '#/components/schemas/ClassificationReadOnly'
+        commissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Commission'
+          description: A collection of commissions associated with the tier.
+        externalCommissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ExternalCommission'
+          description: A collection of external commissions associated with the tier.
+      additionalProperties: false
+      description: Represents a sub transaction.
+    ExternalCommission:
+      required:
+      - externalAgentId
+      - endCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code for the end or side of the transaction.
+        percentage:
+          type: number
+          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the commission paid to the external agent.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the commission.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method of payment for the commission.
+        externalAgentId:
+          type: string
+          description: The unique id of the external agent associated with this commission.
+          format: uuid
+        externalAgent:
+          $ref: '#/components/schemas/ExternalAgent'
+      additionalProperties: false
+      description: Represents a commission paid to an external agent involved in a transaction.
+    TierPatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the tier.
+          writeOnly: true
+        closePrice:
+          type: number
+          description: The close price for the tier.
+          format: double
+          writeOnly: true
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the tier closed.
+          format: date
+          writeOnly: true
+        statusCode:
+          enum:
+          - C
+          - F
+          - O
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the tier.
+          writeOnly: true
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this tier.
+          format: uuid
+          writeOnly: true
+        sellingCommissionAmount:
+          type: number
+          description: The total commission amount for the selling end or side of the tier.
+          format: currency
+          writeOnly: true
+        sellingCommissionPercentage:
+          type: number
+          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        sellingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the selling commission.
+          writeOnly: true
+        buyingCommissionAmount:
+          type: number
+          description: The total commission amount for the buying end or side of the tier.
+          format: currency
+          writeOnly: true
+        buyingCommissionPercentage:
+          type: number
+          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        buyingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the buying commission.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a tier.
+    CommissionFee:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        percentage:
+          type: number
+          description: The percentage of the commission. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the fee.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the fee.
+        taxAmount:
+          type: number
+          description: The amount of tax applied to the fee.
+          format: currency
+        taxPercentage:
+          type: number
+          description: The tax rate applied to the fee. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to pay the fee.
+        fee:
+          $ref: '#/components/schemas/FeeReadOnly'
+      additionalProperties: false
+      description: Represents a fee that is related to a commission.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
+    ClassificationReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the classification.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the classification.
+          readOnly: true
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this classification represents. This value will be either 0, 1 or 2.
+          format: double
+          readOnly: true
+        endTypeCode:
+          enum:
+          - B
+          - D
+          - M
+          - S
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code representing the end or side for the classification.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a transaction classification.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

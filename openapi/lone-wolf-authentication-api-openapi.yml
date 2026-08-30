@@ -1,0 +1,370 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Authentication API
+  version: '1.0'
+  description: 'Operations tagged Authentication across 3 of this provider''s published API definitions: lone-wolf-deals-api-openapi.yml, lone-wolf-transactiondesk-api-openapi.yml, lone-wolf-zipform-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://deals.api.lwolf.com
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+- url: https://api.pre.transactiondesk.com
+- url: https://ws.zipformplus.com/api
+  description: Production
+- url: https://api.pre.zipformplus.com/api
+  description: Staging/QA
+tags:
+- name: Authentication
+paths:
+  /v1/login:
+    post:
+      summary: Returns a JWT along with other information for use in successive calls to our apps and APIs.
+      description: If the `clientId` property is not passed in, and the user is only attached to one client, that client will be returned in the JWT. If it is not passed in and the user is attached to multiple clients, then no client information will be passed back in the JWT.
+      tags:
+      - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+            example:
+              emailAddress: user@example.com
+              password: string
+              clientId: string
+      responses:
+        '200':
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenInfo'
+              example:
+                token: string
+                expiresIn: 3600
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Unknown error. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    servers:
+    - url: https://deals.api.lwolf.com
+      description: Base URL declared by the provider in apis.yml (roadmap#122).
+  /oauth/token:
+    post:
+      summary: Exchange for Access Token
+      description: 'Exchange an authorization code or client credentials for a bearer access token.
+
+
+        - Use `grant_type=authorization_code` along with the `code` and `redirect_uri` from the Authorization Code flow.
+
+        - Use `grant_type=client_credentials` for the Client Credentials flow (no user redirect required).'
+      security: []
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - authorization_code
+                  - client_credentials
+                  example: authorization_code
+                client_id:
+                  type: string
+                  example: Lonewolf
+                  description: Client ID provided by Lonewolf
+                client_secret:
+                  type: string
+                  example: LonewolfSecret
+                  description: Client Secret provided by Lonewolf
+                code:
+                  type: string
+                  example: a29fc587-96f3-4fa2-a4ad-c42fef5141f7
+                  description: Authorization code from step 3 (authorization_code flow only). One-time use, expires in 10 minutes.
+                redirect_uri:
+                  type: string
+                  example: https://www.example.com
+                  description: Must match the redirect_uri used in step 1 (authorization_code flow only)
+      responses:
+        '200':
+          description: Access token issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                  token_type:
+                    type: string
+                    example: bearer
+    servers:
+    - url: https://api.pre.transactiondesk.com
+  /auth/user:
+    post:
+      summary: Authenticate Using User Credentials
+      description: 'Authenticates the partner application and a zipForm® user using username/password or user GUID, and returns a Context Id for use in subsequent requests.
+
+
+        Optionally supply `LinkExternalId` to link the user''s account to a partner external ID.
+
+
+        **Returns 409** if account linking fails.'
+      tags:
+      - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - SharedKey
+              properties:
+                SharedKey:
+                  type: string
+                  description: Partner shared key
+                UserName:
+                  type: string
+                  description: zipForm® username (use with Password)
+                Password:
+                  type: string
+                  description: zipForm® password
+                UserId:
+                  type: string
+                  description: zipForm® user GUID (alternative to UserName/Password)
+                LinkExternalId:
+                  type: string
+                  description: Optional. Partner external ID to link to this zipForm® account.
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextIdResponse'
+        '401':
+          description: Unauthorized — invalid credentials
+        '409':
+          description: Account linking failed
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+  /auth/external-id:
+    post:
+      summary: Authenticate Using External Id
+      description: Authenticates using the partner's External Id and Shared Key, and returns a Context Id.
+      tags:
+      - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - SharedKey
+              - ExternalId
+              properties:
+                SharedKey:
+                  type: string
+                ExternalId:
+                  type: string
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContextIdResponse'
+        '401':
+          description: Unauthorized
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+  /auth/end-session:
+    post:
+      summary: End Session
+      description: Ends the current session identified by the Context Id. Partners using Context Id authentication should invoke this when their application session ends to destroy the Context Id.
+      tags:
+      - Authentication
+      responses:
+        '200':
+          description: Session ended successfully
+        '401':
+          description: Unauthorized
+      security:
+      - contextAuth: []
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+  /auth/unlink:
+    post:
+      summary: Unlink Account
+      description: Unlinks a partner account (identified by External Id) from its associated zipForm® account. The zipForm® account becomes available for linking to another partner account.
+      tags:
+      - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - SharedKey
+              - ExternalId
+              properties:
+                SharedKey:
+                  type: string
+                ExternalId:
+                  type: string
+      responses:
+        '200':
+          description: Account unlinked successfully
+        '304':
+          description: Not Modified — External Id could not be removed
+        '401':
+          description: Unauthorized — partner not recognized or user not found
+    get:
+      summary: Unlink Account (GET)
+      description: Alternative GET form of the unlink method. Supply SharedKey and ExternalId as query parameters.
+      tags:
+      - Authentication
+      security: []
+      parameters:
+      - in: query
+        name: SharedKey
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: ExternalId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Account unlinked successfully
+        '304':
+          description: Not Modified
+        '401':
+          description: Unauthorized
+    servers:
+    - url: https://ws.zipformplus.com/api
+      description: Production
+    - url: https://api.pre.zipformplus.com/api
+      description: Staging/QA
+components:
+  schemas:
+    Login:
+      type: object
+      required:
+      - emailAddress
+      - password
+      properties:
+        emailAddress:
+          type: string
+          format: email
+          description: The email address for the user's account.
+        password:
+          type: string
+          description: The user's password.
+        clientId:
+          type: string
+          description: Penderis code for brokerWOLF logins. Extranet or penderis code for WOLFconnect logins. If not passed and the user belongs to only one client, that client is returned in the JWT. If the user belongs to multiple clients and this is not passed, no client information is included in the JWT.
+    TokenInfo:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JSON Web Token to use in the Authorization header for all requests to any API.
+        expiresIn:
+          type: integer
+          format: int32
+          description: The number of seconds in which the token will expire.
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    ContextIdResponse:
+      type: object
+      properties:
+        contextId:
+          type: string
+          description: Session identifier to be used in subsequent requests
+  securitySchemes:
+    BearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JSON Web Token obtained from the Authentication API (`POST /v1/login`). Pass the token as `Authorization: Bearer <token>` in every request. Tokens expire after the number of seconds specified in the `expiresIn` field of the login response.'
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    contextAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ContextId
+      description: Context Id obtained from an authentication endpoint. Must be used together with X-Auth-SharedKey.
+    sharedKey:
+      type: apiKey
+      in: header
+      name: X-Auth-SharedKey
+      description: Shared Key provided by zipLogix to authenticate the partner application.
+    externalIdAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ExternalId
+      description: External Id for partners authorized to use the External Id authentication scheme. Must be used together with X-Auth-SharedKey.
+x-refined-from:
+- lone-wolf-deals-api-openapi.yml
+- lone-wolf-transactiondesk-api-openapi.yml
+- lone-wolf-zipform-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

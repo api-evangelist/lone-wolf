@@ -1,0 +1,1601 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Signings API
+  version: '1.0'
+  description: 'Operations tagged Signings across 2 of this provider''s published API definitions: lone-wolf-authentisign-api-openapi.yml, lone-wolf-transact-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.lwolf.com/authentisign
+- url: https://gateway.lwolf.com
+  description: Production API gateway
+- url: '{tw_host}'
+  description: Environment-specific host (e.g. pre-production)
+  variables:
+    tw_host:
+      default: https://api.pre.lwolf.com
+      description: Base host for the target environment.
+tags:
+- name: Signings
+paths:
+  /api/v1/signings:
+    get:
+      tags:
+      - Signings
+      summary: Retrieve all signings owned by a user. This endpoint fetches a list of all the signings that the user owns.
+      description: "Sample request:\n            \n    GET /api/v1/signings?SortBy=LastModified&SortDescending=true&FilterBy=exampleFilter&SkipItems=0&ItemLimit=50&TransactionId=example-transaction-id&StatusId=1,21"
+      operationId: GetSignings
+      parameters:
+      - name: TransactionId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: StatusId
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: SortBy
+        in: query
+        schema:
+          type: string
+      - name: SortDescending
+        in: query
+        schema:
+          type: boolean
+      - name: FilterBy
+        in: query
+        schema:
+          type: string
+      - name: SkipItems
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: ItemLimit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    post:
+      tags:
+      - Signings
+      summary: Create a signing. This endpoint allows for the creation of a new signing, including the ability to add a webhook callback URL.
+      description: "Sample request:\n            \n    POST /signings\n            \nRequest Body:\n            \n```json\n{\n    \"Id\": \"example-guid-1\",\n    \"Name\": \"Test Layout\",\n    \"AccountId\": \"example-guid-2\",\n    \"StatusId\": 1,\n    \"IsOrdered\": false,\n    \"DateCreated\": \"2023-04-20T02:59:00Z\",\n    \"LastModified\": \"2023-04-21T02:59:00Z\",\n    \"ExpirationDate\": \"2023-04-26T02:59:00Z\",\n    \"IdPosition\": 1,\n    \"ReminderDay\": 5,\n    \"ReminderHour\": 2,\n    \"TransactionId\": \"example-guid-3\",\n    \"TechnologyProvider\": \"TechProviderName\",\n    \"CallbackUrl\": \"https://yourcallbackurl.com\",\n    \"Files\": [\"File1\", \"File2\"],\n    \"FilesWithStrikeoutsDisabled\": [\"FileName1\", \"FileName2\"]\n}\n```\n            \nNote: Replace \"example-guid-1\", \"example-guid-2\", etc., with actual GUID values and \"File1\", \"File2\" with your file objects."
+      operationId: CreateSigning
+      parameters:
+      - name: externalId
+        in: header
+        description: The external identifier associated with the signing.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - Name
+              - Participants
+              type: object
+              properties:
+                Files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                FilesWithStrikeoutsDisabled:
+                  type: array
+                  items:
+                    type: string
+                Fields:
+                  type: object
+                  additionalProperties:
+                    type: string
+                Participants:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Authentisign.Services.Dtos.ParticipantDto'
+                Id:
+                  type: string
+                  format: uuid
+                Name:
+                  type: string
+                AccountId:
+                  type: string
+                  format: uuid
+                StatusId:
+                  type: integer
+                  format: int32
+                IsOrdered:
+                  type: boolean
+                DateCreated:
+                  type: string
+                  format: date-time
+                LastModified:
+                  type: string
+                  format: date-time
+                ExpirationDate:
+                  type: string
+                  format: date-time
+                IdPosition:
+                  type: integer
+                  format: int32
+                ReminderDay:
+                  type: integer
+                  format: int32
+                ReminderHour:
+                  type: integer
+                  format: int32
+                TransactionId:
+                  type: string
+                  format: uuid
+                TechnologyProvider:
+                  type: string
+                CallbackUrl:
+                  type: string
+                LayoutId:
+                  type: string
+                  format: uuid
+                ApplyLayout:
+                  type: boolean
+            encoding:
+              Files:
+                style: form
+              FilesWithStrikeoutsDisabled:
+                style: form
+              Fields:
+                style: form
+              Participants:
+                style: form
+              Id:
+                style: form
+              Name:
+                style: form
+              AccountId:
+                style: form
+              StatusId:
+                style: form
+              IsOrdered:
+                style: form
+              DateCreated:
+                style: form
+              LastModified:
+                style: form
+              ExpirationDate:
+                style: form
+              IdPosition:
+                style: form
+              ReminderDay:
+                style: form
+              ReminderHour:
+                style: form
+              TransactionId:
+                style: form
+              TechnologyProvider:
+                style: form
+              CallbackUrl:
+                style: form
+              LayoutId:
+                style: form
+              ApplyLayout:
+                style: form
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{id}:
+    get:
+      tags:
+      - Signings
+      summary: Retrieve details of an individual signing. This endpoint fetches details for the signing associated with the provided signing ID.
+      description: "Sample request:\n            \n    GET /api/v1/signings/{id}"
+      operationId: GetSigning
+      parameters:
+      - name: id
+        in: path
+        description: The identifier of the signing to be retrieved.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    patch:
+      tags:
+      - Signings
+      summary: Update the callback URL for a signing. This endpoint allows you to update the callback URL on the signing for webhook events.
+      description: "Sample request:\n            \n    PATCH /api/v1/signings/{id}\n    {\n        \"CallbackUrl\": \"https://newcallbackurl.com\"\n    }"
+      operationId: UpdateSigningCallback
+      parameters:
+      - name: id
+        in: path
+        description: The identifier of the signing to be updated.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: CallbackUrl
+        in: query
+        description: Get or Set the Callback URL. This property represents the URL to which callbacks related to the signing should be sent.
+      requestBody:
+        description: The details of the signing update, including the new callback URL.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.SigningUpdateDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.SigningUpdateDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.SigningUpdateDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    delete:
+      tags:
+      - Signings
+      summary: Deletes a signing session. This endpoint removes a signing session based on the provided signing ID.
+      description: "Sample request:\n            \n    DELETE /signings/{id}"
+      operationId: DeleteSigning
+      parameters:
+      - name: id
+        in: path
+        description: The identifier of the signing session to be deleted.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{id}/copy:
+    post:
+      tags:
+      - Signings
+      summary: Duplicate an existing signing. This endpoint creates a copy of a signing session based on the provided signing ID.
+      description: "Sample request:\n            \n    POST /signings/{id}/copy"
+      operationId: CopySigning
+      parameters:
+      - name: id
+        in: path
+        description: The identifier of the signing session to be copied.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{id}/reset:
+    post:
+      tags:
+      - Signings
+      summary: Reset a signing session. This endpoint resets the status of a signing session based on its ID.
+      description: "Sample request:\n            \n    POST /signings/{id}/reset"
+      operationId: ResetSigning
+      parameters:
+      - name: id
+        in: path
+        description: The identifier of the signing session to be reset.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{id}/resend-invitation:
+    post:
+      tags:
+      - Signings
+      summary: Resend the signing invitation. This endpoint resends the invitation for a signing session based on the provided signing ID.
+      description: "Sample request:\n            \n    POST /signings/{id}/resend-invitation"
+      operationId: ResendInvitation
+      parameters:
+      - name: id
+        in: path
+        description: The identifier of the signing session.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/send-final-documents:
+    post:
+      tags:
+      - Signings
+      summary: Send final documents of a signing session. This endpoint sends the final documents for a completed signing session.
+      description: "Sample request:\n            \n    POST /signings/{signingId}/send-final-documents\n            \nRequest Body:\n            \n```json\n{\n   \"Emails\": \"email1@example.com,email2@example.com\"\n}\n```"
+      operationId: SendFinalDocuments
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing session.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Emails
+        in: query
+        description: Get or Set the email addresses. This property represents the email addresses, typically in a serialized or comma-separated format.
+        required: true
+      requestBody:
+        description: Emails to which the final documents should be sent.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.EmailsDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.EmailsDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.EmailsDto'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/link-transaction:
+    post:
+      tags:
+      - Signings
+      summary: Link a transaction to a signing session. This endpoint associates a transaction with a signing session based on the provided ID.
+      description: "Sample request:\n            \n    POST /signings/{signingId}/link-transaction\n            \nRequest Body:\n            \n```json\n{\n    \"TransactionId\": \"example-transaction-id\",\n    \"Documents\": [\n        {\n            \"Id\": \"example-document-id-1\",\n            \"BFMDocumentId\": \"BFMDoc-001\"\n        },\n        {\n            \"Id\": \"example-document-id-2\",\n            \"BFMDocumentId\": \"BFMDoc-002\"\n        }\n        // ... add more documents as required\n    ]\n}\n```"
+      operationId: LinkTransaction
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing session.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: TransactionId
+        in: query
+        description: Get or Set the unique identifier of the transaction.
+      - name: Documents
+        in: query
+        description: Get or Set the list of documents associated with the transaction.
+      requestBody:
+        description: The data required to link the transaction.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto'
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/force-complete:
+    post:
+      tags:
+      - Signings
+      summary: Force completes a signing session. This endpoint forcefully completes a signing session based on the provided signing ID.
+      description: "Sample request:\n            \n    POST /signings/{signingId}/force-complete"
+      operationId: ForceCompleteSigning
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing session to be forcefully completed.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/deleted:
+    get:
+      tags:
+      - Signings
+      summary: Retrieve deleted signing sessions. This endpoint fetches all the deleted signing sessions for a given external ID.
+      description: "Sample request:\n            \n    GET /signings/deleted\n    Headers:\n        externalId: your-external-id-guid"
+      operationId: GetDeletedSignings
+      parameters:
+      - name: externalId
+        in: header
+        description: The external identifier used to fetch the deleted signings.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/recover-deleted:
+    put:
+      tags:
+      - Signings
+      summary: Recover a deleted signing session. This endpoint recovers a deleted signing session based on the provided signing ID.
+      description: "Sample request:\n            \n    PUT /signings/{signingId}/recover-deleted"
+      operationId: RecoverDeletedSigning
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing session to be recovered.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/send-signing:
+    post:
+      tags:
+      - Signings
+      summary: Send a signing session to participants. This endpoint starts the signing process for a signing session based on the provided signing ID.
+      description: "Sample request:\n            \n    POST /signings/{signingId}/send-signing"
+      operationId: SendSigning
+      parameters:
+      - name: signingId
+        in: path
+        description: The email to query.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/reject:
+    post:
+      tags:
+      - Signings
+      summary: This is only called by Trestle client
+      operationId: RejectSigning
+      parameters:
+      - name: signingId
+        in: path
+        description: ''
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/participants/{signingId}/invitations:
+    get:
+      tags:
+      - Signings
+      operationId: GetLinksOfInvitationsWhenSigningIsSent
+      parameters:
+      - name: signingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/documents/{signingId}/completed:
+    get:
+      tags:
+      - Signings
+      operationId: GetLinksOfDocumentsWhenSigningIsCompleted
+      parameters:
+      - name: signingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/documents/{signingId}/originals:
+    get:
+      tags:
+      - Signings
+      operationId: GetLinksOfOriginalDocuments
+      parameters:
+      - name: signingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/documents/{signingId}/certificates:
+    get:
+      tags:
+      - Signings
+      operationId: GetLinksOfCertificateDocuments
+      parameters:
+      - name: signingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /authentisign/v3/users/{userId}/signings:
+    get:
+      tags:
+      - Signings
+      summary: List signings
+      description: Returns the signings belonging to the specified user.
+      operationId: getSignings
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: api-version
+        in: query
+        required: true
+        description: Authentisign API version. Use `3`.
+        schema:
+          type: string
+          default: '3'
+        example: '3'
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    post:
+      tags:
+      - Signings
+      summary: Create a signing
+      description: Creates a new signing with one or more documents. The request is sent as `multipart/form-data`.
+      operationId: createSigning
+      responses:
+        '201':
+          description: Signing created.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: api-version
+        in: query
+        required: true
+        description: Authentisign API version. Use `3`.
+        schema:
+          type: string
+          default: '3'
+        example: '3'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - Name
+              - Files
+              properties:
+                Name:
+                  type: string
+                  description: Display name of the signing.
+                isOrdered:
+                  type: boolean
+                  description: Whether participants must sign in order.
+                ExpirationDate:
+                  type: string
+                  format: date-time
+                  description: Expiration date of the signing.
+                Files:
+                  type: string
+                  format: binary
+                  description: Document file(s) to include in the signing.
+                CallbackUrl:
+                  type: string
+                  format: uri
+                  description: Optional callback URL invoked on signing events.
+                TransactionId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of the transaction to associate the signing with.
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /authentisign/v3/api/v3/users/{userId}/sso/signing/{signingId}:
+    get:
+      tags:
+      - Signings
+      summary: Get a signing SSO link
+      description: Returns a single-sign-on link that opens the specified signing in the Authentisign UI.
+      operationId: getSigningSsoLink
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+      - name: redirectUrl
+        in: query
+        required: false
+        description: URL to redirect the user to after the signing session.
+        schema:
+          type: string
+          format: uri
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /authentisign/v3/api/v3/users/{userId}/participants/batch:
+    post:
+      tags:
+      - Signings
+      summary: Add signing participants (batch)
+      description: Adds multiple participants to a signing in a single request. The `type` field on each participant controls their role (e.g. signer vs. carbon-copy recipient).
+      operationId: addSigningParticipants
+      responses:
+        '201':
+          description: Participants added.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SigningParticipant'
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /authentisign/v3/api/v3/users/{userId}/signings/{signingId}/documents:
+    get:
+      tags:
+      - Signings
+      summary: List original signing documents
+      description: Returns the original (unsigned) documents attached to the signing.
+      operationId: getSigningDocuments
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /authentisign/v3/api/v3/users/{userId}/signings/{signingId}/documents/s:
+    get:
+      tags:
+      - Signings
+      summary: List signed documents
+      description: Returns the signed documents for the signing.
+      operationId: getSignedDocuments
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /authentisign/v3/api/v3/users/{userId}/signings/{signingId}/documents/sc:
+    get:
+      tags:
+      - Signings
+      summary: List signing certificates
+      description: Returns the signing certificates for the signing's documents.
+      operationId: getSigningCertificates
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: signingId
+        in: path
+        required: true
+        description: GUID of the signing.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /authentisign/v3/api/v3/{encryptedDocumentId}/d:
+    get:
+      tags:
+      - Signings
+      summary: Download an individual signed document
+      description: Downloads a single signed document by its encrypted document identifier.
+      operationId: getSignedDocument
+      responses:
+        '200':
+          description: Signed document content.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: encryptedDocumentId
+        in: path
+        required: true
+        description: Encrypted identifier of the signed document, as returned by the signed documents listing endpoints.
+        schema:
+          type: string
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+components:
+  schemas:
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+        documents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto'
+      additionalProperties: false
+    Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bfmDocumentId:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Authentisign.Services.Dtos.EmailsDto:
+      required:
+      - emails
+      type: object
+      properties:
+        emails:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.SigningUpdateDto:
+      type: object
+      properties:
+        callbackUrl:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.ParticipantDto:
+      required:
+      - firstName
+      - lastName
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        signingId:
+          type: string
+          format: uuid
+        firstName:
+          minLength: 1
+          type: string
+        middleName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          minLength: 1
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+        participantRole:
+          type:
+          - string
+          - 'null'
+        customSignature:
+          type:
+          - string
+          - 'null'
+        customInitials:
+          type:
+          - string
+          - 'null'
+        signingPin:
+          type:
+          - string
+          - 'null'
+        type:
+          type: integer
+          format: int32
+        displayOrder:
+          type: integer
+          format: int32
+        signerGroup:
+          type: integer
+          format: int32
+        customInvitationSubject:
+          type:
+          - string
+          - 'null'
+        customInvitationMessage:
+          type:
+          - string
+          - 'null'
+        externalId:
+          type:
+          - string
+          - 'null'
+        transactionId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        language:
+          type:
+          - string
+          - 'null'
+        staticSignatureEnabled:
+          type:
+          - boolean
+          - 'null'
+        scriptedSignatureEnabled:
+          type:
+          - boolean
+          - 'null'
+        imageSignatureEnabled:
+          type:
+          - boolean
+          - 'null'
+        trestleRole:
+          type:
+          - string
+          - 'null'
+        crmId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+      additionalProperties: false
+    SigningParticipant:
+      type: object
+      required:
+      - signingId
+      - firstName
+      - lastName
+      - email
+      - type
+      properties:
+        signingId:
+          type: string
+          format: uuid
+          description: GUID of the signing the participant is added to.
+        firstName:
+          type: string
+          description: Participant first name.
+        middleName:
+          type: string
+          description: Participant middle name.
+        lastName:
+          type: string
+          description: Participant last name.
+        email:
+          type: string
+          format: email
+          description: Participant email address.
+        type:
+          type: integer
+          description: 'Participant role code. Observed values: `1` and `0` — these appear to distinguish signer from carbon-copy recipient roles. **TODO: confirm the code-to-role mapping and document all values.**'
+        staticSignatureEnabled:
+          type: boolean
+          description: Whether static (typed) signatures are allowed.
+        scriptedSignatureEnabled:
+          type: boolean
+          description: Whether scripted (drawn) signatures are allowed.
+        imageSignatureEnabled:
+          type: boolean
+          description: Whether image signatures are allowed.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT access token obtained from the `/oauth/token` endpoint, sent as `Authorization: Bearer <token>`.'
+    subscriptionKey:
+      type: apiKey
+      in: header
+      name: lw-subscription-key
+      description: API subscription key issued by Lone Wolf, sent on every request.
+x-refined-from:
+- lone-wolf-authentisign-api-openapi.yml
+- lone-wolf-transact-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

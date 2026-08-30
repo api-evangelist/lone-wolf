@@ -1,0 +1,300 @@
+openapi: 3.2.0
+info:
+  title: Back Office Commission Fees API
+  version: '1.0'
+  description: Represents fees that are associated with commissions.
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Commission Fees
+  description: Represents fees that are associated with commissions.
+paths:
+  /v1/transactions/{transactionId}/tiers/{tierId}/commissions/{commissionId}/fees:
+    get:
+      tags:
+      - Commission Fees
+      summary: Get Commission Fees
+      operationId: get-v1-transactions-transactionid-tiers-tierid-commissions-commissionid-fees
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: tierId
+        in: path
+        description: The id of the tier.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: commissionId
+        in: path
+        description: The id of the commission.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommissionFee'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                percentage: 0
+                amount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                taxPercentage: 0
+                paymentMethodCode: string
+                fee:
+                  shortName: string
+                  name: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/commission-fees/{id}:
+    get:
+      tags:
+      - Commission Fees
+      summary: Get Commission Fee
+      operationId: get-v1-commission-fees-id
+      parameters:
+      - name: id
+        in: path
+        description: The id of the commission fee.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionFee'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                percentage: 0
+                amount: 0
+                calculationMethodCode: A
+                taxAmount: 0
+                taxPercentage: 0
+                paymentMethodCode: string
+                fee:
+                  shortName: string
+                  name: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    CommissionFee:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        percentage:
+          type: number
+          description: The percentage of the commission. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the fee.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the fee.
+        taxAmount:
+          type: number
+          description: The amount of tax applied to the fee.
+          format: currency
+        taxPercentage:
+          type: number
+          description: The tax rate applied to the fee. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to pay the fee.
+        fee:
+          $ref: '#/components/schemas/FeeReadOnly'
+      additionalProperties: false
+      description: Represents a fee that is related to a commission.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

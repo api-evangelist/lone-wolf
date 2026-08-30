@@ -1,0 +1,462 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Sources of Business API
+  version: '1.0'
+  description: 'Operations tagged Sources of Business across 3 of this provider''s published API definitions: lone-wolf-back-office-online-api-openapi.yml, lone-wolf-deals-api-openapi.yml, lone-wolf-wolfconnect-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.lwolf.com/backoffice
+- url: https://deals.api.lwolf.com
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
+- url: https://api.globalwolfweb.com
+  description: Production
+- url: https://api-sb.globalwolfweb.com
+  description: Test
+tags:
+- name: Sources of Business
+  description: Represents the different sources of business that were used to find the buyers and sellers.
+paths:
+  /v1/sources-of-business:
+    get:
+      tags:
+      - Sources of Business
+      summary: Get Sources of Business
+      operationId: get-v1-sources-of-business
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SourceOfBusiness'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /v1/sources-of-business/{sourceOfBusinessId}:
+    get:
+      tags:
+      - Sources of Business
+      summary: Get Source of Business
+      operationId: get-v1-sources-of-business-sourceofbusinessid
+      parameters:
+      - name: sourceOfBusinessId
+        in: path
+        description: The id of the source of business.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceOfBusiness'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Sources of Business
+      summary: Update Source of Business
+      description: Update Source of Business
+      operationId: patch-v1-sources-of-business-sourceofbusinessid
+      parameters:
+      - name: sourceOfBusinessId
+        in: path
+        description: The id of the source of business.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the source of business to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceOfBusinessPatchRequest'
+            example:
+              name: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceOfBusiness'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                name: string
+                code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    servers:
+    - url: https://api.lwolf.com/backoffice
+  /sources-of-business/{sourceOfBusinessId}:
+    get:
+      summary: Get a source of business.
+      description: Retrieves a single source of business.
+      tags:
+      - Sources of Business
+      security:
+      - BearerToken: []
+      parameters:
+      - name: sourceOfBusinessId
+        in: in path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Source of Business found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceOfBusiness_2'
+        '400':
+          description: Invalid request. See response body for details.
+        '401':
+          description: Unauthorized request. See response body for details.
+        '403':
+          description: Permission denied. See response body for details.
+        '404':
+          description: Source of Business not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError_2'
+        '500':
+          description: Unknown error. See response body for details.
+    servers:
+    - url: https://deals.api.lwolf.com
+      description: Base URL declared by the provider in apis.yml (roadmap#122).
+  /wolfconnect/sources-of-business/v1/:
+    get:
+      tags:
+      - Sources of Business
+      summary: Retrieve the list of all Sources of Business
+      operationId: getSourcesOfBusiness
+      description: All of the sources of business that are configured for the Client Code used during the authentication process will be returned. The sources of business returned where LWCompanyCode is blank are for offices that are not synced with brokerWOLF.
+      responses:
+        '200':
+          description: A collection of SourceOfBusiness objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SourceOfBusiness_3'
+      security:
+      - LoneWolfToken: []
+    servers:
+    - url: https://api.globalwolfweb.com
+      description: Production
+    - url: https://api-sb.globalwolfweb.com
+      description: Test
+components:
+  schemas:
+    SourceOfBusinessPatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the source of business.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a source of business.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    SourceOfBusiness:
+      required:
+      - name
+      - code
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the source of business.
+        code:
+          type: string
+          description: The unique code for the source of business.
+      additionalProperties: false
+      description: Represents a source of business for a contact associated to a transaction.
+    ApiError_2:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    SourceOfBusiness_2:
+      type: object
+    SourceOfBusiness_3:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the source of business.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synched with brokerWOLF.
+        Code:
+          type: string
+          readOnly: true
+          description: A code for this source of business. This must be unique within an LWCompanyCode.
+        Name:
+          type: string
+          readOnly: true
+          description: The name of the source of business (Newspaper, Referral, Website, etc).
+        InactiveDate:
+          type:
+          - string
+          - 'null'
+          format: date
+          readOnly: true
+          description: The date the source of business became inactive. (Nullable)
+  securitySchemes:
+    BearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JSON Web Token obtained from the Authentication API (`POST /v1/login`). Pass the token as `Authorization: Bearer <token>` in every request. Tokens expire after the number of seconds specified in the `expiresIn` field of the login response.'
+    LoneWolfToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Custom HMAC-signed authorization scheme used when calling resources that access your actual data:
+
+
+        ```
+
+        Authorization: LoneWolfToken [API Token]:[Client Code]:[Signature]:[Date]
+
+        ```
+
+
+        A `Content-MD5` header is also required on every request (base 64 encoded MD5 hash of the request body, or of an empty string for requests without a body: `1B2M2Y8AsgTpgAmY7PhCfg==`).
+
+
+        The signature is the HMACSHA256 hash (seeded with your secret key) of `[HTTP Method]:[Resource URI]:[Date]:[Content-MD5]`. HMACSHA384 and HMACSHA512 are also supported by appending the algorithm to the scheme (e.g. `LoneWolfToken-HMACSHA512`).
+
+
+        See the Authentication, Creating a Request, and Creating the Signature sections of the introduction for full details, date format, and worked examples. A separate `LoneWolfKey` scheme exists for resources that deal with your API account; there is never a scenario where you would send more than one type of authorization scheme.'
+x-refined-from:
+- lone-wolf-back-office-online-api-openapi.yml
+- lone-wolf-deals-api-openapi.yml
+- lone-wolf-wolfconnect-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

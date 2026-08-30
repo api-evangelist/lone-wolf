@@ -1,0 +1,879 @@
+openapi: 3.2.0
+info:
+  title: Lone Wolf Documents API
+  version: '1.0'
+  description: 'Operations tagged Documents across 2 of this provider''s published API definitions: lone-wolf-authentisign-api-openapi.yml, lone-wolf-transact-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.lwolf.com/authentisign
+- url: https://gateway.lwolf.com
+  description: Production API gateway
+- url: '{tw_host}'
+  description: Environment-specific host (e.g. pre-production)
+  variables:
+    tw_host:
+      default: https://api.pre.lwolf.com
+      description: Base host for the target environment.
+tags:
+- name: Documents
+paths:
+  /api/v1/signings/{signingId}/documents:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve signing document IDs. This endpoint fetches the document IDs associated with the provided signing ID.
+      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/documents"
+      operationId: GetDocuments
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which document IDs are to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/documents/{documentId}:
+    patch:
+      tags:
+      - Documents
+      summary: Apply a layout to a document within a specific signing.
+      description: "Sample request:\n            \n    PATCH /api/v1/signings/3fa85f64-5717-4562-b3fc-2c963f66afa6/documents/3fa85f64-5717-4562-b3fc-2c963f66afa7\n    {\n       \"LayoutId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa8\"\n    }"
+      operationId: ApplyLayout
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing to which the document belongs.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        description: The identifier of the document to which the layout is to be applied.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: LayoutId
+        in: query
+        description: Get or Set Layout ID. This property represents the unique identifier of the document layout.
+        required: true
+      requestBody:
+        description: The layout details to be applied.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.DocumentLayoutDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.DocumentLayoutDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Authentisign.Services.Dtos.DocumentLayoutDto'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/documents/s:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the fully executed combined signing package PDF.
+      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/documents/s"
+      operationId: GetFinalSigningDocument
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which the final document is to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/documents/s/url:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the URL to a fully executed combined signing package PDF.
+      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/documents/s/url"
+      operationId: GetFinalSigningDocumentUrl
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which the final document URL is to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/documents/sc:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the signing certificate for a specific signing.
+      description: "Sample request:\n            \n    GET ~/api/v1/signings/{signingId}/documents/sc"
+      operationId: GetSigningCertificate
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which the certificate is to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/documents/ls:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the latest signed document for a specific signing.
+      description: "Sample request:\n            \n    GET ~/api/v1/signings/{signingId}/documents/ls"
+      operationId: GetLatestSignedDocument
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which the latest signed document is to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/signings/{signingId}/documents/ls/url:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the URL to latest signed document associated with the specified signing ID.
+      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/documents/ls/url"
+      operationId: GetLatestSignedDocumentUrl
+      parameters:
+      - name: signingId
+        in: path
+        description: The identifier of the signing for which the final document URL is to be fetched.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/documents/{encryptedDocumentId}/o:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the original document using its encrypted ID.
+      description: "Sample request:\n            \n    GET /{encryptedDocumentId}/o"
+      operationId: GetOriginalDocument
+      parameters:
+      - name: encryptedDocumentId
+        in: path
+        description: The encrypted identifier of the document to be fetched.
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/documents/{documentId}/o/url:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the URL of the original document.
+      description: "Sample request:\n            \n    GET /{documentId}/o/url"
+      operationId: GetOriginalDocumentUrl
+      parameters:
+      - name: documentId
+        in: path
+        description: The unique identifier of the document.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/documents/{encryptedDocumentId}/d:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the final version of a document using its encrypted ID.
+      description: "Sample request:\n            \n    GET /{encryptedDocumentId}/d"
+      operationId: GetFinalDocument
+      parameters:
+      - name: encryptedDocumentId
+        in: path
+        description: The encrypted identifier of the document to be fetched.
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/documents/{documentId}/d/url:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the URL of the final version of a document.
+      description: "Sample request:\n            \n    GET /{documentId}/d/url"
+      operationId: GetFinalDocumentUrl
+      parameters:
+      - name: documentId
+        in: path
+        description: The unique identifier of the document.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/documents/{encryptedDocumentId}/dc:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the certificate of a document using its encrypted ID.
+      description: "Sample request:\n            \n    GET /{encryptedDocumentId}/dc"
+      operationId: GetDocumentCertificate
+      parameters:
+      - name: encryptedDocumentId
+        in: path
+        description: The encrypted identifier of the document for which the certificate is to be fetched.
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /api/v1/documents/{documentId}/dc/url:
+    get:
+      tags:
+      - Documents
+      summary: Retrieve the URL of the document's certificate.
+      description: "Sample request:\n            \n    GET /{documentId}/dc/url"
+      operationId: GetDocumentCertificateUrl
+      parameters:
+      - name: documentId
+        in: path
+        description: The unique identifier of the document.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+    servers:
+    - url: https://api.lwolf.com/authentisign
+  /transact-workflow/v1/Documents:
+    post:
+      tags:
+      - Documents
+      summary: Upload a document
+      description: Uploads a document file to a transaction. The request is sent as `multipart/form-data`. A user-scoped alternative is available at `POST /transact-workflow/v1/users/{userId}/documents`.
+      operationId: createDocument
+      responses:
+        '201':
+          description: Document uploaded.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - name
+              - file
+              - transactionId
+              - userId
+              properties:
+                name:
+                  type: string
+                  description: Display name of the document.
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to upload.
+                transactionId:
+                  type: string
+                  format: uuid
+                  description: GUID of the transaction the document belongs to.
+                parentId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of the folder to place the document in.
+                formId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of a form to associate the document with.
+                userId:
+                  type: string
+                  format: uuid
+                  description: GUID of the user uploading the document.
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /transact-workflow/v1/users/{userId}/documents:
+    get:
+      tags:
+      - Documents
+      summary: List documents
+      description: Returns the documents visible to the specified user.
+      operationId: getDocuments
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: $filter
+        in: query
+        required: false
+        description: 'OData filter expression used to restrict the result set (e.g. filter documents by folder: `parentId eq <folderId>`).'
+        schema:
+          type: string
+        example: parentId eq c69f5c7f-f9f4-4d7c-c22f-08de10fda488
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    post:
+      tags:
+      - Documents
+      summary: Upload a document (user-scoped)
+      description: Uploads a document file to a transaction under the specified user's path. Equivalent to `POST /transact-workflow/v1/Documents` with the user supplied in the path instead of the form body. The request is sent as `multipart/form-data`.
+      operationId: createDocumentForUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - name
+              - file
+              - transactionId
+              properties:
+                name:
+                  type: string
+                  description: Display name of the document.
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to upload.
+                transactionId:
+                  type: string
+                  format: uuid
+                  description: GUID of the transaction the document belongs to.
+                parentId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of the folder to place the document in.
+                formId:
+                  type: string
+                  format: uuid
+                  description: Optional GUID of a form to associate the document with.
+      responses:
+        '201':
+          description: Document uploaded.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /transact-workflow/v1/users/{userId}/documents/{documentId}:
+    get:
+      tags:
+      - Documents
+      summary: Get a document
+      description: Returns a single document's metadata by its key.
+      operationId: getDocumentByKey
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        required: true
+        description: GUID of the document.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    delete:
+      tags:
+      - Documents
+      summary: Delete a document
+      description: Deletes the specified document.
+      operationId: deleteDocument
+      responses:
+        '204':
+          description: Document deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        required: true
+        description: GUID of the document.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+  /transact-workflow/v1/users/{userId}/documents/file/{documentId}:
+    get:
+      tags:
+      - Documents
+      summary: Download a document file
+      description: Returns the binary file content of the specified document.
+      operationId: getDocumentFile
+      responses:
+        '200':
+          description: Document file content.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier (GUID) of the acting user. All Transact Workflow resources are scoped to a user.
+        schema:
+          type: string
+          format: uuid
+      - name: documentId
+        in: path
+        required: true
+        description: GUID of the document.
+        schema:
+          type: string
+          format: uuid
+      security:
+      - bearerAuth: []
+        subscriptionKey: []
+    servers:
+    - url: https://gateway.lwolf.com
+      description: Production API gateway
+    - url: '{tw_host}'
+      description: Environment-specific host (e.g. pre-production)
+      variables:
+        tw_host:
+          default: https://api.pre.lwolf.com
+          description: Base host for the target environment.
+components:
+  schemas:
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.DocumentLayoutDto:
+      required:
+      - layoutId
+      type: object
+      properties:
+        layoutId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT access token obtained from the `/oauth/token` endpoint, sent as `Authorization: Bearer <token>`.'
+    subscriptionKey:
+      type: apiKey
+      in: header
+      name: lw-subscription-key
+      description: API subscription key issued by Lone Wolf, sent on every request.
+x-refined-from:
+- lone-wolf-authentisign-api-openapi.yml
+- lone-wolf-transact-api-openapi.yml
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/authentisign-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

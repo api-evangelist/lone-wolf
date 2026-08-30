@@ -1,0 +1,869 @@
+openapi: 3.2.0
+info:
+  title: Back Office Business Contacts API
+  version: '1.0'
+  description: 'Business contacts represent a business or third party that is part of a transaction such as a home inspector or a lawyer.
+
+    They do not represent the buyer or seller. For buyer and seller contacts, use client contacts.'
+servers:
+- url: https://api.lwolf.com/backoffice
+tags:
+- name: Business Contacts
+  description: 'Business contacts represent a business or third party that is part of a transaction such as a home inspector or a lawyer.
+
+    They do not represent the buyer or seller. For buyer and seller contacts, use client contacts.'
+paths:
+  /v1/transactions/{transactionId}/business-contacts:
+    get:
+      tags:
+      - Business Contacts
+      summary: Get Business Contacts
+      description: Returns all the business contacts for the specified transaction.
+      operationId: get-v1-transactions-transactionid-business-contacts
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessContact'
+              example:
+              - id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    post:
+      tags:
+      - Business Contacts
+      summary: Create Business Contact
+      description: Creates a new business contact for the transaction.
+      operationId: post-v1-transactions-transactionid-business-contacts
+      parameters:
+      - name: transactionId
+        in: path
+        description: The id of the transaction.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The business contact to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessContact'
+            example:
+              id: string
+              createdTimestamp: string
+              modifiedTimestamp: string
+              contactTypeId: string
+              endCode: B
+              prefix: string
+              firstName: string
+              lastName: string
+              companyName: string
+              addressLine1: string
+              addressLine2: string
+              addressCity: string
+              addressPostalCode: string
+              addressProvinceCode: string
+              addressCountryCode: string
+              phoneNumberMain: string
+              phoneNumberBusiness: string
+              phoneNumberMobile: string
+              faxNumberMain: string
+              emailAddressMain: string
+              emailAddressWork: string
+              contactType:
+                name: string
+                code: string
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessContact'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '409':
+          description: Conflict. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+  /v1/business-contacts/{businessContactId}:
+    get:
+      tags:
+      - Business Contacts
+      summary: Get Business Contact
+      description: Retrieves a single business contact.
+      operationId: get-v1-business-contacts-businesscontactid
+      parameters:
+      - name: businessContactId
+        in: path
+        description: The id of the business contact.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessContact'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    patch:
+      tags:
+      - Business Contacts
+      summary: Update Business Contact
+      description: Make changes to existing business contacts.
+      operationId: patch-v1-business-contacts-businesscontactid
+      parameters:
+      - name: businessContactId
+        in: path
+        description: The id of the business contact.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The properties of the business contact to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessContactPatchRequest'
+            example:
+              contactTypeId: string
+              endCode: B
+              prefix: string
+              firstName: string
+              lastName: string
+              companyName: string
+              addressLine1: string
+              addressLine2: string
+              addressCity: string
+              addressPostalCode: string
+              addressProvinceCode: string
+              addressCountryCode: string
+              phoneNumberMain: string
+              phoneNumberBusiness: string
+              phoneNumberMobile: string
+              faxNumberMain: string
+              emailAddressMain: string
+              emailAddressWork: string
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessContact'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '422':
+          description: Validation failed. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+    delete:
+      tags:
+      - Business Contacts
+      summary: Delete Business Contact
+      description: Delete an existing business contact.
+      operationId: delete-v1-business-contacts-businesscontactid
+      parameters:
+      - name: businessContactId
+        in: path
+        description: The id of the business contact.
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessContact'
+              example:
+                id: string
+                createdTimestamp: string
+                modifiedTimestamp: string
+                contactTypeId: string
+                endCode: B
+                prefix: string
+                firstName: string
+                lastName: string
+                companyName: string
+                addressLine1: string
+                addressLine2: string
+                addressCity: string
+                addressPostalCode: string
+                addressProvinceCode: string
+                addressCountryCode: string
+                phoneNumberMain: string
+                phoneNumberBusiness: string
+                phoneNumberMobile: string
+                faxNumberMain: string
+                emailAddressMain: string
+                emailAddressWork: string
+                contactType:
+                  name: string
+                  code: string
+        '400':
+          description: Invalid request. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '401':
+          description: Unauthorized. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '403':
+          description: Permission denied. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+        '404':
+          description: Not found. See response body for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                id: string
+                code: 0
+                message: string
+                details:
+                - string
+components:
+  schemas:
+    ContactTypeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The unique code for the contact type.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a contact type.
+    BusinessContact:
+      required:
+      - contactTypeId
+      - endCode
+      - firstName
+      - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        contactTypeId:
+          type: string
+          description: The unique id of the contact type.
+          format: uuid
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The end or side of the transaction with which the contact is associated.
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
+        firstName:
+          type: string
+          description: The first name of the contact.
+        lastName:
+          type: string
+          description: The last name of the contact.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The full street address for the company of the contact.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the street address, if applicable (e.g., suite number).
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the contact's address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the contact's address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the province or state.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the country of the contact's address.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number for the contact. This will be unformatted.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the business for the contact. This will be unformatted.
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile or cell phone number for the contact. This will be unformatted.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main fax number for the contact. This will be unformatted.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        emailAddressWork:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        contactType:
+          $ref: '#/components/schemas/ContactTypeReadOnly'
+      additionalProperties: false
+      description: Represents a company or business contact like a Lawyer or Title Company. See client contacts for buyers and sellers.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    BusinessContactPatchRequest:
+      type: object
+      properties:
+        contactTypeId:
+          type: string
+          description: The unique id of the contact type.
+          format: uuid
+          writeOnly: true
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The end or side of the transaction with which the contact is associated.
+          writeOnly: true
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
+          writeOnly: true
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the contact.
+          writeOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the contact.
+          writeOnly: true
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company.
+          writeOnly: true
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The full street address for the company of the contact.
+          writeOnly: true
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the street address, if applicable (e.g., suite number).
+          writeOnly: true
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the contact's address.
+          writeOnly: true
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the contact's address. This will be unformatted.
+          writeOnly: true
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the province or state.
+          writeOnly: true
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the country of the contact's address.
+          writeOnly: true
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number for the contact. This will be unformatted.
+          writeOnly: true
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the business for the contact. This will be unformatted.
+          writeOnly: true
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile or cell phone number for the contact. This will be unformatted.
+          writeOnly: true
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main fax number for the contact. This will be unformatted.
+          writeOnly: true
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+          writeOnly: true
+        emailAddressWork:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a business contact.
+x-topics:
+- title: Overview
+  content:
+    $ref: ./docs/backoffice-overview.md
+- title: Getting started
+  content:
+    $ref: ./docs/getting-started.md
+- title: Authentication Token
+  content:
+    $ref: ./docs/authentication.md
+- title: HTTP Request
+  content:
+    $ref: ./docs/http-request.md

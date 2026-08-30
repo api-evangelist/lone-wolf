@@ -1,0 +1,285 @@
+openapi: 3.2.0
+info:
+  title: TransactionDesk Partner Transaction Documents API
+  description: "Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.\n\n## Authorization\n\n### Authorization Code Flow\n\n1. Redirect the user to the OAuth authorization URL:\n   `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`\n2. The user logs in via the Lonewolf Authentication system.\n3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.\n4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.\n5. Include the access token in the `Authorization: Bearer <token>` header on every request.\n\n### Client Credentials Flow\n\nFor enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.\n\n## Universal Global Fields\n\nBelow is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.\n\n### 1. Property Information\n\n#### Address\n- `streetNumber`\n- `streetName`\n- `city`\n- `county`\n- `state`\n- `zipCode`\n\n#### Subdivision and Parcel Information\n- `subDivision`\n- `lotNumber`\n- `block`\n- `pageNumber`\n- `platBook`\n\n#### Property Characteristics\n- `yearBuilt`\n- `zoningClass`\n- `schoolDistrict`\n\n#### Tax and Legal Information\n- `taxNumber`\n- `township`\n- `legalDescription`\n\n### 2. Listing Information\n\n#### Listing Identification\n- `mlsNumber`\n\n#### Pricing\n- `listPrice`\n\n#### Listing Timeline\n- `expirationDate`\n\n#### Property Inclusions and Exclusions\n- `propertyIncludes`\n- `propertyExcludes`\n- `leasedItems`\n\n### 3. Purchase Information\n\n#### Pricing\n- `purchasePrice`\n\n#### Offer Timeline\n- `offerDate`\n- `offerExpirationDate`\n- `offerAcceptanceDate`\n\n#### Financing Timeline\n- `applicationDate`\n- `approvalDate`\n\n#### Deposits\n- `depositAmount`\n- `additionalDepositAmount`\n- `additionalDepositDate`\n\n#### Transaction Milestones\n- `fundingDate`\n- `possessionDate`\n- `closingDate`"
+  version: '2.0'
+servers:
+- url: https://api.pre.transactiondesk.com
+security:
+- bearerAuth: []
+tags:
+- name: Transaction Documents
+  description: Manage documents within transaction files
+paths:
+  /v2/transactions/{id}/documents:
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    get:
+      summary: Get All Documents
+      description: Returns a full list of documents associated with a specific transaction.
+      tags:
+      - Transaction Documents
+      parameters:
+      - in: query
+        name: $orderDir
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      - in: query
+        name: $skip
+        schema:
+          type: integer
+      - in: query
+        name: $take
+        schema:
+          type: integer
+          maximum: 100
+      - in: query
+        name: $orderBy
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of documents returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+    post:
+      summary: Upload a Document
+      description: Uploads a new document to a specific transaction. The document binary must be Base64 encoded.
+      tags:
+      - Transaction Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - documentName
+              - binary
+              - fileTypeId
+              properties:
+                documentName:
+                  type: string
+                  example: Purchase Agreement
+                binary:
+                  type: string
+                  description: Base64 encoded document binary
+                fileTypeId:
+                  type: string
+                  format: uuid
+                  description: File type GUID. See Glossary for values.
+      responses:
+        '200':
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+  /v2/transactions/{transactionId}/documents/{documentId}:
+    parameters:
+    - in: path
+      name: transactionId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: TransactionGUID
+    - in: path
+      name: documentId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: DocumentGUID
+    get:
+      summary: Get a Specific Document
+      description: Returns the document binary of a specific file within a transaction.
+      tags:
+      - Transaction Documents
+      responses:
+        '200':
+          description: Document returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentWithBinary'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    patch:
+      summary: Update a Document
+      description: Updates the name of a specific document within a transaction.
+      tags:
+      - Transaction Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                documentName:
+                  type: string
+      responses:
+        '200':
+          description: Document updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    delete:
+      summary: Delete a Document
+      description: Deletes a specific document within a transaction.
+      tags:
+      - Transaction Documents
+      responses:
+        '200':
+          description: Document deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBadRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+components:
+  schemas:
+    DocumentWithBinary:
+      allOf:
+      - $ref: '#/components/schemas/Document'
+      - type: object
+        properties:
+          binary:
+            type: string
+            description: Base64 encoded document binary
+            example: JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9U....
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: DocumentGUID
+        fileTypeId:
+          type: string
+          format: uuid
+          example: 6db4d39b-d96d-4cfd-b97e-0c9cd1a176f9
+          description: File type GUID. See Glossary for values.
+        documentName:
+          type: string
+          example: 1916 Glenarbor Way
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:49.143+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:52.27+00:00'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

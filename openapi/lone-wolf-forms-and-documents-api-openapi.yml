@@ -1,0 +1,1005 @@
+openapi: 3.2.0
+info:
+  title: ZipForm Partner Forms and Documents API
+  description: 'The zipForm® REST web service is made available on a licensed basis to third-party application partners. It exposes zipForm® transaction data, PDF forms, and certain zipForm® application functionality for integration into partner applications.
+
+
+    **Base URLs:**
+
+    - Production: `https://ws.zipformplus.com/api`
+
+    - Staging/QA: `https://api.pre.zipformplus.com/api`
+
+
+    ## Authentication
+
+
+    All requests (except authentication endpoints) must include a **Shared Key** and either a **Context Id** or **External Id**, passed via request headers or query string.
+
+
+    ### Via Request Headers (Context Id)
+
+    ```
+
+    X-Auth-ContextId: <Context Id>
+
+    X-Auth-SharedKey: <Client Shared Key>
+
+    ```
+
+
+    ### Via Query String (Context Id)
+
+    ```
+
+    <URL>?ContextId=<Context Id>&SharedKey=<Client Shared Key>
+
+    ```
+
+
+    ### Via Request Headers (External Id)
+
+    ```
+
+    X-Auth-ExternalId: <Client External Id>
+
+    X-Auth-SharedKey: <Client Shared Key>
+
+    ```
+
+
+    ### Via Query String (External Id)
+
+    ```
+
+    <URL>?ExternalId=<External Id>&SharedKey=<Client shared key>
+
+    ```
+
+
+    ## Response Codes
+
+
+    | Code | Description |
+
+    |---|---|
+
+    | 200 | OK |
+
+    | 201 | Created |
+
+    | 204 | No Content — success but resource has no content |
+
+    | 304 | Not Modified |
+
+    | 400 | Bad Request |
+
+    | 401 | Unauthorized |
+
+    | 403 | Forbidden / Blank PDF Not Allowed |
+
+    | 404 | Not Found |
+
+    | 409 | Account Linking Failed |
+
+    | 415 | Unsupported Media Type |
+
+    | 500 | Internal Server Error |
+
+    | 503 | Service Unavailable |
+
+
+    ## Terminology
+
+
+    | Term | Definition |
+
+    |---|---|
+
+    | Shared Key | A unique identifier granted to the partner that authenticates its Foreign Application |
+
+    | Context Id | A session identifier returned after authentication, uniquely identifying the current interaction |
+
+    | External Id | A partner-supplied identifier that uniquely identifies a user in the partner''s application |
+
+    | Foreign Application (FA) | An external application that consumes the zipForm® web service |
+
+    | MD5 | Message-digest algorithm used for data encryption |
+
+
+    ## Pagination and Sorting
+
+
+    Supported on collection endpoints (Get Transaction List, Get Document List, Get Library Documents, Get Agent Libraries):
+
+
+    ```
+
+    <URL>?page=<page number>&pagesize=<page size>&orderby=<sort field>&sortorder=<sort order>
+
+    ```
+
+
+    | Collection | Sort Fields |
+
+    |---|---|
+
+    | Transactions | `name`, `created` |
+
+    | Forms/Documents | `name`, `ContentType` |
+
+    | Libraries | `name`, `state` |
+
+
+    `sortorder`: `asc` or `desc`
+
+
+    ## Universal Global Fields
+
+
+    Below is a list of the fields related to a transaction that can be updated through the API for the ZipForms System.
+
+
+    ### 1. Property Listing Address
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_CompositeAddress`
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_City`
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_StateOrProvince`
+
+    - `REData_REProperties_ResidentialProperty_Listing_StreetAddress_PostalCode`
+
+
+    ### 2. Listing Agent Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_FullName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_AgentID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_CellPhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_Pager`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REAgent_ContactInformation_Email`
+
+
+    ### 3. Listing Office Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_Name`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_OfficeID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_ContactInformation_Fax`
+
+
+    #### Address
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_CompositeAddress`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_City`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_StateOrProvince`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_REOffice_StreetAddress_PostalCode`
+
+
+    ### 4. Listing Details
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingID`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_ListDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_ListPrice`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_ExpirationDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ListingData_Remarks`
+
+
+    ### 5. Geographic Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_GeographicData_County`
+
+
+    ### 6. Sales Agent Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_FullName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_AgentID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_CellPhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_Pager`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REAgent_ContactInformation_Email`
+
+
+    ### 7. Sales Office Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_Name`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_OfficeID`
+
+
+    #### Contact Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_ContactInformation_OfficePhone`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_ContactInformation_Fax`
+
+
+    #### Address
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_CompositeAddress`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_City`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_StateOrProvince`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_REOffice_StreetAddress_PostalCode`
+
+
+    ### 8. Sales Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ContractDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ClosePrice`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_CloseDate`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AmountFinanced`
+
+
+    ### 9. School Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_SchoolData_SchoolDistrict`
+
+
+    ### 10. Tax Information
+
+    - `REData_REProperties_ResidentialProperty_Listing_TaxData_TaxID`
+
+    - `REData_REProperties_ResidentialProperty_Listing_TaxData_County`
+
+    - `REData_REProperties_ResidentialProperty_Listing_TaxData_LegalDescription`
+
+    - `REData_REProperties_ResidentialProperty_Listing_ParcelNumber`
+
+
+    ### 11. Property Characteristics
+
+    - `REData_REProperties_ResidentialProperty_Subdivision`
+
+    - `REData_REProperties_ResidentialProperty_AssociationFee`
+
+    - `REData_REProperties_ResidentialProperty_YearBuilt`
+
+
+    ---
+
+
+    ## Parties
+
+
+    ### 12. Seller 1
+
+
+    #### Identity
+
+    - `Other_Seller1_FirstName`
+
+    - `Other_Seller1_MiddleName`
+
+    - `Other_Seller1_LastName`
+
+    - `Other_Seller1_FullName`
+
+    - `Other_Seller1_Relationship`
+
+
+    #### Address
+
+    - `Other_Seller1_StreetAddress_CompositeAddress`
+
+    - `Other_Seller1_StreetAddress_City`
+
+    - `Other_Seller1_StreetAddress_StateOrProvince`
+
+    - `Other_Seller1_StreetAddress_PostalCode`
+
+
+    #### Contact Information
+
+    - `Other_Seller1_ContactInformation_OfficePhone`
+
+    - `Other_Seller1_ContactInformation_CellPhone`
+
+    - `Other_Seller1_ContactInformation_HomePhone`
+
+    - `Other_Seller1_ContactInformation_Fax`
+
+    - `Other_Seller1_ContactInformation_Email`
+
+
+    ### 13. Seller 2
+
+    Same structure as Seller 1 — prefix `Other_Seller2_`
+
+
+    ### 14. Buyer 1
+
+
+    #### Identity
+
+    - `Other_Buyer1_FirstName`
+
+    - `Other_Buyer1_MiddleName`
+
+    - `Other_Buyer1_LastName`
+
+    - `Other_Buyer1_FullName`
+
+    - `Other_Buyer1_Relationship`
+
+
+    #### Address
+
+    - `Other_Buyer1_StreetAddress_CompositeAddress`
+
+    - `Other_Buyer1_StreetAddress_City`
+
+    - `Other_Buyer1_StreetAddress_StateOrProvince`
+
+    - `Other_Buyer1_StreetAddress_PostalCode`
+
+
+    #### Contact Information
+
+    - `Other_Buyer1_ContactInformation_OfficePhone`
+
+    - `Other_Buyer1_ContactInformation_CellPhone`
+
+    - `Other_Buyer1_ContactInformation_HomePhone`
+
+    - `Other_Buyer1_ContactInformation_Fax`
+
+    - `Other_Buyer1_ContactInformation_Email`
+
+
+    ### 15. Buyer 2
+
+    Same structure as Buyer 1 — prefix `Other_Buyer2_`
+
+
+    ---
+
+
+    ## Additional Parties
+
+
+    ### 16. Seller Attorney
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_Name`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactName`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Attorneys_Sellers_ContactInformation_Email`
+
+
+    ### 17. Buyer Attorney
+
+    Same structure as Seller Attorney — prefix `Other_AdditionalInfo_Attorneys_Buyers_`
+
+
+    ### 18. Appraiser
+
+    - `Other_AdditionalInfo_Appraiser_Name`
+
+    - `Other_AdditionalInfo_Appraiser_ContactName`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Appraiser_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_CellPhone`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_Pager`
+
+    - `Other_AdditionalInfo_Appraiser_ContactInformation_Email`
+
+
+    ### 19. Escrow
+
+    - `Other_AdditionalInfo_Escrow_Name`
+
+    - `Other_AdditionalInfo_Escrow_ContactName`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Escrow_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Escrow_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Escrow_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Escrow_ContactInformation_Email`
+
+    - `Other_AdditionalInfo_Escrow_CaseNumber`
+
+
+    ### 20. Lender
+
+    - `Other_AdditionalInfo_Lender_Name`
+
+    - `Other_AdditionalInfo_Lender_ContactName`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_City`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_Lender_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_CellPhone`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_Pager`
+
+    - `Other_AdditionalInfo_Lender_ContactInformation_Email`
+
+    - `Other_AdditionalInfo_Lender_LoanNumber`
+
+
+    ### 21. Title Company
+
+    - `Other_AdditionalInfo_TitleInformation_Name`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactName`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_CompositeAddress`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_City`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_StateOrProvince`
+
+    - `Other_AdditionalInfo_TitleInformation_StreetAddress_PostalCode`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_OfficePhone`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_CellPhone`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_Fax`
+
+    - `Other_AdditionalInfo_TitleInformation_ContactInformation_Email`
+
+
+    ---
+
+
+    ## Additional Listing and Sales Data
+
+
+    ### 22. Listing Condition Information
+
+    - `Other_AdditionalInfo_AdditionalListingData_ConditionInfo_Includes`
+
+    - `Other_AdditionalInfo_AdditionalListingData_ConditionInfo_Excludes`
+
+
+    ### 23. Listing Encumbrances
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_MortgageBalance1`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_MortgageBalance2`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_TotalEncumbrances`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_OtherLien`
+
+    - `Other_AdditionalInfo_AdditionalListingData_Encumberances_OtherLienDescription`
+
+
+    ### 24. Offer & Deposit Information
+
+    - `Other_AdditionalInfo_AdditionalSalesData_OfferDate`
+
+    - `Other_AdditionalInfo_AdditionalSalesData_OfferAcceptDate`
+
+    - `Other_AdditionalInfo_AdditionalSalesData_DepositAmount`
+
+
+    ### Tax Parcel Metadata
+
+    - `Other_AdditionalInfo_AdditionalTaxData_LotNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_UnitNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_Township`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_BlockNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_PlatBookNumber`
+
+    - `Other_AdditionalInfo_AdditionalTaxData_PlatPageNumber`
+
+
+    ### Property Type Flags
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Residential`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Multi`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Vacant`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_Commercial`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_OtherPT`
+
+    - `Other_AdditionalInfo_AdditionalFields_CS_PropertyType_OtherPTDescription`
+
+
+    ### ZipForms Metadata
+
+    - `Other_ZFMetadata_ZFFilename`
+
+    - `Other_ZFMetadata_ZFBrokerName`
+
+    - `Other_ZFMetadata_ZFUserName_Name`
+
+    - `Other_ZFMetadata_ZFUserName_OfficePhone`
+
+    - `Other_ZFMetadata_ZFUserName_Fax`
+
+    - `Other_ZFMetadata_ZFUserName_CompositeAddress`
+
+
+    ---
+
+
+    ## Commission Data
+
+
+    ### Listing Side
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ListingCommissionPercent`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_ListingCommissionAmount`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AdminTransactionFee`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_OtherDeductions`
+
+
+    #### Agent Splits
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneSplitName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoSplitName`
+
+
+    #### Net Values
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentOneNet`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_AgentTwoNet`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_OfficeCommissionNet`
+
+
+    ### Buy Side
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_BuyerCommissionPercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_BuyerCommissionAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AdminTransactionFee`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_OtherDeductions`
+
+
+    #### Referrals
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_ReferringAgentFeePercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_ReferringAgentFeeAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_ReferringAgentName`
+
+
+    #### Agent Splits
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneSplitName`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoSplitPercent`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoSplitAmount`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoSplitName`
+
+
+    #### Net Values
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentOneNet`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_AgentTwoNet`
+
+    - `REData_REProperties_ResidentialProperty_BuySideData_OfficeCommissionNet`
+
+
+    ### Signer Representative
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_FirstName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_MiddleName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_LastName`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_Email`
+
+    - `REData_REProperties_ResidentialProperty_Listing_SalesData_SignerRepresentative_Phone`'
+  version: '5.1'
+servers:
+- url: https://ws.zipformplus.com/api
+  description: Production
+- url: https://api.pre.zipformplus.com/api
+  description: Staging/QA
+security:
+- contextAuth: []
+tags:
+- name: Forms and Documents
+  description: Manage forms and file documents within transactions.
+paths:
+  /transactions/{transactionId}/forms:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    get:
+      summary: Get Form List
+      description: Returns the list of forms for a given transaction. Forms are distinguished by `contentType` having a value of `form`.
+      tags:
+      - Forms and Documents
+      responses:
+        '200':
+          description: Form list returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentItem'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+  /transactions/{transactionId}/documents:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    get:
+      summary: Get Document List
+      description: Returns the list of documents and forms for a given transaction, in the same order as the zipForm® Plus UI. Use `excludeforms=true` to return only non-form documents.
+      tags:
+      - Forms and Documents
+      parameters:
+      - in: query
+        name: excludeforms
+        schema:
+          type: boolean
+        description: If true, only non-form documents are returned
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: pagesize
+        schema:
+          type: integer
+      - in: query
+        name: orderby
+        schema:
+          type: string
+          enum:
+          - name
+          - ContentType
+      - in: query
+        name: sortorder
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      responses:
+        '200':
+          description: Document list returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentItem'
+        '204':
+          description: No content — transaction has no documents
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+  /transactions/{transactionId}/documents/form:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    post:
+      summary: Add Form to Transaction
+      description: Adds a form (by its GUID) to a transaction. Form GUIDs are obtained from the Get Library Forms endpoint.
+      tags:
+      - Forms and Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  description: Form GUID from the library
+      responses:
+        '201':
+          description: Form added successfully. Returns the form GUID.
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction or form not found
+  /transactions/{transactionId}/documents/file:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    post:
+      summary: Upload File Document
+      description: 'Uploads a file document to a transaction. If `Id` is omitted, a new document is created at version 1. If `Id` is provided and matches an existing document, a new version is added.
+
+
+        **Supported MIME types:** `application/pdf`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `image/jpeg`, `image/png`, `image/bmp`, `image/gif`'
+      tags:
+      - Forms and Documents
+      parameters:
+      - in: query
+        name: Name
+        required: true
+        schema:
+          type: string
+        description: Document name
+      - in: query
+        name: Description
+        required: true
+        schema:
+          type: string
+        description: Document description
+      - in: query
+        name: ContainerId
+        schema:
+          type: string
+        description: Optional folder ID to store the document in
+      - in: query
+        name: Id
+        schema:
+          type: string
+        description: Optional document ID. If provided and found, adds a new version.
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+          application/msword:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: Document uploaded. Returns the endpoint URL for the uploaded document.
+        '401':
+          description: Unauthorized
+        '404':
+          description: Document ID provided but not found
+        '415':
+          description: Unsupported media type
+  /transactions/{transactionId}/documents/{documentId}:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    - $ref: '#/components/parameters/documentId'
+    get:
+      summary: Get Document Contents
+      description: 'Returns the content of the specified form or document. If a form GUID is specified, returns it as a PDF. Otherwise returns the document in its existing format.
+
+
+        Optionally append `/<version>` to the URL to specify the form version or document version number.'
+      tags:
+      - Forms and Documents
+      responses:
+        '200':
+          description: Document contents returned as a byte stream
+        '401':
+          description: Unauthorized
+        '403':
+          description: Blank PDF Not Allowed — form has no user-entered contents
+        '404':
+          description: Document not found
+    delete:
+      summary: Delete Document
+      description: Deletes the specified form or document from the transaction.
+      tags:
+      - Forms and Documents
+      responses:
+        '200':
+          description: Document deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Document not found
+  /transactions/{transactionId}/documents/{documentId}/meta:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    - $ref: '#/components/parameters/documentId'
+    get:
+      summary: Get Document Metadata
+      description: 'Returns the metadata associated with a form or document. For forms, `size` is always 0. `signed` values: 0=not signed, 1=Docusign, 2=zipLogix Digital Ink, 3=zipLogix Digital Ink TouchSign.'
+      tags:
+      - Forms and Documents
+      responses:
+        '200':
+          description: Document metadata returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentItem'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Document not found
+  /transactions/{transactionId}/documents/{documentId}/hash:
+    parameters:
+    - $ref: '#/components/parameters/transactionId'
+    - $ref: '#/components/parameters/documentId'
+    get:
+      summary: Get Form Hash
+      description: Returns an MD5 hash of the form, calculated upon PDF generation. Useful for determining whether a form has changed since it was last retrieved.
+      tags:
+      - Forms and Documents
+      responses:
+        '200':
+          description: MD5 hash returned
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: a933e383fcaf699a8041497bca7654a7
+        '401':
+          description: Unauthorized
+        '404':
+          description: Form not found
+components:
+  parameters:
+    transactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction GUID
+    documentId:
+      name: documentId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Document ID or Form GUID
+  schemas:
+    DocumentItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Document ID or Form GUID
+        name:
+          type: string
+        description:
+          type: string
+        contentType:
+          type: string
+          description: form, PDF, doc, etc.
+        version:
+          type: string
+        signed:
+          type: integer
+          description: 0=not signed, 1=Docusign, 2=zipLogix Digital Ink, 3=zipLogix Digital Ink TouchSign
+        size:
+          type: integer
+          description: Size in bytes (0 for forms)
+  securitySchemes:
+    contextAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ContextId
+      description: Context Id obtained from an authentication endpoint. Must be used together with X-Auth-SharedKey.
+    sharedKey:
+      type: apiKey
+      in: header
+      name: X-Auth-SharedKey
+      description: Shared Key provided by zipLogix to authenticate the partner application.
+    externalIdAuth:
+      type: apiKey
+      in: header
+      name: X-Auth-ExternalId
+      description: External Id for partners authorized to use the External Id authentication scheme. Must be used together with X-Auth-SharedKey.
