@@ -932,7 +932,7 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
-  - deal
+  - Deal
   tags_raw:
   - Deal
   properties:
