@@ -335,46 +335,6 @@ apis:
     url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
   - type: Sandbox
     url: https://api-sb.globalwolfweb.com
-- aid: lone-wolf:lone-wolf-ccs-api
-  name: Lone Wolf Technologies C Cs API
-  description: The CCs API from Lone Wolf Technologies — 2 operation(s) for ccs.
-  humanURL: https://apidocs.lwolf.com/doc/transact-api
-  baseURL: https://gateway.lwolf.com
-  tags:
-  - CCs
-  properties:
-  - type: OpenAPI
-    url: openapi/lone-wolf-ccs-api-openapi.yml
-  - type: Documentation
-    url: https://apidocs.lwolf.com/doc/transact-api
-  - type: APIReference
-    url: https://apidocs.lwolf.com/doc/transact-api
-  - type: Changelog
-    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
-  - type: DeveloperPortal
-    url: https://www.lwolf.com/api-portal
-  - type: Documentation
-    url: https://apidocs.lwolf.com/doc/deals-api
-  - type: Changelog
-    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
-  - type: Authentication
-    url: https://authentication.api.lwolf.com/v1/login
-  - type: Documentation
-    url: https://apidocs.lwolf.com/doc/back-office-online-api
-  - type: Documentation
-    url: https://apidocs.lwolf.com/doc/transactiondesk-api
-  - type: Documentation
-    url: https://apidocs.lwolf.com/doc/zipform-api
-  - type: Changelog
-    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
-  - type: ErrorCatalog
-    url: errors/lone-wolf-error-codes.yml
-  - type: Documentation
-    url: https://apidocs.lwolf.com/doc/wolfconnect-api
-  - type: Changelog
-    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
-  - type: Sandbox
-    url: https://api-sb.globalwolfweb.com
 - aid: lone-wolf:lone-wolf-classification-api
   name: Lone Wolf Technologies Classification API
   description: The Classification API from Lone Wolf Technologies — 2 operation(s) for classification.
@@ -2716,6 +2676,46 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/lone-wolf-users-and-offices-api-openapi.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: APIReference
+    url: https://apidocs.lwolf.com/doc/transact-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/transact-api/changes/2ffeff3a
+  - type: DeveloperPortal
+    url: https://www.lwolf.com/api-portal
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/deals-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/deals-api/changes/dc2c920d
+  - type: Authentication
+    url: https://authentication.api.lwolf.com/v1/login
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/back-office-online-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/transactiondesk-api
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/zipform-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/zipform-api/changes/27ccca82
+  - type: ErrorCatalog
+    url: errors/lone-wolf-error-codes.yml
+  - type: Documentation
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api
+  - type: Changelog
+    url: https://apidocs.lwolf.com/doc/wolfconnect-api/changes/a612bf03
+  - type: Sandbox
+    url: https://api-sb.globalwolfweb.com
+- aid: lone-wolf:lone-wolf-c-cs-api
+  name: Lone Wolf Technologies C Cs API
+  description: The C Cs API from Lone Wolf Technologies — 2 operation(s) for c cs.
+  humanURL: https://apidocs.lwolf.com/doc/authentisign-api
+  baseURL: https://api.lwolf.com/authentisign
+  tags:
+  - C Cs
+  properties:
+  - type: OpenAPI
+    url: openapi/lone-wolf-c-cs-api-openapi.yml
   - type: Documentation
     url: https://apidocs.lwolf.com/doc/transact-api
   - type: APIReference
