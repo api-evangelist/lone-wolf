@@ -505,6 +505,8 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
+  - Commissions
+  tags_raw:
   - Commission
   properties:
   - type: OpenAPI
@@ -1940,7 +1942,7 @@ apis:
   humanURL: https://apidocs.lwolf.com/doc/transact-api
   baseURL: https://gateway.lwolf.com
   tags:
-  - Single Sign-On
+  - SSO
   tags_raw:
   - Single Sign On
   properties:
