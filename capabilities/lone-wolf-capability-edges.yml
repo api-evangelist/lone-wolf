@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 13
+edge_count: 16
 edges:
 - tag: External Commissions
   spec_file: lone-wolf-external-commissions-api-openapi.yml
@@ -95,6 +95,18 @@ edges:
   reason: A 'deal' here is the brokerage transaction record submitted into brokerWOLF back office (commission/paperwork
     side of a residential real-estate sale). That is brokerage/agency intermediation management; no single
     L2 is clearly named since the deal record spans closing, commissions and parties, so L1 only.
+- tag: Client Contacts
+  spec_file: lone-wolf-client-contacts-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.72
+  evidence: '"Client contacts represent a buyer or seller that is part of a transaction. For all other
+    types of contacts, use business contacts."'
+  reason: Create/read/update/delete of buyer and seller party records on a transaction — customer party
+    data maintenance. Mapped to Customer Data Management; it is a customer record store rather than segmentation
+    or lifecycle marketing.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: Commissions
   spec_file: lone-wolf-commissions-api-openapi.yml
   capability_id: BC-4960.80
@@ -127,6 +139,29 @@ edges:
     POST /transactions/{transactionId}/title-order-note "Add Note to Title Order"
   reason: Tracks title-order status and notes against a real-estate transaction, i.e. coordination of
     title/escrow/conveyancing steps through to closing on a brokered deal.
+- tag: Client Contact
+  spec_file: lone-wolf-client-contact-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.7
+  evidence: POST /deals/{dealId}/client-contacts    Create a client contact; POST /client-contacts/{clientContactId}/email-addresses    Create
+    client contact email address
+  reason: Full CRUD over client (buyer/seller) contact records with addresses, phone numbers and email
+    addresses attached to a deal — maintenance of customer party master data, i.e. Customer Data Management.
+    Some ambiguity because the records are deal-scoped transaction parties rather than a CRM golden record.
+  recovered_from: sweep-20260829T005356Z-edges.json
+- tag: Employees
+  spec_file: lone-wolf-employees-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.7
+  evidence: '"Represents a person that works at the brokerage. This includes the broker themselves, office
+    admins, agent''s, everyone."; GET /v1/employees  Get Employees'
+  reason: Read access to employee master records of the brokerage, which is employee-record keeping under
+    HR Operations. Only read operations are exposed, so confidence moderate.
+  recovered_from: sweep-20260829T005356Z-edges.json
 - tag: Transaction Documents
   spec_file: lone-wolf-transaction-documents-api-openapi.yml
   capability_id: BC-4960
