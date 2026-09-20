@@ -1,0 +1,150 @@
+slug: lone-wolf
+provider: Lone Wolf Technologies
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Real Estate
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 13
+edges:
+- tag: External Commissions
+  spec_file: lone-wolf-external-commissions-api-openapi.yml
+  capability_id: BC-4960.80
+  capability_id_l1: BC-4960
+  capability_name: Commission & Cooperating-Broker Management
+  confidence: 0.88
+  evidence: '"Represents the external commissions and the related external agent''s that are not part
+    of the brokerage that receive those commissions."'
+  reason: Explicitly commissions paid to cooperating (non-brokerage) agents on a transaction, matching
+    Commission & Cooperating-Broker Management.
+- tag: Transactions
+  spec_file: lone-wolf-transactions-api-openapi.yml
+  capability_id: BC-4960
+  capability_id_l1: BC-4960
+  capability_name: Real Estate Brokerage Management
+  confidence: 0.85
+  evidence: '"Create Transaction", "Get Transaction Summary", "Retrieve a Collection of Transactions";
+    schemas Commission, CommissionFee, ExternalCommission, Deposit, ClientContact, ExternalAgent'
+  reason: Full lifecycle of brokerage deal records including commissions, deposits and client/agent parties
+    across back-office, Transact, WolfConnect and zipForm — squarely Real Estate Brokerage Management.
+    Evidence spans commission settlement and closing coordination, so L1 only.
+- tag: External Commission
+  spec_file: lone-wolf-external-commission-api-openapi.yml
+  capability_id: BC-4960.80
+  capability_id_l1: BC-4960
+  capability_name: Commission & Cooperating-Broker Management
+  confidence: 0.8
+  evidence: '"GET /tiers/{tierId}/external-commissions    Get all external commissions", "POST /tiers/{tierId}/external-commissions    Create
+    an external commission"'
+  reason: Commission amounts payable to agents outside the brokerage on a deal — cooperating-broker commission
+    capture and settlement.
+- tag: Tiers
+  spec_file: lone-wolf-tiers-api-openapi.yml
+  capability_id: BC-4960.80
+  capability_id_l1: BC-4960
+  capability_name: Commission & Cooperating-Broker Management
+  confidence: 0.8
+  evidence: '"Represents a tier or sub-transaction for a given transaction"; POST /v1/tiers/calculate-tier
+    "Calculate Tier"; schemas Commission, ExternalCommission, CommissionFee, ExternalAgent'
+  reason: Transaction tiers carry Commission, CommissionFee and ExternalAgent structures and support commission
+    calculation per transaction — brokerage commission capture and cooperating/external agent settlement.
+- tag: Transaction Summary
+  spec_file: lone-wolf-transaction-summary-api-openapi.yml
+  capability_id: BC-4960
+  capability_id_l1: BC-4960
+  capability_name: Real Estate Brokerage Management
+  confidence: 0.8
+  evidence: POST /v2/transactions "Create a Transaction"; GET /v2/transactions/{id}/details "Get Transaction
+    Details"; schemas Transaction, TransactionDetails
+  reason: Core CRUD over residential real-estate deal records in Lone Wolf's brokerage transaction-management
+    product; maps to Real Estate Brokerage Management at L1 (spans offer, closing coordination and commission).
+- tag: Commission
+  spec_file: lone-wolf-commission-api-openapi.yml
+  capability_id: BC-4960.80
+  capability_id_l1: BC-4960
+  capability_name: Commission & Cooperating-Broker Management
+  confidence: 0.78
+  evidence: GET /tiers/{tierId}/commissions    Get all commissions; POST /tiers/{tierId}/commissions    Create
+    a commission
+  reason: Commission records held against deal commission tiers in a residential brokerage back-office
+    system — capture of commission terms, i.e. brokerage commission management. Some chance the intended
+    sub-capability is agent commission plan administration.
+- tag: Commission Fees
+  spec_file: lone-wolf-commission-fees-api-openapi.yml
+  capability_id: BC-4960.80
+  capability_id_l1: BC-4960
+  capability_name: Commission & Cooperating-Broker Management
+  confidence: 0.75
+  evidence: '"Represents fees that are associated with commissions."; GET /v1/transactions/{transactionId}/tiers/{tierId}/commissions/{commissionId}/fees'
+  reason: Fees attached to transaction commissions in brokerage back office — part of commission capture
+    and settlement. Read-only lookup keeps confidence below the top band.
+- tag: Deal
+  spec_file: lone-wolf-deal-api-openapi.yml
+  capability_id: BC-4960
+  capability_id_l1: BC-4960
+  capability_name: Real Estate Brokerage Management
+  confidence: 0.75
+  evidence: '"POST /deals    Create a deal", "POST /deals/{dealId}/submit    Submit deal", "GET /deals/{dealId}/bw-sync-status    Get
+    the sync status of the deal with brokerWOLF"'
+  reason: A 'deal' here is the brokerage transaction record submitted into brokerWOLF back office (commission/paperwork
+    side of a residential real-estate sale). That is brokerage/agency intermediation management; no single
+    L2 is clearly named since the deal record spans closing, commissions and parties, so L1 only.
+- tag: Commissions
+  spec_file: lone-wolf-commissions-api-openapi.yml
+  capability_id: BC-4960.80
+  capability_id_l1: BC-4960
+  capability_name: Commission & Cooperating-Broker Management
+  confidence: 0.72
+  evidence: '"Represents the commissions and the related agent''s within the brokerage that receive those
+    commissions. For commissions related to agent''s that are not part of the brokerage, use external
+    commissions."'
+  reason: Transaction-level commission records tied to brokerage agents and offices (EmployeeReadOnly,
+    OfficeReadOnly). Clearly brokerage commission management; ambiguity between commission settlement
+    (.80) and agent commission plan administration (.90) caps confidence.
+- tag: Offers
+  spec_file: lone-wolf-offers-api-openapi.yml
+  capability_id: BC-4960.60
+  capability_id_l1: BC-4960
+  capability_name: Offer & Negotiation Management
+  confidence: 0.72
+  evidence: '"Create an offer", "List offers", "Update an offer"; description: "covers the full transaction
+    lifecycle: creating and updating transactions, managing offers"'
+  reason: Offer records within a residential real-estate transaction platform map to brokerage offer management/negotiation
+    on behalf of represented parties. Some ambiguity remains as the offer schema fields are not shown.
+- tag: Title Integration
+  spec_file: lone-wolf-title-integration-api-openapi.yml
+  capability_id: BC-4960.70
+  capability_id_l1: BC-4960
+  capability_name: Brokerage Transaction Closing Coordination
+  confidence: 0.72
+  evidence: POST /transactions/{transactionId}/title-order-status/{status} "Update Title Order Status";
+    POST /transactions/{transactionId}/title-order-note "Add Note to Title Order"
+  reason: Tracks title-order status and notes against a real-estate transaction, i.e. coordination of
+    title/escrow/conveyancing steps through to closing on a brokered deal.
+- tag: Transaction Documents
+  spec_file: lone-wolf-transaction-documents-api-openapi.yml
+  capability_id: BC-4960
+  capability_id_l1: BC-4960
+  capability_name: Real Estate Brokerage Management
+  confidence: 0.7
+  evidence: GET /v2/transactions/{id}/documents — "Get All Documents"; POST "Upload a Document"; TransactionDesk
+    API for "transaction management"
+  reason: Manages the document set attached to a residential real-estate deal file in a brokerage transaction-management
+    platform, which sits within Real Estate Brokerage Management. No single L2 cleanly covers deal-file
+    document handling, so L1 only.
+- tag: Transaction Forms
+  spec_file: lone-wolf-transaction-forms-api-openapi.yml
+  capability_id: BC-4960
+  capability_id_l1: BC-4960
+  capability_name: Real Estate Brokerage Management
+  confidence: 0.7
+  evidence: '"Add forms to a transaction", "Get a transaction form PDF"; description: "attaching forms
+    from form libraries, and sending documents out for e-signature through Authentisign"'
+  reason: Attachment and retrieval of standard real-estate transaction forms within a brokerage deal file
+    — brokerage transaction paperwork. L1 only as it spans offer drafting and closing coordination.
