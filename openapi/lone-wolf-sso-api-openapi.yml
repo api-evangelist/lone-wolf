@@ -6,14 +6,17 @@ info:
 servers:
 - url: https://api.lwolf.com/authentisign
 tags:
-- name: Sso
+- name: SSO
 paths:
   /api/v1/sso/signing/{signingId}:
     get:
       tags:
-      - Sso
-      summary: Retrieve an SSO URL for a specific signing. This endpoint generates an SSO URL that directly lands the user into the design phase of the signing.
-      description: "Sample request:\n            \n    GET /api/v1/sso/signing/{signingId}?redirectUrl=https://example.com"
+      - SSO
+      summary: Retrieve an SSO URL for a specific signing
+      description: 'Sample request:
+
+
+        GET /api/v1/sso/signing/{signingId}?redirectUrl=https://example.com'
       operationId: DesignSso
       parameters:
       - name: signingId
@@ -46,9 +49,58 @@ paths:
   /api/v1/sso/layout/{layoutId}:
     post:
       tags:
-      - Sso
-      summary: SSO into the layout design phase with account update. This endpoint allows customization of the layout and setting up signature blocks.
-      description: "Sample request:\n            \n    POST /api/v1/sso/layout/{layoutId}\n    {\n        \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"firstName\": \"John\",\n        \"middleName\": \"D\",\n        \"lastName\": \"Doe\",\n        \"email\": \"john.doe@example.com\",\n        \"phone\": \"555-5555\",\n        \"company\": \"JD Inc\",\n        \"clientId\": \"Client123\",\n        \"clientFullName\": \"John Doe\",\n        \"clientShortName\": \"JD\",\n        \"timeZone\": \"EST\",\n        \"gmtOffset\": -5,\n        \"applyDST\": true,\n        \"isExpired\": false,\n        \"isValid\": true,\n        \"isDisabled\": false,\n        \"isDeleted\": false,\n        \"language\": \"en\",\n        \"isInitialized\": true,\n        \"hasMoxiContacts\": false,\n        \"lwaId\": \"LWA12345\"\n    }"
+      - SSO
+      summary: SSO into the layout design phase with account update
+      description: 'Sample request:
+
+
+        POST /api/v1/sso/layout/{layoutId}
+
+        {
+
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+
+        "firstName": "John",
+
+        "middleName": "D",
+
+        "lastName": "Doe",
+
+        "email": "john.doe@example.com",
+
+        "phone": "555-5555",
+
+        "company": "JD Inc",
+
+        "clientId": "Client123",
+
+        "clientFullName": "John Doe",
+
+        "clientShortName": "JD",
+
+        "timeZone": "EST",
+
+        "gmtOffset": -5,
+
+        "applyDST": true,
+
+        "isExpired": false,
+
+        "isValid": true,
+
+        "isDisabled": false,
+
+        "isDeleted": false,
+
+        "language": "en",
+
+        "isInitialized": true,
+
+        "hasMoxiContacts": false,
+
+        "lwaId": "LWA12345"
+
+        }'
       operationId: LayoutSso
       parameters:
       - name: layoutId
@@ -155,9 +207,12 @@ paths:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
     get:
       tags:
-      - Sso
-      summary: SSO into the layout design phase. This endpoint allows customization of the layout and setting up signature blocks.
-      description: "Sample request:\n            \n    GET /api/v1/sso/layout/{layoutId}?redirectUrl=https://example.com&language=en"
+      - SSO
+      summary: SSO into the layout design phase
+      description: 'Sample request:
+
+
+        GET /api/v1/sso/layout/{layoutId}?redirectUrl=https://example.com&language=en'
       operationId: LayoutSso
       parameters:
       - name: layoutId
@@ -194,23 +249,6 @@ paths:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
 components:
   schemas:
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
     Authentisign.Services.Dtos.AccountDto:
       type: object
       properties:
@@ -282,6 +320,23 @@ components:
           type:
           - string
           - 'null'
+      additionalProperties: false
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
       additionalProperties: false
 x-topics:
 - title: Overview

@@ -316,7 +316,7 @@ x-refined-from:
 x-topics:
 - title: Overview
   content:
-    $ref: ./docs/authentisign-overview.md
+    $ref: ./docs/backoffice-overview.md
 - title: Getting started
   content:
     $ref: ./docs/getting-started.md

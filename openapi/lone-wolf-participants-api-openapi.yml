@@ -12,8 +12,11 @@ paths:
     get:
       tags:
       - Participants
-      summary: Retrieve the list of signing participants within a signing.
-      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/participants"
+      summary: Retrieve the list of signing participants within a signing
+      description: 'Sample request:
+
+
+        GET /api/v1/signings/{signingId}/participants'
       operationId: GetParticipants
       parameters:
       - name: signingId
@@ -42,8 +45,17 @@ paths:
     put:
       tags:
       - Participants
-      summary: Update the email address of a signing participant and resend the invitation.
-      description: "Sample request:\n            \n    PATCH /api/v1/participants/{participantId}/email \n    {\n        \"email\": \"change@lwolf.com\"\n    }"
+      summary: Update the email address of a signing participant and resend the invitation
+      description: 'Sample request:
+
+
+        PATCH /api/v1/participants/{participantId}/email
+
+        {
+
+        "email": "change@lwolf.com"
+
+        }'
       operationId: UpdateParticipantEmail
       parameters:
       - name: participantId
@@ -87,8 +99,67 @@ paths:
     post:
       tags:
       - Participants
-      summary: Batch creation of signing participants for a signing process.
-      description: "Sample request:\n            \n    POST /api/v1/participants/batch \n    Header: externalId\n    Request Body:\n    [\n        {\n            \"Id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n            \"SigningId\": \"5c192f97-41e4-ed11-8e8b-00224827d18c\",\n            \"FirstName\": \"John\",\n            \"MiddleName\": \"D\",\n            \"LastName\": \"Doe\",\n            \"Email\": \"john.doe@example.com\",\n            \"ParticipantRole\": \"Buyer\",\n            \"CustomSignature\": \"JD_Signature\",\n            \"CustomInitials\": \"JD\",\n            \"SigningPin\": \"123456\",\n            \"Type\": 0,\n            \"DisplayOrder\": 1,\n            \"SignerGroup\": 1,\n            \"CustomInvitationSubject\": \"Invitation to Sign\",\n            \"CustomInvitationMessage\": \"Please review and sign the document.\",\n            \"ExternalId\": \"External12345\",\n            \"TransactionId\": \"3fb95f64-5717-4562-b3fc-2c963f66bfa7\",\n            \"Language\": \"en\",\n            \"StaticSignatureEnabled\": true,\n            \"ScriptedSignatureEnabled\": true,\n            \"ImageSignatureEnabled\": true,\n            \"TrestleRole\": \"Role1\"\n        }\n    ]"
+      summary: Batch creation of signing participants for a signing process
+      description: 'Sample request:
+
+
+        POST /api/v1/participants/batch
+
+        Header: externalId
+
+        Request Body:
+
+        [
+
+        {
+
+        "Id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+
+        "SigningId": "5c192f97-41e4-ed11-8e8b-00224827d18c",
+
+        "FirstName": "John",
+
+        "MiddleName": "D",
+
+        "LastName": "Doe",
+
+        "Email": "john.doe@example.com",
+
+        "ParticipantRole": "Buyer",
+
+        "CustomSignature": "JD_Signature",
+
+        "CustomInitials": "JD",
+
+        "SigningPin": "123456",
+
+        "Type": 0,
+
+        "DisplayOrder": 1,
+
+        "SignerGroup": 1,
+
+        "CustomInvitationSubject": "Invitation to Sign",
+
+        "CustomInvitationMessage": "Please review and sign the document.",
+
+        "ExternalId": "External12345",
+
+        "TransactionId": "3fb95f64-5717-4562-b3fc-2c963f66bfa7",
+
+        "Language": "en",
+
+        "StaticSignatureEnabled": true,
+
+        "ScriptedSignatureEnabled": true,
+
+        "ImageSignatureEnabled": true,
+
+        "TrestleRole": "Role1"
+
+        }
+
+        ]'
       operationId: AddParticipants
       parameters:
       - name: externalId
@@ -156,31 +227,6 @@ paths:
                 $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
 components:
   schemas:
-    Microsoft.AspNetCore.Mvc.ProblemDetails:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        detail:
-          type:
-          - string
-          - 'null'
-        instance:
-          type:
-          - string
-          - 'null'
-      additionalProperties: {}
     Authentisign.Services.Dtos.ParticipantDto:
       required:
       - firstName
@@ -276,6 +322,39 @@ components:
           - 'null'
           format: int32
       additionalProperties: false
+    Authentisign.Services.Dtos.ParticipantEmailDtoExternal:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
     Authentisign.Services.Dtos.ErrorResponse:
       type: object
       properties:
@@ -292,14 +371,6 @@ components:
           - 'null'
           items:
             type: string
-      additionalProperties: false
-    Authentisign.Services.Dtos.ParticipantEmailDtoExternal:
-      type: object
-      properties:
-        email:
-          type:
-          - string
-          - 'null'
       additionalProperties: false
 x-topics:
 - title: Overview

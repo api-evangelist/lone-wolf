@@ -16,7 +16,7 @@ tags:
 paths:
   /v1/login:
     post:
-      summary: Returns a JWT along with other information for use in successive calls to our apps and APIs.
+      summary: Returns a JWT along with other information for use in successive calls to our…
       description: If the `clientId` property is not passed in, and the user is only attached to one client, that client will be returned in the JWT. If it is not passed in and the user is attached to multiple clients, then no client information will be passed back in the JWT.
       tags:
       - Authentication
@@ -53,6 +53,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+      operationId: postV1Login
+      x-operation-id-source: derived
     servers:
     - url: https://deals.api.lwolf.com
       description: Base URL declared by the provider in apis.yml (roadmap#122).
@@ -115,6 +117,8 @@ paths:
                   token_type:
                     type: string
                     example: bearer
+      operationId: postOauthToken
+      x-operation-id-source: derived
     servers:
     - url: https://api.pre.transactiondesk.com
   /auth/user:
@@ -165,6 +169,8 @@ paths:
           description: Unauthorized — invalid credentials
         '409':
           description: Account linking failed
+      operationId: postAuthUser
+      x-operation-id-source: derived
     servers:
     - url: https://ws.zipformplus.com/api
       description: Production
@@ -200,6 +206,8 @@ paths:
                 $ref: '#/components/schemas/ContextIdResponse'
         '401':
           description: Unauthorized
+      operationId: postAuthExternalId
+      x-operation-id-source: derived
     servers:
     - url: https://ws.zipformplus.com/api
       description: Production
@@ -218,6 +226,8 @@ paths:
           description: Unauthorized
       security:
       - contextAuth: []
+      operationId: postAuthEndSession
+      x-operation-id-source: derived
     servers:
     - url: https://ws.zipformplus.com/api
       description: Production
@@ -251,6 +261,8 @@ paths:
           description: Not Modified — External Id could not be removed
         '401':
           description: Unauthorized — partner not recognized or user not found
+      operationId: postAuthUnlink
+      x-operation-id-source: derived
     get:
       summary: Unlink Account (GET)
       description: Alternative GET form of the unlink method. Supply SharedKey and ExternalId as query parameters.
@@ -275,6 +287,8 @@ paths:
           description: Not Modified
         '401':
           description: Unauthorized
+      operationId: getAuthUnlink
+      x-operation-id-source: derived
     servers:
     - url: https://ws.zipformplus.com/api
       description: Production
@@ -282,6 +296,18 @@ paths:
       description: Staging/QA
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
     Login:
       type: object
       required:
@@ -308,18 +334,6 @@ components:
           type: integer
           format: int32
           description: The number of seconds in which the token will expire.
-    ApiError:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-        details:
-          type: array
-          items:
-            type: string
     ContextIdResponse:
       type: object
       properties:
@@ -358,7 +372,7 @@ x-refined-from:
 x-topics:
 - title: Overview
   content:
-    $ref: ./docs/authentisign-overview.md
+    $ref: ./docs/backoffice-overview.md
 - title: Getting started
   content:
     $ref: ./docs/getting-started.md

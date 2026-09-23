@@ -259,17 +259,6 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    ConditionTypePatchRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the condition type.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a condition type.
     ConditionType:
       required:
       - name
@@ -296,6 +285,17 @@ components:
           description: The name of the condition type.
       additionalProperties: false
       description: Represents a preset type of condition that can be applied to a transaction.
+    ConditionTypePatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the condition type.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a condition type.
 x-topics:
 - title: Overview
   content:

@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: TransactionDesk Partner Other Endpoints API
-  description: "Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.\n\n## Authorization\n\n### Authorization Code Flow\n\n1. Redirect the user to the OAuth authorization URL:\n   `https://api.pre.transactiondesk.com/oauth/authorize?client_id=Lonewolf&redirect_uri=https://www.example.com&response_type=code&state=active`\n2. The user logs in via the Lonewolf Authentication system.\n3. On success, the user is redirected back to your `redirect_uri` with a `code` parameter appended.\n4. Exchange the code for an access token via `POST /oauth/token` (see Authentication section). The code is one-time-use and expires in 10 minutes.\n5. Include the access token in the `Authorization: Bearer <token>` header on every request.\n\n### Client Credentials Flow\n\nFor enterprise integrations, use `grant_type=client_credentials`. No user redirect is required. Include an `On-Behalf-Of` header with the target user's GUID on API requests.\n\n## Universal Global Fields\n\nBelow is a list of the fields related to a transaction that can be updated through the API for the Transaction Desk System.\n\n### 1. Property Information\n\n#### Address\n- `streetNumber`\n- `streetName`\n- `city`\n- `county`\n- `state`\n- `zipCode`\n\n#### Subdivision and Parcel Information\n- `subDivision`\n- `lotNumber`\n- `block`\n- `pageNumber`\n- `platBook`\n\n#### Property Characteristics\n- `yearBuilt`\n- `zoningClass`\n- `schoolDistrict`\n\n#### Tax and Legal Information\n- `taxNumber`\n- `township`\n- `legalDescription`\n\n### 2. Listing Information\n\n#### Listing Identification\n- `mlsNumber`\n\n#### Pricing\n- `listPrice`\n\n#### Listing Timeline\n- `expirationDate`\n\n#### Property Inclusions and Exclusions\n- `propertyIncludes`\n- `propertyExcludes`\n- `leasedItems`\n\n### 3. Purchase Information\n\n#### Pricing\n- `purchasePrice`\n\n#### Offer Timeline\n- `offerDate`\n- `offerExpirationDate`\n- `offerAcceptanceDate`\n\n#### Financing Timeline\n- `applicationDate`\n- `approvalDate`\n\n#### Deposits\n- `depositAmount`\n- `additionalDepositAmount`\n- `additionalDepositDate`\n\n#### Transaction Milestones\n- `fundingDate`\n- `possessionDate`\n- `closingDate`"
+  description: Lonewolf's TransactionDesk API for Partners to integrate with the TransactionDesk application.
   version: '2.0'
 servers:
 - url: https://api.pre.transactiondesk.com
@@ -29,6 +29,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+      operationId: getV2Users
+      x-operation-id-source: derived
   /v2/formlibraries:
     get:
       summary: Get All Libraries
@@ -50,6 +52,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+      operationId: getV2Formlibraries
+      x-operation-id-source: derived
   /v2/formlibraries/{folderId}:
     parameters:
     - in: path
@@ -82,6 +86,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+      operationId: getV2FormlibrariesByFolderId
+      x-operation-id-source: derived
   /v2/formlibraries/{folderId}/forms/{formLib}:
     parameters:
     - in: path
@@ -120,6 +126,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorNotFound'
+      operationId: getV2FormlibrariesByFolderIdFormsByFormLib
+      x-operation-id-source: derived
   /v2/transactions/{transactionId}/forms:
     parameters:
     - in: path
@@ -172,6 +180,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+      operationId: postV2TransactionsByTransactionIdForms
+      x-operation-id-source: derived
   /v2/transactions/{transactionId}/forms/{id}:
     parameters:
     - in: path
@@ -202,8 +212,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorUnauthorized'
+      operationId: deleteV2TransactionsByTransactionIdFormsById
+      x-operation-id-source: derived
 components:
   schemas:
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    FormLibraryForm:
+      type: object
+      properties:
+        formLib:
+          type: string
+          example: ABC123
+          description: Form identifier within the folder
+        name:
+          type: string
+          example: Purchase Agreement
+          description: Name of the form
+        description:
+          type: string
+          example: Purchase Agreement form
+          description: Description of the form
     ErrorUnauthorized:
       type: object
       properties:
@@ -232,33 +271,6 @@ components:
           type: string
           example: State form library
           description: Description of the form library folder
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
-    FormLibraryForm:
-      type: object
-      properties:
-        formLib:
-          type: string
-          example: ABC123
-          description: Form identifier within the folder
-        name:
-          type: string
-          example: Purchase Agreement
-          description: Name of the form
-        description:
-          type: string
-          example: Purchase Agreement form
-          description: Description of the form
   securitySchemes:
     bearerAuth:
       type: http

@@ -583,23 +583,31 @@ paths:
                 - string
 components:
   schemas:
-    ContactTypeReadOnly:
+    ApiError:
       type: object
       properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the contact type.
+        id:
+          type: string
+          description: The unique identifier for the error.
           readOnly: true
         code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
           type:
-          - string
+          - array
           - 'null'
-          description: The unique code for the contact type.
+          items:
+            type: string
+          description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-      description: A read only representation of a contact type.
     BusinessContact:
       required:
       - contactTypeId
@@ -714,31 +722,23 @@ components:
           $ref: '#/components/schemas/ContactTypeReadOnly'
       additionalProperties: false
       description: Represents a company or business contact like a Lawyer or Title Company. See client contacts for buyers and sellers.
-    ApiError:
+    ContactTypeReadOnly:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
           readOnly: true
         code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
+          description: The unique code for the contact type.
           readOnly: true
       additionalProperties: false
+      description: A read only representation of a contact type.
     BusinessContactPatchRequest:
       type: object
       properties:

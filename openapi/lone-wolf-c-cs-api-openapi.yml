@@ -6,14 +6,17 @@ info:
 servers:
 - url: https://api.lwolf.com/authentisign
 tags:
-- name: CCs
+- name: C Cs
 paths:
   /api/v1/signings/{signingId}/ccs:
     get:
       tags:
-      - CCs
-      summary: Retrieve CCs for a signing. This endpoint fetches all the CCs associated with the provided signing ID.
-      description: "Sample request:\n            \n    GET /api/v1/signings/{signingId}/CCs"
+      - C Cs
+      summary: Retrieve CCs for a signing
+      description: 'Sample request:
+
+
+        GET /api/v1/signings/{signingId}/CCs'
       operationId: GetCcs
       parameters:
       - name: signingId
@@ -41,9 +44,42 @@ paths:
   /api/v1/ccs/batch:
     post:
       tags:
-      - CCs
-      summary: Add CCs in batch. This endpoint allows you to add multiple CCs at once for efficient processing.
-      description: "Sample request:\n            \n    POST /api/v1/signings/{signingId}/CCs/batch\n    [\n        {\n            \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n            \"signingId\": \"12345678-1234-1234-1234-123456789012\",\n            \"firstName\": \"John\",\n            \"middleName\": \"D\",\n            \"lastName\": \"Doe\",\n            \"email\": \"john.doe@example.com\",\n            \"displayOrder\": 1,\n            \"externalId\": \"EXT1234\",\n            \"transactionId\": \"9b74f03d-71d4-4911-a0d4-60c720bacea1\",\n            \"saveToContacts\": true\n        },\n        ... [more CCs]\n    ]"
+      - C Cs
+      summary: Add CCs in batch
+      description: 'Sample request:
+
+
+        POST /api/v1/signings/{signingId}/CCs/batch
+
+        [
+
+        {
+
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+
+        "signingId": "12345678-1234-1234-1234-123456789012",
+
+        "firstName": "John",
+
+        "middleName": "D",
+
+        "lastName": "Doe",
+
+        "email": "john.doe@example.com",
+
+        "displayOrder": 1,
+
+        "externalId": "EXT1234",
+
+        "transactionId": "9b74f03d-71d4-4911-a0d4-60c720bacea1",
+
+        "saveToContacts": true
+
+        },
+
+        ... [more CCs]
+
+        ]'
       operationId: AddCCs
       parameters:
       - name: externalId
@@ -111,48 +147,6 @@ paths:
                 $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
 components:
   schemas:
-    Microsoft.AspNetCore.Mvc.ProblemDetails:
-      type: object
-      properties:
-        type:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        detail:
-          type:
-          - string
-          - 'null'
-        instance:
-          type:
-          - string
-          - 'null'
-      additionalProperties: {}
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
     Authentisign.Services.Dtos.CcDto:
       required:
       - firstName
@@ -195,6 +189,48 @@ components:
           type:
           - boolean
           - 'null'
+      additionalProperties: false
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
       additionalProperties: false
 x-topics:
 - title: Overview

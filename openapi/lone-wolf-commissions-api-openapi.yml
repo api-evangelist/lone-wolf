@@ -637,6 +637,83 @@ paths:
                 - string
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    CommissionFee:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        percentage:
+          type: number
+          description: The percentage of the commission. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the fee.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the fee.
+        taxAmount:
+          type: number
+          description: The amount of tax applied to the fee.
+          format: currency
+        taxPercentage:
+          type: number
+          description: The tax rate applied to the fee. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        paymentMethodCode:
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to pay the fee.
+        fee:
+          $ref: '#/components/schemas/FeeReadOnly'
+      additionalProperties: false
+      description: Represents a fee that is related to a commission.
     EmployeeReadOnly:
       type: object
       properties:
@@ -660,6 +737,23 @@ components:
           readOnly: true
       additionalProperties: false
       description: A read only representation of an agent.
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
     Commission:
       required:
       - agentId
@@ -807,100 +901,6 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a commission.
-    CommissionFee:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        percentage:
-          type: number
-          description: The percentage of the commission. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        amount:
-          type: number
-          description: The amount of the fee.
-          format: currency
-        calculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code for the method used to calculate the fee.
-        taxAmount:
-          type: number
-          description: The amount of tax applied to the fee.
-          format: currency
-        taxPercentage:
-          type: number
-          description: The tax rate applied to the fee. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        paymentMethodCode:
-          type:
-          - string
-          - 'null'
-          description: The code for the method used to pay the fee.
-        fee:
-          $ref: '#/components/schemas/FeeReadOnly'
-      additionalProperties: false
-      description: Represents a fee that is related to a commission.
-    ApiError:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
-      additionalProperties: false
-    FeeReadOnly:
-      type: object
-      properties:
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the fee.
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the fee.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a fee associated with a transaction.
 x-topics:
 - title: Overview
   content:

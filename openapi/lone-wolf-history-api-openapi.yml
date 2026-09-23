@@ -12,8 +12,16 @@ paths:
     get:
       tags:
       - History
-      summary: Retrieve Audit Trail. This endpoint allows you to pull a list of all audit trail events related to this signing. The audit trail is also embedded into the final signed documents themselves.
-      description: "Sample request:\n            \n    GET /signings/{signingId}/history\n            \nHeader:\n    externalId: SomeExternalId"
+      summary: Retrieve Audit Trail
+      description: 'Sample request:
+
+
+        GET /signings/{signingId}/history
+
+
+        Header:
+
+        externalId: SomeExternalId'
       operationId: GetSigningHistory
       parameters:
       - name: signingId

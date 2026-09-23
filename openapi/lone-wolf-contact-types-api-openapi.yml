@@ -272,6 +272,49 @@ paths:
       description: Test
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    ContactTypePatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
+          writeOnly: true
+        inactiveDate:
+          type:
+          - string
+          - 'null'
+          description: The date the contact type was no longer active.
+          format: date
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a contact type.
     ContactType:
       required:
       - name
@@ -308,49 +351,6 @@ components:
           format: date
       additionalProperties: false
       description: Represents a type of contact for a client or business contact associated with a transaction.
-    ContactTypePatchRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the contact type.
-          writeOnly: true
-        inactiveDate:
-          type:
-          - string
-          - 'null'
-          description: The date the contact type was no longer active.
-          format: date
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a contact type.
-    ApiError:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
-      additionalProperties: false
     ContactType_2:
       type: object
       properties:
@@ -409,7 +409,7 @@ x-refined-from:
 x-topics:
 - title: Overview
   content:
-    $ref: ./docs/authentisign-overview.md
+    $ref: ./docs/backoffice-overview.md
 - title: Getting started
   content:
     $ref: ./docs/getting-started.md

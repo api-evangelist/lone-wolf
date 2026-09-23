@@ -1037,6 +1037,9 @@ components:
           type: integer
           format: int32
           description: The number of seconds in which the token will expire.
+servers:
+- url: https://deals.api.lwolf.com
+  description: Base URL declared by the provider in apis.yml (roadmap#122).
 paths:
   "/business-contacts/{businessContactId}":
     get:

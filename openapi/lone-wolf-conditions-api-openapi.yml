@@ -505,31 +505,6 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a condition.
-    ApiError:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
-      additionalProperties: false
     Condition:
       required:
       - description
@@ -567,6 +542,31 @@ components:
           format: date
       additionalProperties: false
       description: Represents a condition on a transaction.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
     Condition_2:
       type: object
       description: 'A condition lookup value from the Conditions API. Note: transaction-level conditions attached to a Transaction use the TransactionCondition schema.'
@@ -618,7 +618,7 @@ x-refined-from:
 x-topics:
 - title: Overview
   content:
-    $ref: ./docs/authentisign-overview.md
+    $ref: ./docs/backoffice-overview.md
 - title: Getting started
   content:
     $ref: ./docs/getting-started.md

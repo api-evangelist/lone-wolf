@@ -12,8 +12,13 @@ paths:
     post:
       tags:
       - Accounts
-      summary: Update Email Signature. Use this endpoint to update the email signature associated with the current account.
-      description: "Sample request:\n            \n    POST /Accounts/email-signature\n    \"emailSignature\" : \"Best Regards, John Doe\""
+      summary: Update Email Signature
+      description: 'Sample request:
+
+
+        POST /Accounts/email-signature
+
+        "emailSignature" : "Best Regards, John Doe"'
       operationId: UpdateEmailSignature
       requestBody:
         content:

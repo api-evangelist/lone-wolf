@@ -157,7 +157,6 @@ paths:
       tags:
       - Property Types
       summary: Update Property Type
-      description: Update Property Type
       operationId: patch-v1-property-types-propertytypeid
       parameters:
       - name: propertyTypeId
@@ -280,27 +279,6 @@ paths:
       description: Test
 components:
   schemas:
-    PropertyTypePatchRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the property type.
-          writeOnly: true
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the property type.
-          writeOnly: true
-        rental:
-          type: boolean
-          description: Indicates whether the property type is for rental property transactions.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a property type.
     ApiError:
       type: object
       properties:
@@ -371,6 +349,27 @@ components:
           description: Indicates whether the property type is for rental property transactions.
       additionalProperties: false
       description: Represents the type of property for a transaction.
+    PropertyTypePatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the property type.
+          writeOnly: true
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the property type.
+          writeOnly: true
+        rental:
+          type: boolean
+          description: Indicates whether the property type is for rental property transactions.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a property type.
     PropertyType_2:
       type: object
       properties:
@@ -437,7 +436,7 @@ x-refined-from:
 x-topics:
 - title: Overview
   content:
-    $ref: ./docs/authentisign-overview.md
+    $ref: ./docs/backoffice-overview.md
 - title: Getting started
   content:
     $ref: ./docs/getting-started.md

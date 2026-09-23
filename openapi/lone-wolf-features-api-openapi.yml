@@ -237,35 +237,6 @@ paths:
                 - string
 components:
   schemas:
-    Feature:
-      required:
-      - code
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        code:
-          type: string
-          description: The code.
-        enabled:
-          type: boolean
-          description: True if the feature is enabled.
-      additionalProperties: false
-      description: Represents a feature in back office.
     ApiError:
       type: object
       properties:
@@ -300,6 +271,35 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to update the properties of a feature.
+    Feature:
+      required:
+      - code
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        code:
+          type: string
+          description: The code.
+        enabled:
+          type: boolean
+          description: True if the feature is enabled.
+      additionalProperties: false
+      description: Represents a feature in back office.
 x-topics:
 - title: Overview
   content:

@@ -578,138 +578,6 @@ paths:
                 - string
 components:
   schemas:
-    ContactTypeReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the contact type.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The unique code for the contact type.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a contact type.
-    ClientContactPatchRequest:
-      type: object
-      properties:
-        contactTypeId:
-          type: string
-          description: The unique id of the contact type.
-          format: uuid
-          writeOnly: true
-        endCode:
-          enum:
-          - B
-          - S
-          type:
-          - string
-          - 'null'
-          description: The end or side of the transaction with which the contact is associated.
-          writeOnly: true
-        prefix:
-          type:
-          - string
-          - 'null'
-          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
-          writeOnly: true
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: The first name of the contact.
-          writeOnly: true
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: The last name of the contact.
-          writeOnly: true
-        companyName:
-          type:
-          - string
-          - 'null'
-          description: The name of the company if the buyer or seller is a company and not an individual.
-          writeOnly: true
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          description: The full street address for the company of the contact.
-          writeOnly: true
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          description: The second line of the street address, if applicable (e.g., suite number).
-          writeOnly: true
-        addressCity:
-          type:
-          - string
-          - 'null'
-          description: The city of the contact's address.
-          writeOnly: true
-        addressPostalCode:
-          type:
-          - string
-          - 'null'
-          description: The postal code of the contact's address. This will be unformatted.
-          writeOnly: true
-        addressProvinceCode:
-          type:
-          - string
-          - 'null'
-          description: The two character code for the province or state.
-          writeOnly: true
-        addressCountryCode:
-          type:
-          - string
-          - 'null'
-          description: The two character code for the country of the contact's address.
-          writeOnly: true
-        phoneNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The main phone number for the contact. This will be unformatted.
-          writeOnly: true
-        phoneNumberBusiness:
-          type:
-          - string
-          - 'null'
-          description: The phone number of the business for the contact. This will be unformatted.
-          writeOnly: true
-        phoneNumberMobile:
-          type:
-          - string
-          - 'null'
-          description: The mobile or cell phone number for the contact. This will be unformatted.
-          writeOnly: true
-        faxNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The main fax number for the contact. This will be unformatted.
-          writeOnly: true
-        emailAddressMain:
-          type:
-          - string
-          - 'null'
-          description: The main email address of the contact.
-          writeOnly: true
-        emailAddressWork:
-          type:
-          - string
-          - 'null'
-          description: The main email address of the contact.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a client contact.
     ApiError:
       type: object
       properties:
@@ -849,6 +717,138 @@ components:
           $ref: '#/components/schemas/ContactTypeReadOnly'
       additionalProperties: false
       description: Represents a buyer or seller on a transaction. For companies or business contacts, see Business Contact.
+    ContactTypeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The unique code for the contact type.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a contact type.
+    ClientContactPatchRequest:
+      type: object
+      properties:
+        contactTypeId:
+          type: string
+          description: The unique id of the contact type.
+          format: uuid
+          writeOnly: true
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The end or side of the transaction with which the contact is associated.
+          writeOnly: true
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
+          writeOnly: true
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the contact.
+          writeOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the contact.
+          writeOnly: true
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company if the buyer or seller is a company and not an individual.
+          writeOnly: true
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The full street address for the company of the contact.
+          writeOnly: true
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the street address, if applicable (e.g., suite number).
+          writeOnly: true
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the contact's address.
+          writeOnly: true
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the contact's address. This will be unformatted.
+          writeOnly: true
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the province or state.
+          writeOnly: true
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the country of the contact's address.
+          writeOnly: true
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number for the contact. This will be unformatted.
+          writeOnly: true
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the business for the contact. This will be unformatted.
+          writeOnly: true
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile or cell phone number for the contact. This will be unformatted.
+          writeOnly: true
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main fax number for the contact. This will be unformatted.
+          writeOnly: true
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+          writeOnly: true
+        emailAddressWork:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a client contact.
 x-topics:
 - title: Overview
   content:

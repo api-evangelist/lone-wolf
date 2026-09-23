@@ -12,8 +12,11 @@ paths:
     get:
       tags:
       - Layouts
-      summary: Get layouts by language. This endpoint retrieves all layouts created under the account based on the specified language.
-      description: "Sample request:\n            \n    GET /layouts?language=en"
+      summary: Get layouts by language
+      description: 'Sample request:
+
+
+        GET /layouts?language=en'
       operationId: GetLayouts
       parameters:
       - name: language
@@ -39,8 +42,17 @@ paths:
     post:
       tags:
       - Layouts
-      summary: Create a new layout. This endpoint allows you to create a signature layout for future signing.
-      description: "Sample request:\n            \n    POST /layouts\n    {\n        \"name\": \"Test Layout\"\n    }"
+      summary: Create a new layout
+      description: 'Sample request:
+
+
+        POST /layouts
+
+        {
+
+        "name": "Test Layout"
+
+        }'
       operationId: CreateLayout
       parameters:
       - name: Name
@@ -77,8 +89,11 @@ paths:
     post:
       tags:
       - Layouts
-      summary: Copy an existing layout. This endpoint lets you duplicate a layout for reuse.
-      description: "Sample request:\n            \n    POST /layouts/{layoutId}/copy"
+      summary: Copy an existing layout. This endpoint lets you duplicate a layout for reuse
+      description: 'Sample request:
+
+
+        POST /layouts/{layoutId}/copy'
       operationId: CopyLayout
       parameters:
       - name: id
@@ -107,8 +122,11 @@ paths:
     delete:
       tags:
       - Layouts
-      summary: Delete a specific layout. This endpoint removes a layout based on its ID.
-      description: "Sample request:\n            \n    DELETE /layouts/{LayoutId}"
+      summary: Delete a specific layout. This endpoint removes a layout based on its ID
+      description: 'Sample request:
+
+
+        DELETE /layouts/{LayoutId}'
       operationId: DeleteLayout
       parameters:
       - name: id
@@ -135,6 +153,14 @@ paths:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
 components:
   schemas:
+    Authentisign.Services.Dtos.LayoutDtoExternal:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     Authentisign.Services.Dtos.ErrorResponse:
       type: object
       properties:
@@ -151,14 +177,6 @@ components:
           - 'null'
           items:
             type: string
-      additionalProperties: false
-    Authentisign.Services.Dtos.LayoutDtoExternal:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
       additionalProperties: false
 x-topics:
 - title: Overview
