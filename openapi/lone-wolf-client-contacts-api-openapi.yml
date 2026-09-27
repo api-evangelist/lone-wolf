@@ -603,6 +603,23 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
+    ContactTypeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The unique code for the contact type.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a contact type.
     ClientContact:
       required:
       - contactTypeId
@@ -717,23 +734,6 @@ components:
           $ref: '#/components/schemas/ContactTypeReadOnly'
       additionalProperties: false
       description: Represents a buyer or seller on a transaction. For companies or business contacts, see Business Contact.
-    ContactTypeReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the contact type.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The unique code for the contact type.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a contact type.
     ClientContactPatchRequest:
       type: object
       properties:

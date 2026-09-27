@@ -574,119 +574,6 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    ExternalAgent:
-      required:
-      - endCode
-      - firstName
-      - lastName
-      - typeCode
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        endCode:
-          enum:
-          - B
-          - S
-          type: string
-          description: The code end or side of the transaction.
-        typeCode:
-          enum:
-          - B
-          - R
-          type: string
-          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
-        paymentMethodCode:
-          enum:
-          - B
-          - N
-          - E
-          type:
-          - string
-          - 'null'
-          description: The code for the method use to pay the external agent.
-        firstName:
-          type: string
-          description: The first name of the external agent.
-        lastName:
-          type: string
-          description: The last name of the external agent.
-        companyName:
-          type:
-          - string
-          - 'null'
-          description: The name of the company for which the external agent works.
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          description: The street address.
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          description: The address unit number.
-        addressCity:
-          type:
-          - string
-          - 'null'
-          description: The city of the address.
-        addressPostalCode:
-          type:
-          - string
-          - 'null'
-          description: The postal code of the address. This will be unformatted.
-        addressProvinceCode:
-          type:
-          - string
-          - 'null'
-          description: The two character state or province code.
-        addressCountryCode:
-          type:
-          - string
-          - 'null'
-          description: The two character country code.
-        phoneNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The external agent's main phone number.
-        phoneNumberBusiness:
-          type:
-          - string
-          - 'null'
-          description: The external agent's business phone number.
-        faxNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The external agent's main fax number.
-        emailAddressMain:
-          type:
-          - string
-          - 'null'
-          description: The external agent's main email address.
-        emailAddressBusiness:
-          type:
-          - string
-          - 'null'
-          description: The external agent's business email address.
-      additionalProperties: false
-      description: Represents an agent involved in the transaction that does not work for the brokerage.
     ExternalAgentPatchRequest:
       type: object
       properties:
@@ -804,6 +691,119 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of an external agent.
+    ExternalAgent:
+      required:
+      - endCode
+      - firstName
+      - lastName
+      - typeCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code end or side of the transaction.
+        typeCode:
+          enum:
+          - B
+          - R
+          type: string
+          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method use to pay the external agent.
+        firstName:
+          type: string
+          description: The first name of the external agent.
+        lastName:
+          type: string
+          description: The last name of the external agent.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company for which the external agent works.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The address unit number.
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character country code.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main phone number.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business phone number.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main fax number.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main email address.
+        emailAddressBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business email address.
+      additionalProperties: false
+      description: Represents an agent involved in the transaction that does not work for the brokerage.
 x-topics:
 - title: Overview
   content:

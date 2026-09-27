@@ -213,7 +213,7 @@ paths:
 
 
         GET /api/v1/sso/layout/{layoutId}?redirectUrl=https://example.com&language=en'
-      operationId: LayoutSso
+      operationId: getApiV1SsoLayoutByLayoutId
       parameters:
       - name: layoutId
         in: path
@@ -247,8 +247,27 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
+      x-operation-id-source: normalized
+      x-operation-id-original: LayoutSso
 components:
   schemas:
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
     Authentisign.Services.Dtos.AccountDto:
       type: object
       properties:
@@ -320,23 +339,6 @@ components:
           type:
           - string
           - 'null'
-      additionalProperties: false
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
       additionalProperties: false
 x-topics:
 - title: Overview

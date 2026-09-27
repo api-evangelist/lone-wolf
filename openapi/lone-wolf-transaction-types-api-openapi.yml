@@ -192,19 +192,6 @@ components:
         details:
           type: array
           items: {}
-    ErrorBadRequest:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-        message:
-          type: string
-          example: Request was not valid.
-        details:
-          type: array
-          items:
-            type: string
     ErrorUnauthorized:
       type: object
       properties:
@@ -242,6 +229,19 @@ components:
           type: string
           format: date-time
           example: '2012-01-18T20:42:38.737'
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http

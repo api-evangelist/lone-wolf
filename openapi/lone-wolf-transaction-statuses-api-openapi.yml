@@ -180,18 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
     TransactionStatus:
       type: object
       properties:
@@ -216,19 +204,18 @@ components:
           type: string
           format: date-time
           example: '2008-03-02T04:26:50.607+00:00'
-    ErrorBadRequest:
+    ErrorNotFound:
       type: object
       properties:
         code:
           type: integer
-          example: 400
+          example: 404
         message:
           type: string
-          example: Request was not valid.
+          example: Item not found.
         details:
           type: array
-          items:
-            type: string
+          items: {}
     ErrorUnauthorized:
       type: object
       properties:
@@ -242,6 +229,19 @@ components:
           type: array
           items: {}
         data: {}
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http

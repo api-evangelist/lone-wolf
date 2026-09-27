@@ -401,19 +401,68 @@ paths:
                   $ref: '#/components/schemas/MemberInOutStatus'
 components:
   schemas:
-    Integrations:
+    PublicProfile:
       type: object
       properties:
-        PartnerCode:
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was modified.
+        Name:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The name of the public profile.
+        FirstName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The first name of the member.
+        MiddleName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The middle name of the member.
+        LastName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The last name of the member.
+        Title:
           type: string
           maxLength: 100
           readOnly: true
-          description: The code for the Partner. Usually the Partner's name.
-        Id:
-          type: string
-          maxLength: 100
+          description: The title of the member.
+        Addresses:
+          type: array
           readOnly: true
-          description: The Id for the Partner's matching Member.
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The collection of addresses for the member. Currently supported address types: M: Mailing, P: Physical'
+        EmailAddresses:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The collection of email addresses for the member. Currently supported email address types: B: Business, S: Secondary'
+        PhoneNumbers:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: The collection of phone numbers for the member.
+        Websites:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Website'
+          description: The collection of websites for the member.
     PhoneNumber:
       type: object
       required:
@@ -442,6 +491,49 @@ components:
           type: string
           maxLength: 1
           description: 'The code for the type of phone number. A: Assistant, B: Business, BF: Business Fax, CB: Callback, C: Company, X: Extension, H: Home, HF: Home Fax, ISDN: ISDN, M: Mobile, P: Pager, R: Radio, T: Telex, TF: Toll Free, TTY: TTY/TDD, O: Other, OF: Other Fax'
+    MLSBoard:
+      type: object
+      properties:
+        MLSId:
+          type: string
+          readOnly: true
+          description: The MLS Id of the member for the MLS Board specified by the MLSAreaId.
+        MLSAreaId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the MLS area.
+    MemberInOutStatus:
+      type: object
+      properties:
+        Id:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The Lone Wolf Id of the member.
+        In:
+          type: boolean
+          description: True if the member is marked in. False otherwise. Required when updating the In/Out status of a member.
+        Notes:
+          type: string
+          maxLength: 500
+          description: Quick notes about why the member is out.
+        DetailedNotes:
+          type: string
+          maxLength: 5000
+          description: More detailed notes about why the member is out.
+    Integrations:
+      type: object
+      properties:
+        PartnerCode:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The code for the Partner. Usually the Partner's name.
+        Id:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The Id for the Partner's matching Member.
     ClientError:
       type: object
       description: The ClientError object is used to give detailed information whenever an API request fails. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL. See the Error Codes section of the introduction for the full list of Lone Wolf Error Codes.
@@ -458,6 +550,91 @@ components:
           type: string
           readOnly: true
           description: The exact problem that occurred to give this error response.
+    Address:
+      type: object
+      required:
+      - City
+      - CountryCode
+      - Line1
+      - PostalCode
+      - ProvinceCode
+      - TypeCode
+      properties:
+        City:
+          type: string
+          maxLength: 50
+          description: The city.
+        Confidential:
+          type: boolean
+          description: True if the address is confidential.
+        Country:
+          type: string
+          readOnly: true
+          description: The name of the country. This field is read only.
+        CountryCode:
+          type: string
+          maxLength: 2
+          description: The two digit ISO code for the country.
+        Line1:
+          type: string
+          maxLength: 200
+          description: The first line for the address.
+        Line2:
+          type: string
+          maxLength: 200
+          description: The second line for the address.
+        Line3:
+          type: string
+          maxLength: 200
+          description: The third line for the address.
+        Line4:
+          type: string
+          maxLength: 200
+          description: The fourth line for the address.
+        PostalCode:
+          type: string
+          maxLength: 20
+          description: The unformatted postal or zip code.
+        Province:
+          type: string
+          readOnly: true
+          description: The name of the province or state. This field is read only.
+        ProvinceCode:
+          type: string
+          maxLength: 20
+          description: The province code or postal abbreviation of the province or state.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of address. This field is read only.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of address. P: Physical, M: Mailing, H: Home, B: Business, W: Work, O: Other'
+    EmailAddress:
+      type: object
+      required:
+      - Address
+      - TypeCode
+      properties:
+        Address:
+          type: string
+          maxLength: 100
+          description: The email address.
+        Confidential:
+          type: boolean
+          description: True if the email address is confidential.
+        Primary:
+          type: boolean
+          description: True if this is the primary email address.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of email address.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address. H: Home, B: Business, W: Work, S: Secondary, O: Other'
     Member:
       type: object
       required:
@@ -596,183 +773,6 @@ components:
           items:
             $ref: '#/components/schemas/Integrations'
           description: The collection of partner integrations for the member.
-    EmailAddress:
-      type: object
-      required:
-      - Address
-      - TypeCode
-      properties:
-        Address:
-          type: string
-          maxLength: 100
-          description: The email address.
-        Confidential:
-          type: boolean
-          description: True if the email address is confidential.
-        Primary:
-          type: boolean
-          description: True if this is the primary email address.
-        Type:
-          type: string
-          readOnly: true
-          description: The name of the type of email address.
-        TypeCode:
-          type: string
-          maxLength: 1
-          description: 'The code for the type of email address. H: Home, B: Business, W: Work, S: Secondary, O: Other'
-    MLSBoard:
-      type: object
-      properties:
-        MLSId:
-          type: string
-          readOnly: true
-          description: The MLS Id of the member for the MLS Board specified by the MLSAreaId.
-        MLSAreaId:
-          type: string
-          readOnly: true
-          description: The Lone Wolf Id of the MLS area.
-    Address:
-      type: object
-      required:
-      - City
-      - CountryCode
-      - Line1
-      - PostalCode
-      - ProvinceCode
-      - TypeCode
-      properties:
-        City:
-          type: string
-          maxLength: 50
-          description: The city.
-        Confidential:
-          type: boolean
-          description: True if the address is confidential.
-        Country:
-          type: string
-          readOnly: true
-          description: The name of the country. This field is read only.
-        CountryCode:
-          type: string
-          maxLength: 2
-          description: The two digit ISO code for the country.
-        Line1:
-          type: string
-          maxLength: 200
-          description: The first line for the address.
-        Line2:
-          type: string
-          maxLength: 200
-          description: The second line for the address.
-        Line3:
-          type: string
-          maxLength: 200
-          description: The third line for the address.
-        Line4:
-          type: string
-          maxLength: 200
-          description: The fourth line for the address.
-        PostalCode:
-          type: string
-          maxLength: 20
-          description: The unformatted postal or zip code.
-        Province:
-          type: string
-          readOnly: true
-          description: The name of the province or state. This field is read only.
-        ProvinceCode:
-          type: string
-          maxLength: 20
-          description: The province code or postal abbreviation of the province or state.
-        Type:
-          type: string
-          readOnly: true
-          description: The name of the type of address. This field is read only.
-        TypeCode:
-          type: string
-          maxLength: 1
-          description: 'The code for the type of address. P: Physical, M: Mailing, H: Home, B: Business, W: Work, O: Other'
-    PublicProfile:
-      type: object
-      properties:
-        CreatedTimestamp:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The date and time the member was created.
-        ModifiedTimestamp:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The date and time the member was modified.
-        Name:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The name of the public profile.
-        FirstName:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The first name of the member.
-        MiddleName:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The middle name of the member.
-        LastName:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The last name of the member.
-        Title:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: The title of the member.
-        Addresses:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/Address'
-          description: 'The collection of addresses for the member. Currently supported address types: M: Mailing, P: Physical'
-        EmailAddresses:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/EmailAddress'
-          description: 'The collection of email addresses for the member. Currently supported email address types: B: Business, S: Secondary'
-        PhoneNumbers:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/PhoneNumber'
-          description: The collection of phone numbers for the member.
-        Websites:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/Website'
-          description: The collection of websites for the member.
-    MemberInOutStatus:
-      type: object
-      properties:
-        Id:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The Lone Wolf Id of the member.
-        In:
-          type: boolean
-          description: True if the member is marked in. False otherwise. Required when updating the In/Out status of a member.
-        Notes:
-          type: string
-          maxLength: 500
-          description: Quick notes about why the member is out.
-        DetailedNotes:
-          type: string
-          maxLength: 5000
-          description: More detailed notes about why the member is out.
     Office:
       type: object
       properties:
@@ -807,13 +807,6 @@ components:
           maxLength: 100
           description: The url of the website.
   parameters:
-    ODataFilter:
-      name: $filter
-      in: query
-      required: false
-      description: Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.).
-      schema:
-        type: string
     ODataOrderBy:
       name: $orderby
       in: query
@@ -821,18 +814,11 @@ components:
       description: Orders the objects returned in the response by a property related to the resource.
       schema:
         type: string
-    ODataExpand:
-      name: $expand
+    ODataFilter:
+      name: $filter
       in: query
       required: false
-      description: Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction.
-      schema:
-        type: string
-    MemberId:
-      name: memberId
-      in: path
-      required: true
-      description: The Lone Wolf Id of the member.
+      description: Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.).
       schema:
         type: string
     ODataSkip:
@@ -850,6 +836,20 @@ components:
       schema:
         type: integer
         maximum: 1000
+    MemberId:
+      name: memberId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the member.
+      schema:
+        type: string
+    ODataExpand:
+      name: $expand
+      in: query
+      required: false
+      description: Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction.
+      schema:
+        type: string
   securitySchemes:
     LoneWolfToken:
       type: apiKey

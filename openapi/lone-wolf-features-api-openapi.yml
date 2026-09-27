@@ -237,6 +237,15 @@ paths:
                 - string
 components:
   schemas:
+    FeaturePatchRequest:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enables or disables the feature.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to update the properties of a feature.
     ApiError:
       type: object
       properties:
@@ -262,15 +271,6 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    FeaturePatchRequest:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: Enables or disables the feature.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to update the properties of a feature.
     Feature:
       required:
       - code

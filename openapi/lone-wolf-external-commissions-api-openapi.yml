@@ -616,6 +616,54 @@ paths:
                 - string
 components:
   schemas:
+    ExternalCommissionPatchRequest:
+      type: object
+      properties:
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The code for the end or side of the transaction.
+          writeOnly: true
+        percentage:
+          type: number
+          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        amount:
+          type: number
+          description: The amount of the commission paid to the external agent.
+          format: currency
+          writeOnly: true
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the commission.
+          writeOnly: true
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method of payment for the commission.
+          writeOnly: true
+        externalAgentId:
+          type: string
+          description: The unique id of the external agent associated with this commission.
+          format: uuid
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of an external commission.
     ApiError:
       type: object
       properties:
@@ -815,54 +863,6 @@ components:
           $ref: '#/components/schemas/ExternalAgent'
       additionalProperties: false
       description: Represents a commission paid to an external agent involved in a transaction.
-    ExternalCommissionPatchRequest:
-      type: object
-      properties:
-        endCode:
-          enum:
-          - B
-          - S
-          type:
-          - string
-          - 'null'
-          description: The code for the end or side of the transaction.
-          writeOnly: true
-        percentage:
-          type: number
-          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-          writeOnly: true
-        amount:
-          type: number
-          description: The amount of the commission paid to the external agent.
-          format: currency
-          writeOnly: true
-        calculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code for the method used to calculate the commission.
-          writeOnly: true
-        paymentMethodCode:
-          enum:
-          - B
-          - N
-          - E
-          type:
-          - string
-          - 'null'
-          description: The code for the method of payment for the commission.
-          writeOnly: true
-        externalAgentId:
-          type: string
-          description: The unique id of the external agent associated with this commission.
-          format: uuid
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of an external commission.
 x-topics:
 - title: Overview
   content:

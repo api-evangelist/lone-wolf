@@ -216,6 +216,21 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    FormLibrary:
+      type: object
+      properties:
+        folderId:
+          type: integer
+          example: 123
+          description: Form-library folder identifier
+        name:
+          type: string
+          example: State Forms
+          description: Name of the form library folder
+        description:
+          type: string
+          example: State form library
+          description: Description of the form library folder
     ErrorNotFound:
       type: object
       properties:
@@ -256,21 +271,6 @@ components:
           type: array
           items: {}
         data: {}
-    FormLibrary:
-      type: object
-      properties:
-        folderId:
-          type: integer
-          example: 123
-          description: Form-library folder identifier
-        name:
-          type: string
-          example: State Forms
-          description: Name of the form library folder
-        description:
-          type: string
-          example: State form library
-          description: Description of the form library folder
   securitySchemes:
     bearerAuth:
       type: http

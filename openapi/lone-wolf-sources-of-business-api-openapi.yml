@@ -311,6 +311,31 @@ paths:
       description: Test
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
     SourceOfBusiness:
       required:
       - name
@@ -352,33 +377,6 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a source of business.
-    ApiError:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
-      additionalProperties: false
-    SourceOfBusiness_2:
-      type: object
     ApiError_2:
       type: object
       properties:
@@ -391,6 +389,8 @@ components:
           type: array
           items:
             type: string
+    SourceOfBusiness_2:
+      type: object
     SourceOfBusiness_3:
       type: object
       properties:

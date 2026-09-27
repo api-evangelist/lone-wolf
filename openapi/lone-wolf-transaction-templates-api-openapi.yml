@@ -86,8 +86,8 @@ paths:
           format: uuid
 components:
   responses:
-    NotFound:
-      description: The requested resource does not exist.
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
       content:
         application/json:
           schema:
@@ -98,14 +98,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:

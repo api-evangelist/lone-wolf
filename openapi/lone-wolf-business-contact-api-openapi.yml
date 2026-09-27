@@ -685,13 +685,13 @@ components:
           type: array
           items:
             type: string
-    BusinessContact:
-      type: object
-    EmailAddress:
+    PhoneNumber:
       type: object
     Address:
       type: object
-    PhoneNumber:
+    EmailAddress:
+      type: object
+    BusinessContact:
       type: object
   securitySchemes:
     BearerToken:

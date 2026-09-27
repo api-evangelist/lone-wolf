@@ -217,6 +217,52 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: DocumentGUID
+        fileTypeId:
+          type: string
+          format: uuid
+          example: 6db4d39b-d96d-4cfd-b97e-0c9cd1a176f9
+          description: File type GUID. See Glossary for values.
+        documentName:
+          type: string
+          example: 1916 Glenarbor Way
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:49.143+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:52.27+00:00'
+    DocumentWithBinary:
+      allOf:
+      - $ref: '#/components/schemas/Document'
+      - type: object
+        properties:
+          binary:
+            type: string
+            description: Base64 encoded document binary
+            example: JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9U....
     ErrorNotFound:
       type: object
       properties:
@@ -242,52 +288,6 @@ components:
           type: array
           items:
             type: string
-    DocumentWithBinary:
-      allOf:
-      - $ref: '#/components/schemas/Document'
-      - type: object
-        properties:
-          binary:
-            type: string
-            description: Base64 encoded document binary
-            example: JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9U....
-    Document:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 805355ec-7f7d-413e-986a-c767ea0632da
-          description: DocumentGUID
-        fileTypeId:
-          type: string
-          format: uuid
-          example: 6db4d39b-d96d-4cfd-b97e-0c9cd1a176f9
-          description: File type GUID. See Glossary for values.
-        documentName:
-          type: string
-          example: 1916 Glenarbor Way
-        dateCreated:
-          type: string
-          format: date-time
-          example: '2019-05-14T23:49:49.143+00:00'
-        lastModified:
-          type: string
-          format: date-time
-          example: '2019-05-14T23:49:52.27+00:00'
-    ErrorUnauthorized:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 401
-        message:
-          type: string
-          example: Unauthorized. The user is not authenticated.
-        details:
-          type: array
-          items: {}
-        data: {}
   securitySchemes:
     bearerAuth:
       type: http

@@ -215,6 +215,33 @@ components:
       allOf:
       - $ref: '#/components/schemas/OfferBase'
       description: Partial offer representation. Only the provided fields are updated.
+    OfferCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        - transactionId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the offer.
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the offer belongs to.
+      - $ref: '#/components/schemas/OfferBase'
+      description: Payload for creating a new offer on a transaction.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
     OfferBase:
       type: object
       properties:
@@ -250,36 +277,9 @@ components:
           type: number
           description: Deposit amount.
           example: 100000
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code or short error name.
-        message:
-          type: string
-          description: Human-readable error description.
-      additionalProperties: true
-    OfferCreate:
-      allOf:
-      - type: object
-        required:
-        - userId
-        - transactionId
-        properties:
-          userId:
-            type: string
-            format: uuid
-            description: GUID of the user creating the offer.
-          transactionId:
-            type: string
-            format: uuid
-            description: GUID of the transaction the offer belongs to.
-      - $ref: '#/components/schemas/OfferBase'
-      description: Payload for creating a new offer on a transaction.
   responses:
-    NotFound:
-      description: The requested resource does not exist.
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
       content:
         application/json:
           schema:
@@ -290,14 +290,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:

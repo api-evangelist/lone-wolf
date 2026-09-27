@@ -339,8 +339,8 @@ paths:
       description: Staging/QA
 components:
   responses:
-    NotFound:
-      description: The requested resource does not exist.
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
       content:
         application/json:
           schema:
@@ -351,14 +351,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:
@@ -374,6 +374,21 @@ components:
           type: string
           description: Human-readable error description.
       additionalProperties: true
+    Library:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        state:
+          type: string
+        isActive:
+          type: boolean
     DocumentItem:
       type: object
       properties:
@@ -395,21 +410,6 @@ components:
         size:
           type: integer
           description: Size in bytes (0 for forms)
-    Library:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        version:
-          type: string
-        state:
-          type: string
-        isActive:
-          type: boolean
   securitySchemes:
     bearerAuth:
       type: http

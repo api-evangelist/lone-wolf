@@ -532,6 +532,8 @@ components:
           type: array
           items:
             type: string
+    DealSyncStatus:
+      type: object
     DealSummary:
       type: object
     Deal:
@@ -655,8 +657,6 @@ components:
         tiers:
           type: array
           items: {}
-    DealSyncStatus:
-      type: object
   securitySchemes:
     BearerToken:
       type: http

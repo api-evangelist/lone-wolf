@@ -511,6 +511,49 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
+    DepositPatchRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date the deposit was received.
+          format: date
+          writeOnly: true
+        amount:
+          type: number
+          description: The amount of the deposit.
+          format: currency
+          writeOnly: true
+        received:
+          type: boolean
+          description: If the deposit has been received or not.
+          writeOnly: true
+        interest:
+          type: boolean
+          description: If the deposit accumulates interest.
+          writeOnly: true
+        held:
+          type: boolean
+          description: If the deposit is held or not.
+          writeOnly: true
+        heldBy:
+          type:
+          - string
+          - 'null'
+          description: Who the deposit is held by.
+          writeOnly: true
+        direct:
+          type: boolean
+          description: If the deposit is direct or not.
+          writeOnly: true
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The reference number for the deposit.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a deposit.
     Deposit:
       required:
       - date
@@ -565,49 +608,6 @@ components:
           description: The reference number for the deposit.
       additionalProperties: false
       description: Represents a deposit associated to a transaction.
-    DepositPatchRequest:
-      type: object
-      properties:
-        date:
-          type: string
-          description: The date the deposit was received.
-          format: date
-          writeOnly: true
-        amount:
-          type: number
-          description: The amount of the deposit.
-          format: currency
-          writeOnly: true
-        received:
-          type: boolean
-          description: If the deposit has been received or not.
-          writeOnly: true
-        interest:
-          type: boolean
-          description: If the deposit accumulates interest.
-          writeOnly: true
-        held:
-          type: boolean
-          description: If the deposit is held or not.
-          writeOnly: true
-        heldBy:
-          type:
-          - string
-          - 'null'
-          description: Who the deposit is held by.
-          writeOnly: true
-        direct:
-          type: boolean
-          description: If the deposit is direct or not.
-          writeOnly: true
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The reference number for the deposit.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a deposit.
 x-topics:
 - title: Overview
   content:

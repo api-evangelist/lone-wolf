@@ -482,29 +482,31 @@ paths:
       description: Test
 components:
   schemas:
-    ConditionPatchRequest:
+    ApiError:
       type: object
       properties:
-        description:
-          type:
-          - string
-          - 'null'
-          description: A description of the commission.
-          writeOnly: true
-        dueDate:
+        id:
           type: string
-          description: The date the condition is due.
-          format: date
-          writeOnly: true
-        completeDate:
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
           type:
-          - string
+          - array
           - 'null'
-          description: The date the condition was completed.
-          format: date
-          writeOnly: true
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
       additionalProperties: false
-      description: Used to patch properties of a condition.
     Condition:
       required:
       - description
@@ -542,31 +544,29 @@ components:
           format: date
       additionalProperties: false
       description: Represents a condition on a transaction.
-    ApiError:
+    ConditionPatchRequest:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
+        description:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
+          description: A description of the commission.
+          writeOnly: true
+        dueDate:
+          type: string
+          description: The date the condition is due.
+          format: date
+          writeOnly: true
+        completeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the condition was completed.
+          format: date
+          writeOnly: true
       additionalProperties: false
+      description: Used to patch properties of a condition.
     Condition_2:
       type: object
       description: 'A condition lookup value from the Conditions API. Note: transaction-level conditions attached to a Transaction use the TransactionCondition schema.'

@@ -703,13 +703,13 @@ components:
           type: array
           items:
             type: string
-    ExternalAgent:
-      type: object
-    EmailAddress:
+    PhoneNumber:
       type: object
     Address:
       type: object
-    PhoneNumber:
+    EmailAddress:
+      type: object
+    ExternalAgent:
       type: object
   securitySchemes:
     BearerToken:

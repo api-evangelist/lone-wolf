@@ -180,8 +180,8 @@ paths:
           format: uuid
 components:
   responses:
-    NotFound:
-      description: The requested resource does not exist.
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
       content:
         application/json:
           schema:
@@ -192,14 +192,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:
@@ -215,33 +215,6 @@ components:
             description: GUID of the transaction the contact belongs to.
       - $ref: '#/components/schemas/ContactBase'
       description: Partial contact representation. Only the provided fields are updated.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code or short error name.
-        message:
-          type: string
-          description: Human-readable error description.
-      additionalProperties: true
-    ContactCreate:
-      allOf:
-      - type: object
-        required:
-        - userId
-        - transactionId
-        properties:
-          userId:
-            type: string
-            format: uuid
-            description: GUID of the user creating the contact.
-          transactionId:
-            type: string
-            format: uuid
-            description: GUID of the transaction the contact belongs to.
-      - $ref: '#/components/schemas/ContactBase'
-      description: Payload for creating a new transaction contact.
     ContactBase:
       type: object
       properties:
@@ -402,6 +375,33 @@ components:
         llcPoa:
           type: string
           description: LLC / power of attorney designation.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
+    ContactCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        - transactionId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the contact.
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the contact belongs to.
+      - $ref: '#/components/schemas/ContactBase'
+      description: Payload for creating a new transaction contact.
   securitySchemes:
     bearerAuth:
       type: http

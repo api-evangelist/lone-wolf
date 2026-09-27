@@ -714,6 +714,40 @@ components:
           $ref: '#/components/schemas/FeeReadOnly'
       additionalProperties: false
       description: Represents a fee that is related to a commission.
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
     EmployeeReadOnly:
       type: object
       properties:
@@ -737,23 +771,6 @@ components:
           readOnly: true
       additionalProperties: false
       description: A read only representation of an agent.
-    FeeReadOnly:
-      type: object
-      properties:
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the fee.
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the fee.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a fee associated with a transaction.
     Commission:
       required:
       - agentId
@@ -839,23 +856,6 @@ components:
           $ref: '#/components/schemas/OfficeReadOnly'
       additionalProperties: false
       description: Represents a commission for an agent on a transaction.
-    OfficeReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the office.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The code for the office.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of an office.
     CommissionPatchRequest:
       type: object
       properties:

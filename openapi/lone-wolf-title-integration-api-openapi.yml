@@ -94,15 +94,6 @@ paths:
       operationId: getTransactionsByTransactionIdTitleOrderNote
       x-operation-id-source: derived
 components:
-  parameters:
-    transactionId:
-      name: transactionId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-      description: Transaction GUID
   schemas:
     TitleNote:
       type: object
@@ -117,6 +108,15 @@ components:
           type: string
         Publisher:
           type: string
+  parameters:
+    transactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Transaction GUID
   securitySchemes:
     contextAuth:
       type: apiKey

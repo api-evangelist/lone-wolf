@@ -810,8 +810,8 @@ paths:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
 components:
   responses:
-    NotFound:
-      description: The requested resource does not exist.
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
       content:
         application/json:
           schema:
@@ -822,14 +822,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:
@@ -845,15 +845,6 @@ components:
           type: string
           description: Human-readable error description.
       additionalProperties: true
-    Authentisign.Services.Dtos.DocumentLayoutDto:
-      required:
-      - layoutId
-      type: object
-      properties:
-        layoutId:
-          type: string
-          format: uuid
-      additionalProperties: false
     Microsoft.AspNetCore.Mvc.ProblemDetails:
       type: object
       properties:
@@ -895,6 +886,15 @@ components:
           - 'null'
           items:
             type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.DocumentLayoutDto:
+      required:
+      - layoutId
+      type: object
+      properties:
+        layoutId:
+          type: string
+          format: uuid
       additionalProperties: false
   securitySchemes:
     bearerAuth:

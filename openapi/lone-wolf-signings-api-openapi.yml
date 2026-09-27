@@ -1478,31 +1478,6 @@ paths:
       summary: Get links of certificate documents
       x-summary-source: derived
 components:
-  responses:
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: The access token is missing, invalid, or expired.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     SigningParticipant:
       type: object
@@ -1552,6 +1527,42 @@ components:
           type: string
           description: Human-readable error description.
       additionalProperties: true
+    Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bfmDocumentId:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        detail:
+          type:
+          - string
+          - 'null'
+        instance:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
     Authentisign.Services.Dtos.ParticipantDto:
       required:
       - firstName
@@ -1647,38 +1658,6 @@ components:
           - 'null'
           format: int32
       additionalProperties: false
-    Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto:
-      type: object
-      properties:
-        transactionId:
-          type: string
-          format: uuid
-        documents:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto'
-      additionalProperties: false
-    Authentisign.Services.Dtos.SigningUpdateDto:
-      type: object
-      properties:
-        callbackUrl:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        bfmDocumentId:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     Authentisign.Services.Dtos.ErrorResponse:
       type: object
       properties:
@@ -1696,6 +1675,19 @@ components:
           items:
             type: string
       additionalProperties: false
+    Authentisign.Services.Dtos.TransactionDesk.TDLinkTransactionDto:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          format: uuid
+        documents:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Authentisign.Services.Dtos.TransactionDesk.TDDocumentMapChecklistItemDto'
+      additionalProperties: false
     Authentisign.Services.Dtos.EmailsDto:
       required:
       - emails
@@ -1705,31 +1697,39 @@ components:
           minLength: 1
           type: string
       additionalProperties: false
-    Microsoft.AspNetCore.Mvc.ProblemDetails:
+    Authentisign.Services.Dtos.SigningUpdateDto:
       type: object
       properties:
-        type:
+        callbackUrl:
           type:
           - string
           - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - integer
-          - 'null'
-          format: int32
-        detail:
-          type:
-          - string
-          - 'null'
-        instance:
-          type:
-          - string
-          - 'null'
-      additionalProperties: {}
+      additionalProperties: false
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

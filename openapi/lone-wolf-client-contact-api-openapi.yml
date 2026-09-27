@@ -696,13 +696,13 @@ components:
           type: array
           items:
             type: string
-    EmailAddress:
-      type: object
-    Address:
-      type: object
     ClientContact:
       type: object
     PhoneNumber:
+      type: object
+    Address:
+      type: object
+    EmailAddress:
       type: object
   securitySchemes:
     BearerToken:

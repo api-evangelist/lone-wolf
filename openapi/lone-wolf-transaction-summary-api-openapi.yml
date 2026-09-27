@@ -284,41 +284,19 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Transaction:
+    ErrorUnauthorized:
       type: object
       properties:
-        id:
+        code:
+          type: integer
+          example: 401
+        message:
           type: string
-          format: uuid
-          example: 805355ec-7f7d-413e-986a-c767ea0632da
-          description: TransactionGUID used to uniquely identify this specific Transaction
-        name:
-          type: string
-          example: 1916 Glenarbor Way
-          description: Name of the transaction file as it appears in the application
-        statusId:
-          type: string
-          format: uuid
-          example: 6d6d2bfe-b166-4f2c-9027-629f09a35b79
-          description: TransactionStatusGUID. See Glossary for values.
-        typeId:
-          type: string
-          format: uuid
-          example: 2d9d021d-beb7-456d-9cae-6ce5486ac3f5
-          description: TransactionTypeGUID. See Glossary for values.
-        ownerId:
-          type: string
-          format: uuid
-          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
-          description: OwnerID of this Transaction File
-        dateCreated:
-          type: string
-          format: date-time
-          example: '2019-05-14T23:49:49.143+00:00'
-        lastModified:
-          type: string
-          format: date-time
-          example: '2019-05-14T23:49:52.27+00:00'
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
     ErrorNotFound:
       type: object
       properties:
@@ -331,19 +309,6 @@ components:
         details:
           type: array
           items: {}
-    ErrorBadRequest:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-        message:
-          type: string
-          example: Request was not valid.
-        details:
-          type: array
-          items:
-            type: string
     TransactionDetails:
       type: object
       properties:
@@ -462,19 +427,54 @@ components:
             closingDate:
               type: string
               format: date-time
-    ErrorUnauthorized:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 805355ec-7f7d-413e-986a-c767ea0632da
+          description: TransactionGUID used to uniquely identify this specific Transaction
+        name:
+          type: string
+          example: 1916 Glenarbor Way
+          description: Name of the transaction file as it appears in the application
+        statusId:
+          type: string
+          format: uuid
+          example: 6d6d2bfe-b166-4f2c-9027-629f09a35b79
+          description: TransactionStatusGUID. See Glossary for values.
+        typeId:
+          type: string
+          format: uuid
+          example: 2d9d021d-beb7-456d-9cae-6ce5486ac3f5
+          description: TransactionTypeGUID. See Glossary for values.
+        ownerId:
+          type: string
+          format: uuid
+          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
+          description: OwnerID of this Transaction File
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:49.143+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2019-05-14T23:49:52.27+00:00'
+    ErrorBadRequest:
       type: object
       properties:
         code:
           type: integer
-          example: 401
+          example: 400
         message:
           type: string
-          example: Unauthorized. The user is not authenticated.
+          example: Request was not valid.
         details:
           type: array
-          items: {}
-        data: {}
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http
