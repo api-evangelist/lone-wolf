@@ -216,33 +216,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FormLibrary:
-      type: object
-      properties:
-        folderId:
-          type: integer
-          example: 123
-          description: Form-library folder identifier
-        name:
-          type: string
-          example: State Forms
-          description: Name of the form library folder
-        description:
-          type: string
-          example: State form library
-          description: Description of the form library folder
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
     FormLibraryForm:
       type: object
       properties:
@@ -258,6 +231,33 @@ components:
           type: string
           example: Purchase Agreement form
           description: Description of the form
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
+    FormLibrary:
+      type: object
+      properties:
+        folderId:
+          type: integer
+          example: 123
+          description: Form-library folder identifier
+        name:
+          type: string
+          example: State Forms
+          description: Name of the form library folder
+        description:
+          type: string
+          example: State form library
+          description: Description of the form library folder
     ErrorUnauthorized:
       type: object
       properties:

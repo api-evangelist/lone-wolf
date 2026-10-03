@@ -153,6 +153,14 @@ paths:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
 components:
   schemas:
+    Authentisign.Services.Dtos.LayoutDtoExternal:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     Authentisign.Services.Dtos.ErrorResponse:
       type: object
       properties:
@@ -169,14 +177,6 @@ components:
           - 'null'
           items:
             type: string
-      additionalProperties: false
-    Authentisign.Services.Dtos.LayoutDtoExternal:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
       additionalProperties: false
 x-topics:
 - title: Overview

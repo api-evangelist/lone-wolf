@@ -217,19 +217,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ErrorUnauthorized:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 401
-        message:
-          type: string
-          example: Unauthorized. The user is not authenticated.
-        details:
-          type: array
-          items: {}
-        data: {}
     Document:
       type: object
       properties:
@@ -254,15 +241,19 @@ components:
           type: string
           format: date-time
           example: '2019-05-14T23:49:52.27+00:00'
-    DocumentWithBinary:
-      allOf:
-      - $ref: '#/components/schemas/Document'
-      - type: object
-        properties:
-          binary:
-            type: string
-            description: Base64 encoded document binary
-            example: JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9U....
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
     ErrorNotFound:
       type: object
       properties:
@@ -288,6 +279,15 @@ components:
           type: array
           items:
             type: string
+    DocumentWithBinary:
+      allOf:
+      - $ref: '#/components/schemas/Document'
+      - type: object
+        properties:
+          binary:
+            type: string
+            description: Base64 encoded document binary
+            example: JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9U....
   securitySchemes:
     bearerAuth:
       type: http

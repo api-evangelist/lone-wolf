@@ -185,18 +185,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
     TransactionContact:
       type: object
       properties:
@@ -257,19 +245,18 @@ components:
           format: uuid
           example: 918753cd-df9d-4a8c-b9c5-2d0115835ea0
           description: Contact type GUID. See Glossary for values.
-    ErrorUnauthorized:
+    ErrorNotFound:
       type: object
       properties:
         code:
           type: integer
-          example: 401
+          example: 404
         message:
           type: string
-          example: Unauthorized. The user is not authenticated.
+          example: Item not found.
         details:
           type: array
           items: {}
-        data: {}
     ErrorBadRequest:
       type: object
       properties:
@@ -283,6 +270,19 @@ components:
           type: array
           items:
             type: string
+    ErrorUnauthorized:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Unauthorized. The user is not authenticated.
+        details:
+          type: array
+          items: {}
+        data: {}
   securitySchemes:
     bearerAuth:
       type: http

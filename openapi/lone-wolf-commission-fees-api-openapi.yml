@@ -191,31 +191,23 @@ paths:
                 - string
 components:
   schemas:
-    ApiError:
+    FeeReadOnly:
       type: object
       properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
+        shortName:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
           readOnly: true
       additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
     CommissionFee:
       type: object
       properties:
@@ -268,23 +260,31 @@ components:
           $ref: '#/components/schemas/FeeReadOnly'
       additionalProperties: false
       description: Represents a fee that is related to a commission.
-    FeeReadOnly:
+    ApiError:
       type: object
       properties:
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the fee.
+        id:
+          type: string
+          description: The unique identifier for the error.
           readOnly: true
-        name:
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
           type:
-          - string
+          - array
           - 'null'
-          description: The name of the fee.
+          items:
+            type: string
+          description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-      description: A read only representation of a fee associated with a transaction.
 x-topics:
 - title: Overview
   content:

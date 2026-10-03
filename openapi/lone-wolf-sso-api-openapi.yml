@@ -251,23 +251,6 @@ paths:
       x-operation-id-original: LayoutSso
 components:
   schemas:
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
     Authentisign.Services.Dtos.AccountDto:
       type: object
       properties:
@@ -339,6 +322,23 @@ components:
           type:
           - string
           - 'null'
+      additionalProperties: false
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
       additionalProperties: false
 x-topics:
 - title: Overview

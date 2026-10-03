@@ -249,6 +249,8 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Deposit:
+      type: object
     ApiError:
       type: object
       properties:
@@ -261,8 +263,6 @@ components:
           type: array
           items:
             type: string
-    Deposit:
-      type: object
   securitySchemes:
     BearerToken:
       type: http

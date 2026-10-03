@@ -272,6 +272,24 @@ paths:
       description: Test
 components:
   schemas:
+    ContactTypePatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the contact type.
+          writeOnly: true
+        inactiveDate:
+          type:
+          - string
+          - 'null'
+          description: The date the contact type was no longer active.
+          format: date
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a contact type.
     ApiError:
       type: object
       properties:
@@ -297,24 +315,6 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    ContactTypePatchRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the contact type.
-          writeOnly: true
-        inactiveDate:
-          type:
-          - string
-          - 'null'
-          description: The date the contact type was no longer active.
-          format: date
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a contact type.
     ContactType:
       required:
       - name

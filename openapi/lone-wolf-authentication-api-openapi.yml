@@ -296,6 +296,22 @@ paths:
       description: Staging/QA
 components:
   schemas:
+    Login:
+      type: object
+      required:
+      - emailAddress
+      - password
+      properties:
+        emailAddress:
+          type: string
+          format: email
+          description: The email address for the user's account.
+        password:
+          type: string
+          description: The user's password.
+        clientId:
+          type: string
+          description: Penderis code for brokerWOLF logins. Extranet or penderis code for WOLFconnect logins. If not passed and the user belongs to only one client, that client is returned in the JWT. If the user belongs to multiple clients and this is not passed, no client information is included in the JWT.
     ApiError:
       type: object
       properties:
@@ -318,22 +334,6 @@ components:
           type: integer
           format: int32
           description: The number of seconds in which the token will expire.
-    Login:
-      type: object
-      required:
-      - emailAddress
-      - password
-      properties:
-        emailAddress:
-          type: string
-          format: email
-          description: The email address for the user's account.
-        password:
-          type: string
-          description: The user's password.
-        clientId:
-          type: string
-          description: Penderis code for brokerWOLF logins. Extranet or penderis code for WOLFconnect logins. If not passed and the user belongs to only one client, that client is returned in the JWT. If the user belongs to multiple clients and this is not passed, no client information is included in the JWT.
     ContextIdResponse:
       type: object
       properties:

@@ -228,6 +228,8 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Condition:
+      type: object
     Commission:
       type: object
     ApiError:
@@ -242,8 +244,6 @@ components:
           type: array
           items:
             type: string
-    Condition:
-      type: object
   securitySchemes:
     BearerToken:
       type: http

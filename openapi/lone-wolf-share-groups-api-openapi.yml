@@ -185,25 +185,6 @@ components:
           type: string
           format: uuid
           description: GUID of the shared opportunity (transaction).
-    ShareGroupCreate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Display name of the share group.
-          example: West Team Share Group
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code or short error name.
-        message:
-          type: string
-          description: Human-readable error description.
-      additionalProperties: true
     ShareGroupUpdate:
       type: object
       properties:
@@ -242,27 +223,46 @@ components:
           type: boolean
           description: Whether the membership is active.
           example: true
+    ShareGroupCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Display name of the share group.
+          example: West Team Share Group
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
   responses:
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: The access token is missing, invalid, or expired.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
+    NotFound:
+      description: The requested resource does not exist.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource does not exist.
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:

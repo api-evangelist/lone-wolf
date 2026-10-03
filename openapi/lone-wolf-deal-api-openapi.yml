@@ -520,6 +520,10 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    DealSyncStatus:
+      type: object
+    DealSummary:
+      type: object
     ApiError:
       type: object
       properties:
@@ -532,10 +536,6 @@ components:
           type: array
           items:
             type: string
-    DealSyncStatus:
-      type: object
-    DealSummary:
-      type: object
     Deal:
       type: object
       properties:

@@ -94,6 +94,8 @@ components:
   schemas:
     Classification:
       type: object
+    PropertyType:
+      type: object
     ApiError:
       type: object
       properties:
@@ -106,8 +108,6 @@ components:
           type: array
           items:
             type: string
-    PropertyType:
-      type: object
   securitySchemes:
     BearerToken:
       type: http

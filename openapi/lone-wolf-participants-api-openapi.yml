@@ -227,6 +227,31 @@ paths:
                 $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
 components:
   schemas:
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
+    Authentisign.Services.Dtos.ParticipantEmailDtoExternal:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     Microsoft.AspNetCore.Mvc.ProblemDetails:
       type: object
       properties:
@@ -252,23 +277,6 @@ components:
           - string
           - 'null'
       additionalProperties: {}
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
     Authentisign.Services.Dtos.ParticipantDto:
       required:
       - firstName
@@ -363,14 +371,6 @@ components:
           - integer
           - 'null'
           format: int32
-      additionalProperties: false
-    Authentisign.Services.Dtos.ParticipantEmailDtoExternal:
-      type: object
-      properties:
-        email:
-          type:
-          - string
-          - 'null'
       additionalProperties: false
 x-topics:
 - title: Overview

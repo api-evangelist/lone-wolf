@@ -55,6 +55,13 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
+    templateId:
+      name: templateId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Template ID
     transactionId:
       name: transactionId
       in: path
@@ -63,13 +70,6 @@ components:
         type: string
         format: uuid
       description: Transaction GUID
-    templateId:
-      name: templateId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: Template ID
   schemas:
     Template:
       type: object
