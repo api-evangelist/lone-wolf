@@ -190,23 +190,6 @@ components:
           - boolean
           - 'null'
       additionalProperties: false
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-      additionalProperties: false
     Microsoft.AspNetCore.Mvc.ProblemDetails:
       type: object
       properties:
@@ -232,6 +215,23 @@ components:
           - string
           - 'null'
       additionalProperties: {}
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
 x-topics:
 - title: Overview
   content:

@@ -810,6 +810,12 @@ paths:
                 $ref: '#/components/schemas/Authentisign.Services.Dtos.ErrorResponse'
 components:
   responses:
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: The access token is missing, invalid, or expired.
       content:
@@ -824,12 +830,6 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
@@ -853,23 +853,6 @@ components:
         layoutId:
           type: string
           format: uuid
-      additionalProperties: false
-    Authentisign.Services.Dtos.ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
       additionalProperties: false
     Microsoft.AspNetCore.Mvc.ProblemDetails:
       type: object
@@ -896,6 +879,23 @@ components:
           - string
           - 'null'
       additionalProperties: {}
+    Authentisign.Services.Dtos.ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+      additionalProperties: false
   securitySchemes:
     bearerAuth:
       type: http

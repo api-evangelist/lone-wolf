@@ -339,6 +339,12 @@ paths:
       description: Staging/QA
 components:
   responses:
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: The access token is missing, invalid, or expired.
       content:
@@ -353,12 +359,6 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:

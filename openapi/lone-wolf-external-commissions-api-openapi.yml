@@ -616,6 +616,140 @@ paths:
                 - string
 components:
   schemas:
+    ExternalCommissionPatchRequest:
+      type: object
+      properties:
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The code for the end or side of the transaction.
+          writeOnly: true
+        percentage:
+          type: number
+          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        amount:
+          type: number
+          description: The amount of the commission paid to the external agent.
+          format: currency
+          writeOnly: true
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the commission.
+          writeOnly: true
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method of payment for the commission.
+          writeOnly: true
+        externalAgentId:
+          type: string
+          description: The unique id of the external agent associated with this commission.
+          format: uuid
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of an external commission.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
+    ExternalCommission:
+      required:
+      - externalAgentId
+      - endCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code for the end or side of the transaction.
+        percentage:
+          type: number
+          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the commission paid to the external agent.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the commission.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method of payment for the commission.
+        externalAgentId:
+          type: string
+          description: The unique id of the external agent associated with this commission.
+          format: uuid
+        externalAgent:
+          $ref: '#/components/schemas/ExternalAgent'
+      additionalProperties: false
+      description: Represents a commission paid to an external agent involved in a transaction.
     ExternalAgent:
       required:
       - endCode
@@ -729,140 +863,6 @@ components:
           description: The external agent's business email address.
       additionalProperties: false
       description: Represents an agent involved in the transaction that does not work for the brokerage.
-    ExternalCommissionPatchRequest:
-      type: object
-      properties:
-        endCode:
-          enum:
-          - B
-          - S
-          type:
-          - string
-          - 'null'
-          description: The code for the end or side of the transaction.
-          writeOnly: true
-        percentage:
-          type: number
-          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-          writeOnly: true
-        amount:
-          type: number
-          description: The amount of the commission paid to the external agent.
-          format: currency
-          writeOnly: true
-        calculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code for the method used to calculate the commission.
-          writeOnly: true
-        paymentMethodCode:
-          enum:
-          - B
-          - N
-          - E
-          type:
-          - string
-          - 'null'
-          description: The code for the method of payment for the commission.
-          writeOnly: true
-        externalAgentId:
-          type: string
-          description: The unique id of the external agent associated with this commission.
-          format: uuid
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of an external commission.
-    ExternalCommission:
-      required:
-      - externalAgentId
-      - endCode
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        endCode:
-          enum:
-          - B
-          - S
-          type: string
-          description: The code for the end or side of the transaction.
-        percentage:
-          type: number
-          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        amount:
-          type: number
-          description: The amount of the commission paid to the external agent.
-          format: currency
-        calculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code for the method used to calculate the commission.
-        paymentMethodCode:
-          enum:
-          - B
-          - N
-          - E
-          type:
-          - string
-          - 'null'
-          description: The code for the method of payment for the commission.
-        externalAgentId:
-          type: string
-          description: The unique id of the external agent associated with this commission.
-          format: uuid
-        externalAgent:
-          $ref: '#/components/schemas/ExternalAgent'
-      additionalProperties: false
-      description: Represents a commission paid to an external agent involved in a transaction.
-    ApiError:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
-      additionalProperties: false
 x-topics:
 - title: Overview
   content:

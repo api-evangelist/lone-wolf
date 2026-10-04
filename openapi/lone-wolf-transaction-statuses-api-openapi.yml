@@ -180,18 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
     TransactionStatus:
       type: object
       properties:
@@ -229,6 +217,18 @@ components:
           type: array
           items:
             type: string
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
     ErrorUnauthorized:
       type: object
       properties:

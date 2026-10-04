@@ -176,6 +176,33 @@ paths:
               $ref: '#/components/schemas/ShareGroupUpdate'
 components:
   schemas:
+    ShareGroupMember:
+      type: object
+      required:
+      - userId
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: GUID of the member user.
+        permissionLevel:
+          type: integer
+          description: 'Permission level code for the member. Observed value: `1`. **TODO: document the full list of code values and their meanings.**'
+          example: 1
+        isActive:
+          type: boolean
+          description: Whether the membership is active.
+          example: true
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
+      additionalProperties: true
     ShareGroupOpportunity:
       type: object
       required:
@@ -185,6 +212,15 @@ components:
           type: string
           format: uuid
           description: GUID of the shared opportunity (transaction).
+    ShareGroupCreate:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Display name of the share group.
+          example: West Team Share Group
     ShareGroupUpdate:
       type: object
       properties:
@@ -206,45 +242,15 @@ components:
             $ref: '#/components/schemas/ShareGroupMember'
           description: Members of the share group and their permissions.
       description: Full share group representation used to add members and share opportunities.
-    ShareGroupMember:
-      type: object
-      required:
-      - userId
-      properties:
-        userId:
-          type: string
-          format: uuid
-          description: GUID of the member user.
-        permissionLevel:
-          type: integer
-          description: 'Permission level code for the member. Observed value: `1`. **TODO: document the full list of code values and their meanings.**'
-          example: 1
-        isActive:
-          type: boolean
-          description: Whether the membership is active.
-          example: true
-    ShareGroupCreate:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Display name of the share group.
-          example: West Team Share Group
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error code or short error name.
-        message:
-          type: string
-          description: Human-readable error description.
-      additionalProperties: true
   responses:
     Unauthorized:
       description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:
@@ -257,12 +263,6 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:

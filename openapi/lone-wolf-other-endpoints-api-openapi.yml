@@ -216,6 +216,18 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
     FormLibraryForm:
       type: object
       properties:
@@ -231,18 +243,6 @@ components:
           type: string
           example: Purchase Agreement form
           description: Description of the form
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
     FormLibrary:
       type: object
       properties:

@@ -578,6 +578,120 @@ paths:
                 - string
 components:
   schemas:
+    ClientContact:
+      required:
+      - contactTypeId
+      - endCode
+      - firstName
+      - lastName
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        contactTypeId:
+          type: string
+          description: The unique id of the contact type.
+          format: uuid
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The end or side of the transaction with which the contact is associated.
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
+        firstName:
+          type: string
+          description: The first name of the contact.
+        lastName:
+          type: string
+          description: The last name of the contact.
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company if the buyer or seller is a company and not an individual.
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The full street address for the company of the contact.
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The second line of the street address, if applicable (e.g., suite number).
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the contact's address.
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the contact's address. This will be unformatted.
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the province or state.
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character code for the country of the contact's address.
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main phone number for the contact. This will be unformatted.
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The phone number of the business for the contact. This will be unformatted.
+        phoneNumberMobile:
+          type:
+          - string
+          - 'null'
+          description: The mobile or cell phone number for the contact. This will be unformatted.
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The main fax number for the contact. This will be unformatted.
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        emailAddressWork:
+          type:
+          - string
+          - 'null'
+          description: The main email address of the contact.
+        contactType:
+          $ref: '#/components/schemas/ContactTypeReadOnly'
+      additionalProperties: false
+      description: Represents a buyer or seller on a transaction. For companies or business contacts, see Business Contact.
     ClientContactPatchRequest:
       type: object
       properties:
@@ -693,120 +807,6 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a client contact.
-    ClientContact:
-      required:
-      - contactTypeId
-      - endCode
-      - firstName
-      - lastName
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        contactTypeId:
-          type: string
-          description: The unique id of the contact type.
-          format: uuid
-        endCode:
-          enum:
-          - B
-          - S
-          type: string
-          description: The end or side of the transaction with which the contact is associated.
-        prefix:
-          type:
-          - string
-          - 'null'
-          description: The prefix for the contact, such as Mr., Mrs., Ms., Dr., etc.
-        firstName:
-          type: string
-          description: The first name of the contact.
-        lastName:
-          type: string
-          description: The last name of the contact.
-        companyName:
-          type:
-          - string
-          - 'null'
-          description: The name of the company if the buyer or seller is a company and not an individual.
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          description: The full street address for the company of the contact.
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          description: The second line of the street address, if applicable (e.g., suite number).
-        addressCity:
-          type:
-          - string
-          - 'null'
-          description: The city of the contact's address.
-        addressPostalCode:
-          type:
-          - string
-          - 'null'
-          description: The postal code of the contact's address. This will be unformatted.
-        addressProvinceCode:
-          type:
-          - string
-          - 'null'
-          description: The two character code for the province or state.
-        addressCountryCode:
-          type:
-          - string
-          - 'null'
-          description: The two character code for the country of the contact's address.
-        phoneNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The main phone number for the contact. This will be unformatted.
-        phoneNumberBusiness:
-          type:
-          - string
-          - 'null'
-          description: The phone number of the business for the contact. This will be unformatted.
-        phoneNumberMobile:
-          type:
-          - string
-          - 'null'
-          description: The mobile or cell phone number for the contact. This will be unformatted.
-        faxNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The main fax number for the contact. This will be unformatted.
-        emailAddressMain:
-          type:
-          - string
-          - 'null'
-          description: The main email address of the contact.
-        emailAddressWork:
-          type:
-          - string
-          - 'null'
-          description: The main email address of the contact.
-        contactType:
-          $ref: '#/components/schemas/ContactTypeReadOnly'
-      additionalProperties: false
-      description: Represents a buyer or seller on a transaction. For companies or business contacts, see Business Contact.
     ApiError:
       type: object
       properties:

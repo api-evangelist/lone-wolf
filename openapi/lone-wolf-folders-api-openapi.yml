@@ -180,13 +180,15 @@ paths:
           format: uuid
 components:
   schemas:
-    FolderUpdate:
+    Error:
       type: object
       properties:
-        name:
+        error:
           type: string
-          description: Folder name.
-      description: Partial folder representation. Only the provided fields are updated.
+          description: Error code or short error name.
+        message:
+          type: string
+          description: Human-readable error description.
       additionalProperties: true
     FolderCreate:
       type: object
@@ -207,17 +209,21 @@ components:
           type: string
           description: Folder name.
           example: Closing Documents
-    Error:
+    FolderUpdate:
       type: object
       properties:
-        error:
+        name:
           type: string
-          description: Error code or short error name.
-        message:
-          type: string
-          description: Human-readable error description.
+          description: Folder name.
+      description: Partial folder representation. Only the provided fields are updated.
       additionalProperties: true
   responses:
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: The access token is missing, invalid, or expired.
       content:
@@ -232,12 +238,6 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
       content:
         application/json:
           schema:

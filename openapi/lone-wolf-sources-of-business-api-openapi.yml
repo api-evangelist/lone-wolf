@@ -311,36 +311,6 @@ paths:
       description: Test
 components:
   schemas:
-    SourceOfBusiness:
-      required:
-      - name
-      - code
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        name:
-          type: string
-          description: The name of the source of business.
-        code:
-          type: string
-          description: The unique code for the source of business.
-      additionalProperties: false
-      description: Represents a source of business for a contact associated to a transaction.
     SourceOfBusinessPatchRequest:
       type: object
       properties:
@@ -377,8 +347,36 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    SourceOfBusiness_2:
+    SourceOfBusiness:
+      required:
+      - name
+      - code
       type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the source of business.
+        code:
+          type: string
+          description: The unique code for the source of business.
+      additionalProperties: false
+      description: Represents a source of business for a contact associated to a transaction.
     ApiError_2:
       type: object
       properties:
@@ -391,6 +389,8 @@ components:
           type: array
           items:
             type: string
+    SourceOfBusiness_2:
+      type: object
     SourceOfBusiness_3:
       type: object
       properties:

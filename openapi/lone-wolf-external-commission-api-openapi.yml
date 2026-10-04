@@ -253,8 +253,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ExternalCommission:
-      type: object
     ApiError:
       type: object
       properties:
@@ -267,6 +265,8 @@ components:
           type: array
           items:
             type: string
+    ExternalCommission:
+      type: object
   securitySchemes:
     BearerToken:
       type: http

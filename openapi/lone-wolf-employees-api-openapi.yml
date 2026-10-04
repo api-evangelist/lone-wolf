@@ -187,6 +187,48 @@ paths:
                 - string
 components:
   schemas:
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the error.
+          readOnly: true
+        code:
+          type: integer
+          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
+          format: int32
+          readOnly: true
+        message:
+          type: string
+          description: A summary or short message describing the error.
+          readOnly: true
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of more detailed errors messages.
+          readOnly: true
+      additionalProperties: false
     Employee:
       required:
       - firstName
@@ -319,48 +361,6 @@ components:
           $ref: '#/components/schemas/OfficeReadOnly'
       additionalProperties: false
       description: Represents an employee.
-    OfficeReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the office.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The code for the office.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of an office.
-    ApiError:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the error.
-          readOnly: true
-        code:
-          type: integer
-          description: A code used to help identify the type of error. This is typically set to the same value as the http status code.
-          format: int32
-          readOnly: true
-        message:
-          type: string
-          description: A summary or short message describing the error.
-          readOnly: true
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of more detailed errors messages.
-          readOnly: true
-      additionalProperties: false
 x-topics:
 - title: Overview
   content:

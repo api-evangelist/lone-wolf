@@ -55,6 +55,14 @@ paths:
       operationId: getTransactionsByTransactionIdGetAuthentisignUrl
       x-operation-id-source: derived
 components:
+  schemas:
+    AuthentisignUrl:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The Authentisign SSO URL to redirect the user to for signing.
   parameters:
     transactionId:
       name: transactionId
@@ -64,14 +72,6 @@ components:
         type: string
         format: uuid
       description: Transaction GUID
-  schemas:
-    AuthentisignUrl:
-      type: object
-      properties:
-        url:
-          type: string
-          format: uri
-          description: The Authentisign SSO URL to redirect the user to for signing.
   securitySchemes:
     contextAuth:
       type: apiKey

@@ -180,31 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ErrorNotFound:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 404
-        message:
-          type: string
-          example: Item not found.
-        details:
-          type: array
-          items: {}
-    ErrorBadRequest:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-        message:
-          type: string
-          example: Request was not valid.
-        details:
-          type: array
-          items:
-            type: string
     ContactType:
       type: object
       properties:
@@ -229,6 +204,31 @@ components:
           type: string
           format: date-time
           example: '2020-04-14T15:54:53.207'
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    ErrorNotFound:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Item not found.
+        details:
+          type: array
+          items: {}
     ErrorUnauthorized:
       type: object
       properties:

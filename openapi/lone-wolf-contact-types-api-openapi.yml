@@ -272,6 +272,42 @@ paths:
       description: Test
 components:
   schemas:
+    ContactType:
+      required:
+      - name
+      - code
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the contact type.
+        code:
+          type: string
+          description: The unique code for the contact type.
+        inactiveDate:
+          type:
+          - string
+          - 'null'
+          description: The date the contact type was no longer active.
+          format: date
+      additionalProperties: false
+      description: Represents a type of contact for a client or business contact associated with a transaction.
     ContactTypePatchRequest:
       type: object
       properties:
@@ -315,42 +351,6 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    ContactType:
-      required:
-      - name
-      - code
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        name:
-          type: string
-          description: The name of the contact type.
-        code:
-          type: string
-          description: The unique code for the contact type.
-        inactiveDate:
-          type:
-          - string
-          - 'null'
-          description: The date the contact type was no longer active.
-          format: date
-      additionalProperties: false
-      description: Represents a type of contact for a client or business contact associated with a transaction.
     ContactType_2:
       type: object
       properties:

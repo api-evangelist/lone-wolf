@@ -312,6 +312,16 @@ components:
         clientId:
           type: string
           description: Penderis code for brokerWOLF logins. Extranet or penderis code for WOLFconnect logins. If not passed and the user belongs to only one client, that client is returned in the JWT. If the user belongs to multiple clients and this is not passed, no client information is included in the JWT.
+    TokenInfo:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JSON Web Token to use in the Authorization header for all requests to any API.
+        expiresIn:
+          type: integer
+          format: int32
+          description: The number of seconds in which the token will expire.
     ApiError:
       type: object
       properties:
@@ -324,16 +334,6 @@ components:
           type: array
           items:
             type: string
-    TokenInfo:
-      type: object
-      properties:
-        token:
-          type: string
-          description: The JSON Web Token to use in the Authorization header for all requests to any API.
-        expiresIn:
-          type: integer
-          format: int32
-          description: The number of seconds in which the token will expire.
     ContextIdResponse:
       type: object
       properties:

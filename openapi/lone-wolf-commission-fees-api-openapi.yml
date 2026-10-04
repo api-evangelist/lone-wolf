@@ -191,23 +191,6 @@ paths:
                 - string
 components:
   schemas:
-    FeeReadOnly:
-      type: object
-      properties:
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the fee.
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the fee.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a fee associated with a transaction.
     CommissionFee:
       type: object
       properties:
@@ -260,6 +243,23 @@ components:
           $ref: '#/components/schemas/FeeReadOnly'
       additionalProperties: false
       description: Represents a fee that is related to a commission.
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
     ApiError:
       type: object
       properties:

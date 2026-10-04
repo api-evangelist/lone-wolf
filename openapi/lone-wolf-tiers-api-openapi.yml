@@ -1026,270 +1026,6 @@ paths:
                 - string
 components:
   schemas:
-    Tier:
-      required:
-      - name
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        name:
-          type: string
-          description: The name of the tier.
-        closePrice:
-          type: number
-          description: The close price for the tier.
-          format: double
-        closeDate:
-          type:
-          - string
-          - 'null'
-          description: The date the tier closed.
-          format: date
-        statusCode:
-          enum:
-          - C
-          - F
-          - O
-          - X
-          type:
-          - string
-          - 'null'
-          description: The code for the status of the tier.
-        classificationId:
-          type:
-          - string
-          - 'null'
-          description: The unique id of the classification associated with this tier.
-          format: uuid
-        sellingCommissionAmount:
-          type: number
-          description: The total commission amount for the selling end or side of the tier.
-          format: currency
-        sellingCommissionPercentage:
-          type: number
-          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        sellingCommissionCalculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code representing the method used to calculate the selling commission.
-        buyingCommissionAmount:
-          type: number
-          description: The total commission amount for the buying end or side of the tier.
-          format: currency
-        buyingCommissionPercentage:
-          type: number
-          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        buyingCommissionCalculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code representing the method used to calculate the buying commission.
-        classification:
-          $ref: '#/components/schemas/ClassificationReadOnly'
-        commissions:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Commission'
-          description: A collection of commissions associated with the tier.
-        externalCommissions:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ExternalCommission'
-          description: A collection of external commissions associated with the tier.
-      additionalProperties: false
-      description: Represents a sub transaction.
-    TierPatchRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the tier.
-          writeOnly: true
-        closePrice:
-          type: number
-          description: The close price for the tier.
-          format: double
-          writeOnly: true
-        closeDate:
-          type:
-          - string
-          - 'null'
-          description: The date the tier closed.
-          format: date
-          writeOnly: true
-        statusCode:
-          enum:
-          - C
-          - F
-          - O
-          - X
-          type:
-          - string
-          - 'null'
-          description: The code for the status of the tier.
-          writeOnly: true
-        classificationId:
-          type:
-          - string
-          - 'null'
-          description: The unique id of the classification associated with this tier.
-          format: uuid
-          writeOnly: true
-        sellingCommissionAmount:
-          type: number
-          description: The total commission amount for the selling end or side of the tier.
-          format: currency
-          writeOnly: true
-        sellingCommissionPercentage:
-          type: number
-          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-          writeOnly: true
-        sellingCommissionCalculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code representing the method used to calculate the selling commission.
-          writeOnly: true
-        buyingCommissionAmount:
-          type: number
-          description: The total commission amount for the buying end or side of the tier.
-          format: currency
-          writeOnly: true
-        buyingCommissionPercentage:
-          type: number
-          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-          writeOnly: true
-        buyingCommissionCalculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code representing the method used to calculate the buying commission.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of a tier.
-    Commission:
-      required:
-      - agentId
-      - endCode
-      - endCount
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        agentId:
-          type: string
-          description: The unique id of the agent that gets the commission.
-          format: uuid
-        officeId:
-          type: string
-          description: The unique id of the office with which the agent is associated.
-          format: uuid
-          readOnly: true
-        amount:
-          type: number
-          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
-          format: currency
-        percentage:
-          type: number
-          description: The percentage of the total commission for the agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        endCode:
-          enum:
-          - B
-          - S
-          type: string
-          description: The code representing the end or side of the transaction.
-        endCount:
-          maximum: 2
-          minimum: 0
-          type: number
-          description: The total number of ends or sides this commission represents.
-          format: double
-        calculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code representing the calculation method used for the commission. This will be "A" for amount or "P" for percentage.
-        taxAmount:
-          type: number
-          description: The total amount in tax applied to the commission.
-          format: currency
-        totalFeeAmount:
-          type: number
-          description: The total amount of fees applied to the commission.
-          format: currency
-        totalFeeTaxAmount:
-          type: number
-          description: The total amount in tax applied to just the fees for the commission.
-          format: currency
-        fees:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/CommissionFee'
-          description: The list of fees associated with the commission.
-        agent:
-          $ref: '#/components/schemas/EmployeeReadOnly'
-        office:
-          $ref: '#/components/schemas/OfficeReadOnly'
-      additionalProperties: false
-      description: Represents a commission for an agent on a transaction.
     CommissionFee:
       type: object
       properties:
@@ -1367,160 +1103,6 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
-    FeeReadOnly:
-      type: object
-      properties:
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the fee.
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the fee.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a fee associated with a transaction.
-    EmployeeReadOnly:
-      type: object
-      properties:
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: The first name of the agent.
-          readOnly: true
-        middleName:
-          type:
-          - string
-          - 'null'
-          description: The middle name of the agent.
-          readOnly: true
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: The last name of the agent.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of an agent.
-    ClassificationReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the classification.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The code for the classification.
-          readOnly: true
-        endCount:
-          maximum: 2
-          minimum: 0
-          type: number
-          description: The total number of ends or sides this classification represents. This value will be either 0, 1 or 2.
-          format: double
-          readOnly: true
-        endTypeCode:
-          enum:
-          - B
-          - D
-          - M
-          - S
-          - X
-          type:
-          - string
-          - 'null'
-          description: The code representing the end or side for the classification.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a transaction classification.
-    OfficeReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the office.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The code for the office.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of an office.
-    ExternalCommission:
-      required:
-      - externalAgentId
-      - endCode
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        endCode:
-          enum:
-          - B
-          - S
-          type: string
-          description: The code for the end or side of the transaction.
-        percentage:
-          type: number
-          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
-          format: double
-        amount:
-          type: number
-          description: The amount of the commission paid to the external agent.
-          format: currency
-        calculationMethodCode:
-          enum:
-          - A
-          - P
-          type:
-          - string
-          - 'null'
-          description: The code for the method used to calculate the commission.
-        paymentMethodCode:
-          enum:
-          - B
-          - N
-          - E
-          type:
-          - string
-          - 'null'
-          description: The code for the method of payment for the commission.
-        externalAgentId:
-          type: string
-          description: The unique id of the external agent associated with this commission.
-          format: uuid
-        externalAgent:
-          $ref: '#/components/schemas/ExternalAgent'
-      additionalProperties: false
-      description: Represents a commission paid to an external agent involved in a transaction.
     ExternalAgent:
       required:
       - endCode
@@ -1634,6 +1216,424 @@ components:
           description: The external agent's business email address.
       additionalProperties: false
       description: Represents an agent involved in the transaction that does not work for the brokerage.
+    EmployeeReadOnly:
+      type: object
+      properties:
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the agent.
+          readOnly: true
+        middleName:
+          type:
+          - string
+          - 'null'
+          description: The middle name of the agent.
+          readOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the agent.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an agent.
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
+    Commission:
+      required:
+      - agentId
+      - endCode
+      - endCount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        agentId:
+          type: string
+          description: The unique id of the agent that gets the commission.
+          format: uuid
+        officeId:
+          type: string
+          description: The unique id of the office with which the agent is associated.
+          format: uuid
+          readOnly: true
+        amount:
+          type: number
+          description: The total commission amount the agent is receiving. This includes any fees that were subtracted.
+          format: currency
+        percentage:
+          type: number
+          description: The percentage of the total commission for the agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code representing the end or side of the transaction.
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this commission represents.
+          format: double
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the calculation method used for the commission. This will be "A" for amount or "P" for percentage.
+        taxAmount:
+          type: number
+          description: The total amount in tax applied to the commission.
+          format: currency
+        totalFeeAmount:
+          type: number
+          description: The total amount of fees applied to the commission.
+          format: currency
+        totalFeeTaxAmount:
+          type: number
+          description: The total amount in tax applied to just the fees for the commission.
+          format: currency
+        fees:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CommissionFee'
+          description: The list of fees associated with the commission.
+        agent:
+          $ref: '#/components/schemas/EmployeeReadOnly'
+        office:
+          $ref: '#/components/schemas/OfficeReadOnly'
+      additionalProperties: false
+      description: Represents a commission for an agent on a transaction.
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
+    ClassificationReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the classification.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the classification.
+          readOnly: true
+        endCount:
+          maximum: 2
+          minimum: 0
+          type: number
+          description: The total number of ends or sides this classification represents. This value will be either 0, 1 or 2.
+          format: double
+          readOnly: true
+        endTypeCode:
+          enum:
+          - B
+          - D
+          - M
+          - S
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code representing the end or side for the classification.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a transaction classification.
+    TierPatchRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the tier.
+          writeOnly: true
+        closePrice:
+          type: number
+          description: The close price for the tier.
+          format: double
+          writeOnly: true
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the tier closed.
+          format: date
+          writeOnly: true
+        statusCode:
+          enum:
+          - C
+          - F
+          - O
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the tier.
+          writeOnly: true
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this tier.
+          format: uuid
+          writeOnly: true
+        sellingCommissionAmount:
+          type: number
+          description: The total commission amount for the selling end or side of the tier.
+          format: currency
+          writeOnly: true
+        sellingCommissionPercentage:
+          type: number
+          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        sellingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the selling commission.
+          writeOnly: true
+        buyingCommissionAmount:
+          type: number
+          description: The total commission amount for the buying end or side of the tier.
+          format: currency
+          writeOnly: true
+        buyingCommissionPercentage:
+          type: number
+          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+          writeOnly: true
+        buyingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the buying commission.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of a tier.
+    Tier:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the tier.
+        closePrice:
+          type: number
+          description: The close price for the tier.
+          format: double
+        closeDate:
+          type:
+          - string
+          - 'null'
+          description: The date the tier closed.
+          format: date
+        statusCode:
+          enum:
+          - C
+          - F
+          - O
+          - X
+          type:
+          - string
+          - 'null'
+          description: The code for the status of the tier.
+        classificationId:
+          type:
+          - string
+          - 'null'
+          description: The unique id of the classification associated with this tier.
+          format: uuid
+        sellingCommissionAmount:
+          type: number
+          description: The total commission amount for the selling end or side of the tier.
+          format: currency
+        sellingCommissionPercentage:
+          type: number
+          description: The commission percentage for the selling end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        sellingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the selling commission.
+        buyingCommissionAmount:
+          type: number
+          description: The total commission amount for the buying end or side of the tier.
+          format: currency
+        buyingCommissionPercentage:
+          type: number
+          description: The commission percentage for the buying end or side of the tier. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        buyingCommissionCalculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code representing the method used to calculate the buying commission.
+        classification:
+          $ref: '#/components/schemas/ClassificationReadOnly'
+        commissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Commission'
+          description: A collection of commissions associated with the tier.
+        externalCommissions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ExternalCommission'
+          description: A collection of external commissions associated with the tier.
+      additionalProperties: false
+      description: Represents a sub transaction.
+    ExternalCommission:
+      required:
+      - externalAgentId
+      - endCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        endCode:
+          enum:
+          - B
+          - S
+          type: string
+          description: The code for the end or side of the transaction.
+        percentage:
+          type: number
+          description: The percentage of the commission paid to the external agent. This will be specified as a decimal. For example, 5% will be specified as 0.05.
+          format: double
+        amount:
+          type: number
+          description: The amount of the commission paid to the external agent.
+          format: currency
+        calculationMethodCode:
+          enum:
+          - A
+          - P
+          type:
+          - string
+          - 'null'
+          description: The code for the method used to calculate the commission.
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method of payment for the commission.
+        externalAgentId:
+          type: string
+          description: The unique id of the external agent associated with this commission.
+          format: uuid
+        externalAgent:
+          $ref: '#/components/schemas/ExternalAgent'
+      additionalProperties: false
+      description: Represents a commission paid to an external agent involved in a transaction.
 x-topics:
 - title: Overview
   content:
