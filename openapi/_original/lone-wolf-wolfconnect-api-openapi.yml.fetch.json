@@ -1,0 +1,12 @@
+{
+ "url": "https://apidocs.lwolf.com/doc/wolfconnect-api.json",
+ "requested_url": "https://apidocs.lwolf.com/doc/wolfconnect-api.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 119665,
+ "sha256": "ef84b978ad6f486f515e688546f0df457955738107b77ba4a675985e40015dd5",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}

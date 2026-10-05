@@ -1,0 +1,12 @@
+{
+ "url": "https://apidocs.lwolf.com/doc/transact-api.json",
+ "requested_url": "https://apidocs.lwolf.com/doc/transact-api.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 110440,
+ "sha256": "9688b0ba3cbc864fac5dab412c684a12e20137519b78efdead0b826f60399cb8",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.981), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
