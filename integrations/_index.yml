@@ -29,5 +29,5 @@
     other_apps:
     - lone-wolf-boost
     - lone-wolf-leads
-  status: pending-generation
+  status: not-a-workflow
   arazzo: null
