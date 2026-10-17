@@ -187,23 +187,6 @@ paths:
                 - string
 components:
   schemas:
-    OfficeReadOnly:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the office.
-          readOnly: true
-        code:
-          type:
-          - string
-          - 'null'
-          description: The code for the office.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of an office.
     ApiError:
       type: object
       properties:
@@ -361,6 +344,23 @@ components:
           $ref: '#/components/schemas/OfficeReadOnly'
       additionalProperties: false
       description: Represents an employee.
+    OfficeReadOnly:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the office.
+          readOnly: true
+        code:
+          type:
+          - string
+          - 'null'
+          description: The code for the office.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of an office.
 x-topics:
 - title: Overview
   content:

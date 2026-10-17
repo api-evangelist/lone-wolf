@@ -714,6 +714,23 @@ components:
           description: A list of more detailed errors messages.
           readOnly: true
       additionalProperties: false
+    FeeReadOnly:
+      type: object
+      properties:
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the fee.
+          readOnly: true
+        name:
+          type:
+          - string
+          - 'null'
+          description: The name of the fee.
+          readOnly: true
+      additionalProperties: false
+      description: A read only representation of a fee associated with a transaction.
     EmployeeReadOnly:
       type: object
       properties:
@@ -839,23 +856,6 @@ components:
           $ref: '#/components/schemas/OfficeReadOnly'
       additionalProperties: false
       description: Represents a commission for an agent on a transaction.
-    FeeReadOnly:
-      type: object
-      properties:
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the fee.
-          readOnly: true
-        name:
-          type:
-          - string
-          - 'null'
-          description: The name of the fee.
-          readOnly: true
-      additionalProperties: false
-      description: A read only representation of a fee associated with a transaction.
     CommissionPatchRequest:
       type: object
       properties:

@@ -400,137 +400,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/MemberInOutStatus'
 components:
-  parameters:
-    ODataTop:
-      name: $top
-      in: query
-      required: false
-      description: Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. The maximum number of objects returned from any resource is 1,000. If not passed, $top=1000 is assumed.
-      schema:
-        type: integer
-        maximum: 1000
-    ODataSkip:
-      name: $skip
-      in: query
-      required: false
-      description: Skips the specified number of records before returning the results. $orderby must be specified for $skip to be used.
-      schema:
-        type: integer
-    ODataOrderBy:
-      name: $orderby
-      in: query
-      required: false
-      description: Orders the objects returned in the response by a property related to the resource.
-      schema:
-        type: string
-    ODataExpand:
-      name: $expand
-      in: query
-      required: false
-      description: Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction.
-      schema:
-        type: string
-    ODataFilter:
-      name: $filter
-      in: query
-      required: false
-      description: Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.).
-      schema:
-        type: string
-    MemberId:
-      name: memberId
-      in: path
-      required: true
-      description: The Lone Wolf Id of the member.
-      schema:
-        type: string
   schemas:
-    Integrations:
-      type: object
-      properties:
-        PartnerCode:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: The code for the Partner. Usually the Partner's name.
-        Id:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: The Id for the Partner's matching Member.
-    PublicProfile:
-      type: object
-      properties:
-        CreatedTimestamp:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The date and time the member was created.
-        ModifiedTimestamp:
-          type: string
-          format: date-time
-          readOnly: true
-          description: The date and time the member was modified.
-        Name:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The name of the public profile.
-        FirstName:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The first name of the member.
-        MiddleName:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The middle name of the member.
-        LastName:
-          type: string
-          maxLength: 50
-          readOnly: true
-          description: The last name of the member.
-        Title:
-          type: string
-          maxLength: 100
-          readOnly: true
-          description: The title of the member.
-        Addresses:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/Address'
-          description: 'The collection of addresses for the member. Currently supported address types: M: Mailing, P: Physical'
-        EmailAddresses:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/EmailAddress'
-          description: 'The collection of email addresses for the member. Currently supported email address types: B: Business, S: Secondary'
-        PhoneNumbers:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/PhoneNumber'
-          description: The collection of phone numbers for the member.
-        Websites:
-          type: array
-          readOnly: true
-          items:
-            $ref: '#/components/schemas/Website'
-          description: The collection of websites for the member.
-    MLSBoard:
-      type: object
-      properties:
-        MLSId:
-          type: string
-          readOnly: true
-          description: The MLS Id of the member for the MLS Board specified by the MLSAreaId.
-        MLSAreaId:
-          type: string
-          readOnly: true
-          description: The Lone Wolf Id of the MLS area.
     Member:
       type: object
       required:
@@ -669,6 +539,120 @@ components:
           items:
             $ref: '#/components/schemas/Integrations'
           description: The collection of partner integrations for the member.
+    PublicProfile:
+      type: object
+      properties:
+        CreatedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was created.
+        ModifiedTimestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time the member was modified.
+        Name:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The name of the public profile.
+        FirstName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The first name of the member.
+        MiddleName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The middle name of the member.
+        LastName:
+          type: string
+          maxLength: 50
+          readOnly: true
+          description: The last name of the member.
+        Title:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The title of the member.
+        Addresses:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Address'
+          description: 'The collection of addresses for the member. Currently supported address types: M: Mailing, P: Physical'
+        EmailAddresses:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          description: 'The collection of email addresses for the member. Currently supported email address types: B: Business, S: Secondary'
+        PhoneNumbers:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+          description: The collection of phone numbers for the member.
+        Websites:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Website'
+          description: The collection of websites for the member.
+    Office:
+      type: object
+      properties:
+        Id:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the office.
+        Name:
+          type: string
+          readOnly: true
+          description: The name.
+        LWCompanyCode:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
+    Integrations:
+      type: object
+      properties:
+        PartnerCode:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The code for the Partner. Usually the Partner's name.
+        Id:
+          type: string
+          maxLength: 100
+          readOnly: true
+          description: The Id for the Partner's matching Member.
+    EmailAddress:
+      type: object
+      required:
+      - Address
+      - TypeCode
+      properties:
+        Address:
+          type: string
+          maxLength: 100
+          description: The email address.
+        Confidential:
+          type: boolean
+          description: True if the email address is confidential.
+        Primary:
+          type: boolean
+          description: True if this is the primary email address.
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of email address.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of email address. H: Home, B: Business, W: Work, S: Secondary, O: Other'
     PhoneNumber:
       type: object
       required:
@@ -697,6 +681,35 @@ components:
           type: string
           maxLength: 1
           description: 'The code for the type of phone number. A: Assistant, B: Business, BF: Business Fax, CB: Callback, C: Company, X: Extension, H: Home, HF: Home Fax, ISDN: ISDN, M: Mobile, P: Pager, R: Radio, T: Telex, TF: Toll Free, TTY: TTY/TDD, O: Other, OF: Other Fax'
+    MLSBoard:
+      type: object
+      properties:
+        MLSId:
+          type: string
+          readOnly: true
+          description: The MLS Id of the member for the MLS Board specified by the MLSAreaId.
+        MLSAreaId:
+          type: string
+          readOnly: true
+          description: The Lone Wolf Id of the MLS area.
+    Website:
+      type: object
+      required:
+      - TypeCode
+      - Url
+      properties:
+        Type:
+          type: string
+          readOnly: true
+          description: The name of the type of website.
+        TypeCode:
+          type: string
+          maxLength: 1
+          description: 'The code for the type of website. B: Blog, C: Community, FB: Facebook, G: General, L: Linkedin, S: Sports, T: Tourism, TW: Twitter, YT: YouTube'
+        Url:
+          type: string
+          maxLength: 100
+          description: The url of the website.
     Address:
       type: object
       required:
@@ -758,6 +771,22 @@ components:
           type: string
           maxLength: 1
           description: 'The code for the type of address. P: Physical, M: Mailing, H: Home, B: Business, W: Work, O: Other'
+    ClientError:
+      type: object
+      description: The ClientError object is used to give detailed information whenever an API request fails. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL. See the Error Codes section of the introduction for the full list of Lone Wolf Error Codes.
+      properties:
+        Code:
+          type: integer
+          readOnly: true
+          description: The Lone Wolf Error Code. See the Error Codes section of the introduction.
+        Message:
+          type: string
+          readOnly: true
+          description: The message that corresponds to the Code value.
+        Details:
+          type: string
+          readOnly: true
+          description: The exact problem that occurred to give this error response.
     MemberInOutStatus:
       type: object
       properties:
@@ -777,79 +806,50 @@ components:
           type: string
           maxLength: 5000
           description: More detailed notes about why the member is out.
-    ClientError:
-      type: object
-      description: The ClientError object is used to give detailed information whenever an API request fails. If you perform a request that returns with an error and the response does not contain a ClientError object it is a good indication that you are using the wrong URL. See the Error Codes section of the introduction for the full list of Lone Wolf Error Codes.
-      properties:
-        Code:
-          type: integer
-          readOnly: true
-          description: The Lone Wolf Error Code. See the Error Codes section of the introduction.
-        Message:
-          type: string
-          readOnly: true
-          description: The message that corresponds to the Code value.
-        Details:
-          type: string
-          readOnly: true
-          description: The exact problem that occurred to give this error response.
-    Office:
-      type: object
-      properties:
-        Id:
-          type: string
-          readOnly: true
-          description: The Lone Wolf Id of the office.
-        Name:
-          type: string
-          readOnly: true
-          description: The name.
-        LWCompanyCode:
-          type: string
-          readOnly: true
-          description: The Lone Wolf Company Code. This is the code used by a brokerWOLF installation. It will be blank for offices that are not synced with brokerWOLF.
-    Website:
-      type: object
-      required:
-      - TypeCode
-      - Url
-      properties:
-        Type:
-          type: string
-          readOnly: true
-          description: The name of the type of website.
-        TypeCode:
-          type: string
-          maxLength: 1
-          description: 'The code for the type of website. B: Blog, C: Community, FB: Facebook, G: General, L: Linkedin, S: Sports, T: Tourism, TW: Twitter, YT: YouTube'
-        Url:
-          type: string
-          maxLength: 100
-          description: The url of the website.
-    EmailAddress:
-      type: object
-      required:
-      - Address
-      - TypeCode
-      properties:
-        Address:
-          type: string
-          maxLength: 100
-          description: The email address.
-        Confidential:
-          type: boolean
-          description: True if the email address is confidential.
-        Primary:
-          type: boolean
-          description: True if this is the primary email address.
-        Type:
-          type: string
-          readOnly: true
-          description: The name of the type of email address.
-        TypeCode:
-          type: string
-          maxLength: 1
-          description: 'The code for the type of email address. H: Home, B: Business, W: Work, S: Secondary, O: Other'
+  parameters:
+    ODataSkip:
+      name: $skip
+      in: query
+      required: false
+      description: Skips the specified number of records before returning the results. $orderby must be specified for $skip to be used.
+      schema:
+        type: integer
+    ODataOrderBy:
+      name: $orderby
+      in: query
+      required: false
+      description: Orders the objects returned in the response by a property related to the resource.
+      schema:
+        type: string
+    ODataTop:
+      name: $top
+      in: query
+      required: false
+      description: Returns the specified top number of records for the given query. $orderby must be specified for $top to be used. The maximum number of objects returned from any resource is 1,000. If not passed, $top=1000 is assumed.
+      schema:
+        type: integer
+        maximum: 1000
+    ODataExpand:
+      name: $expand
+      in: query
+      required: false
+      description: Instructs the API to include a child object or collection in the response. If omitted, ALL child objects and collections are returned. Pass `$expand=` (empty) to return only the root object. See the OData Support section of the introduction.
+      schema:
+        type: string
+    ODataFilter:
+      name: $filter
+      in: query
+      required: false
+      description: Filters data on properties related to the resource. Only Logical, Arithmetic and Grouping operators are currently supported. No Canonical functions are currently supported (contains, endswith, startswith, etc.).
+      schema:
+        type: string
+    MemberId:
+      name: memberId
+      in: path
+      required: true
+      description: The Lone Wolf Id of the member.
+      schema:
+        type: string
   securitySchemes:
     LoneWolfToken:
       type: apiKey

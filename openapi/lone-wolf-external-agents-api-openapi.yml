@@ -549,123 +549,6 @@ paths:
                 - string
 components:
   schemas:
-    ExternalAgentPatchRequest:
-      type: object
-      properties:
-        endCode:
-          enum:
-          - B
-          - S
-          type:
-          - string
-          - 'null'
-          description: The code end or side of the transaction.
-          writeOnly: true
-        typeCode:
-          enum:
-          - B
-          - R
-          type:
-          - string
-          - 'null'
-          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
-          writeOnly: true
-        paymentMethodCode:
-          enum:
-          - B
-          - N
-          - E
-          type:
-          - string
-          - 'null'
-          description: The code for the method use to pay the external agent.
-          writeOnly: true
-        firstName:
-          type:
-          - string
-          - 'null'
-          description: The first name of the external agent.
-          writeOnly: true
-        lastName:
-          type:
-          - string
-          - 'null'
-          description: The last name of the external agent.
-          writeOnly: true
-        companyName:
-          type:
-          - string
-          - 'null'
-          description: The name of the company for which the external agent works.
-          writeOnly: true
-        addressLine1:
-          type:
-          - string
-          - 'null'
-          description: The street address.
-          writeOnly: true
-        addressLine2:
-          type:
-          - string
-          - 'null'
-          description: The address unit number.
-          writeOnly: true
-        addressCity:
-          type:
-          - string
-          - 'null'
-          description: The city of the address.
-          writeOnly: true
-        addressPostalCode:
-          type:
-          - string
-          - 'null'
-          description: The postal code of the address. This will be unformatted.
-          writeOnly: true
-        addressProvinceCode:
-          type:
-          - string
-          - 'null'
-          description: The two character state or province code.
-          writeOnly: true
-        addressCountryCode:
-          type:
-          - string
-          - 'null'
-          description: The two character country code.
-          writeOnly: true
-        phoneNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The external agent's main phone number.
-          writeOnly: true
-        phoneNumberBusiness:
-          type:
-          - string
-          - 'null'
-          description: The external agent's business phone number.
-          writeOnly: true
-        faxNumberMain:
-          type:
-          - string
-          - 'null'
-          description: The external agent's main fax number.
-          writeOnly: true
-        emailAddressMain:
-          type:
-          - string
-          - 'null'
-          description: The external agent's main email address.
-          writeOnly: true
-        emailAddressBusiness:
-          type:
-          - string
-          - 'null'
-          description: The external agent's business email address.
-          writeOnly: true
-      additionalProperties: false
-      description: Used to patch properties of an external agent.
     ApiError:
       type: object
       properties:
@@ -804,6 +687,123 @@ components:
           description: The external agent's business email address.
       additionalProperties: false
       description: Represents an agent involved in the transaction that does not work for the brokerage.
+    ExternalAgentPatchRequest:
+      type: object
+      properties:
+        endCode:
+          enum:
+          - B
+          - S
+          type:
+          - string
+          - 'null'
+          description: The code end or side of the transaction.
+          writeOnly: true
+        typeCode:
+          enum:
+          - B
+          - R
+          type:
+          - string
+          - 'null'
+          description: The code for the type of external agent this is. This will be either "B" for outside broker or "R" for referral.
+          writeOnly: true
+        paymentMethodCode:
+          enum:
+          - B
+          - N
+          - E
+          type:
+          - string
+          - 'null'
+          description: The code for the method use to pay the external agent.
+          writeOnly: true
+        firstName:
+          type:
+          - string
+          - 'null'
+          description: The first name of the external agent.
+          writeOnly: true
+        lastName:
+          type:
+          - string
+          - 'null'
+          description: The last name of the external agent.
+          writeOnly: true
+        companyName:
+          type:
+          - string
+          - 'null'
+          description: The name of the company for which the external agent works.
+          writeOnly: true
+        addressLine1:
+          type:
+          - string
+          - 'null'
+          description: The street address.
+          writeOnly: true
+        addressLine2:
+          type:
+          - string
+          - 'null'
+          description: The address unit number.
+          writeOnly: true
+        addressCity:
+          type:
+          - string
+          - 'null'
+          description: The city of the address.
+          writeOnly: true
+        addressPostalCode:
+          type:
+          - string
+          - 'null'
+          description: The postal code of the address. This will be unformatted.
+          writeOnly: true
+        addressProvinceCode:
+          type:
+          - string
+          - 'null'
+          description: The two character state or province code.
+          writeOnly: true
+        addressCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The two character country code.
+          writeOnly: true
+        phoneNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main phone number.
+          writeOnly: true
+        phoneNumberBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business phone number.
+          writeOnly: true
+        faxNumberMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main fax number.
+          writeOnly: true
+        emailAddressMain:
+          type:
+          - string
+          - 'null'
+          description: The external agent's main email address.
+          writeOnly: true
+        emailAddressBusiness:
+          type:
+          - string
+          - 'null'
+          description: The external agent's business email address.
+          writeOnly: true
+      additionalProperties: false
+      description: Used to patch properties of an external agent.
 x-topics:
 - title: Overview
   content:

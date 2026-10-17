@@ -180,43 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ContactType:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: 3820856a-faef-477d-8d6a-8a8e25fc9522
-          description: Unique identifier for this contact type
-        name:
-          type: string
-          example: Listing Agent
-        ownerId:
-          type: string
-          format: uuid
-          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
-          description: Owner of this type (Global, Association, Office, or Personal level)
-        dateCreated:
-          type: string
-          format: date-time
-          example: '2020-04-14T15:54:53.207'
-        lastModified:
-          type: string
-          format: date-time
-          example: '2020-04-14T15:54:53.207'
-    ErrorBadRequest:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-        message:
-          type: string
-          example: Request was not valid.
-        details:
-          type: array
-          items:
-            type: string
     ErrorNotFound:
       type: object
       properties:
@@ -242,6 +205,43 @@ components:
           type: array
           items: {}
         data: {}
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    ContactType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 3820856a-faef-477d-8d6a-8a8e25fc9522
+          description: Unique identifier for this contact type
+        name:
+          type: string
+          example: Listing Agent
+        ownerId:
+          type: string
+          format: uuid
+          example: 5ec37bc1-9f55-4fe2-b9c4-1072f9954312
+          description: Owner of this type (Global, Association, Office, or Personal level)
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2020-04-14T15:54:53.207'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2020-04-14T15:54:53.207'
   securitySchemes:
     bearerAuth:
       type: http

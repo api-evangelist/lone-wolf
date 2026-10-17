@@ -92,8 +92,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PropertyType:
-      type: object
     ApiError:
       type: object
       properties:
@@ -107,6 +105,8 @@ components:
           items:
             type: string
     Classification:
+      type: object
+    PropertyType:
       type: object
   securitySchemes:
     BearerToken:

@@ -234,32 +234,6 @@ paths:
                 - string
 components:
   schemas:
-    ConditionType:
-      required:
-      - name
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        name:
-          type: string
-          description: The name of the condition type.
-      additionalProperties: false
-      description: Represents a preset type of condition that can be applied to a transaction.
     ApiError:
       type: object
       properties:
@@ -296,6 +270,32 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a condition type.
+    ConditionType:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the condition type.
+      additionalProperties: false
+      description: Represents a preset type of condition that can be applied to a transaction.
 x-topics:
 - title: Overview
   content:

@@ -816,6 +816,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: The access token is missing, invalid, or expired.
       content:
@@ -824,12 +830,6 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
       content:
         application/json:
           schema:
@@ -845,14 +845,22 @@ components:
           type: string
           description: Human-readable error description.
       additionalProperties: true
-    Authentisign.Services.Dtos.DocumentLayoutDto:
-      required:
-      - layoutId
+    Authentisign.Services.Dtos.ErrorResponse:
       type: object
       properties:
-        layoutId:
-          type: string
-          format: uuid
+        code:
+          type: integer
+          format: int32
+        message:
+          type:
+          - string
+          - 'null'
+        details:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
       additionalProperties: false
     Microsoft.AspNetCore.Mvc.ProblemDetails:
       type: object
@@ -879,22 +887,14 @@ components:
           - string
           - 'null'
       additionalProperties: {}
-    Authentisign.Services.Dtos.ErrorResponse:
+    Authentisign.Services.Dtos.DocumentLayoutDto:
+      required:
+      - layoutId
       type: object
       properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type:
-          - string
-          - 'null'
-        details:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
+        layoutId:
+          type: string
+          format: uuid
       additionalProperties: false
   securitySchemes:
     bearerAuth:

@@ -180,43 +180,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    TransactionStatus:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: ee349fd8-5842-420f-84a2-9b80b8d9632e
-          description: Unique identifier for this transaction status
-        name:
-          type: string
-          example: Active
-        ownerId:
-          type: string
-          format: uuid
-          example: 476ba212-d96d-49e5-82df-3f474d9e9188
-          description: Owner of this status (Global, Association, Office, or Personal level)
-        dateCreated:
-          type: string
-          format: date-time
-          example: '2008-03-02T04:26:50.607+00:00'
-        lastModified:
-          type: string
-          format: date-time
-          example: '2008-03-02T04:26:50.607+00:00'
-    ErrorBadRequest:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-        message:
-          type: string
-          example: Request was not valid.
-        details:
-          type: array
-          items:
-            type: string
     ErrorNotFound:
       type: object
       properties:
@@ -242,6 +205,43 @@ components:
           type: array
           items: {}
         data: {}
+    ErrorBadRequest:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Request was not valid.
+        details:
+          type: array
+          items:
+            type: string
+    TransactionStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: ee349fd8-5842-420f-84a2-9b80b8d9632e
+          description: Unique identifier for this transaction status
+        name:
+          type: string
+          example: Active
+        ownerId:
+          type: string
+          format: uuid
+          example: 476ba212-d96d-49e5-82df-3f474d9e9188
+          description: Owner of this status (Global, Association, Office, or Personal level)
+        dateCreated:
+          type: string
+          format: date-time
+          example: '2008-03-02T04:26:50.607+00:00'
+        lastModified:
+          type: string
+          format: date-time
+          example: '2008-03-02T04:26:50.607+00:00'
   securitySchemes:
     bearerAuth:
       type: http

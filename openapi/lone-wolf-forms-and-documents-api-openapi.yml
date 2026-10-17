@@ -275,13 +275,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    documentId:
-      name: documentId
-      in: path
-      required: true
-      schema:
-        type: string
-      description: Document ID or Form GUID
     transactionId:
       name: transactionId
       in: path
@@ -290,6 +283,13 @@ components:
         type: string
         format: uuid
       description: Transaction GUID
+    documentId:
+      name: documentId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Document ID or Form GUID
   schemas:
     DocumentItem:
       type: object

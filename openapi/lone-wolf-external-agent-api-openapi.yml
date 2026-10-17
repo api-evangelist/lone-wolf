@@ -705,11 +705,11 @@ components:
             type: string
     ExternalAgent:
       type: object
-    Address:
+    EmailAddress:
       type: object
     PhoneNumber:
       type: object
-    EmailAddress:
+    Address:
       type: object
   securitySchemes:
     BearerToken:

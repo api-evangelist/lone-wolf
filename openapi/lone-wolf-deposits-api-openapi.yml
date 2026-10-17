@@ -486,60 +486,6 @@ paths:
                 - string
 components:
   schemas:
-    Deposit:
-      required:
-      - date
-      - amount
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        date:
-          type: string
-          description: The date the deposit was received.
-          format: date
-        amount:
-          type: number
-          description: The amount of the deposit.
-          format: currency
-        received:
-          type: boolean
-          description: If the deposit has been received or not.
-        interest:
-          type: boolean
-          description: If the deposit accumulates interest.
-        held:
-          type: boolean
-          description: If the deposit is held or not.
-        heldBy:
-          type:
-          - string
-          - 'null'
-          description: Who the deposit is held by.
-        direct:
-          type: boolean
-          description: If the deposit is direct or not.
-        reference:
-          type:
-          - string
-          - 'null'
-          description: The reference number for the deposit.
-      additionalProperties: false
-      description: Represents a deposit associated to a transaction.
     ApiError:
       type: object
       properties:
@@ -608,6 +554,60 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a deposit.
+    Deposit:
+      required:
+      - date
+      - amount
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        date:
+          type: string
+          description: The date the deposit was received.
+          format: date
+        amount:
+          type: number
+          description: The amount of the deposit.
+          format: currency
+        received:
+          type: boolean
+          description: If the deposit has been received or not.
+        interest:
+          type: boolean
+          description: If the deposit accumulates interest.
+        held:
+          type: boolean
+          description: If the deposit is held or not.
+        heldBy:
+          type:
+          - string
+          - 'null'
+          description: Who the deposit is held by.
+        direct:
+          type: boolean
+          description: If the deposit is direct or not.
+        reference:
+          type:
+          - string
+          - 'null'
+          description: The reference number for the deposit.
+      additionalProperties: false
+      description: Represents a deposit associated to a transaction.
 x-topics:
 - title: Overview
   content:

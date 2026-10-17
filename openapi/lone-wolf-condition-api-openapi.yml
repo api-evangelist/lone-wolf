@@ -228,9 +228,9 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Condition:
-      type: object
     Commission:
+      type: object
+    Condition:
       type: object
     ApiError:
       type: object

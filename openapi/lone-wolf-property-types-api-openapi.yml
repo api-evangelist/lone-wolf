@@ -279,51 +279,6 @@ paths:
       description: Test
 components:
   schemas:
-    PropertyType:
-      required:
-      - name
-      - code
-      - classCode
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique id.
-          format: uuid
-        createdTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time of creation in UTC time.
-          format: date-time
-        modifiedTimestamp:
-          type:
-          - string
-          - 'null'
-          description: The date and time last modification in UTC time.
-          format: date-time
-        name:
-          type: string
-          description: The name of the property type.
-        shortName:
-          type:
-          - string
-          - 'null'
-          description: The short name of the property type.
-        code:
-          type: string
-          description: The unique code for the property type.
-        classCode:
-          enum:
-          - C
-          - R
-          type: string
-          description: The code representing the class of the property type. This will be either "C" for commercial or "R" for residential.
-        rental:
-          type: boolean
-          description: Indicates whether the property type is for rental property transactions.
-      additionalProperties: false
-      description: Represents the type of property for a transaction.
     ApiError:
       type: object
       properties:
@@ -370,6 +325,51 @@ components:
           writeOnly: true
       additionalProperties: false
       description: Used to patch properties of a property type.
+    PropertyType:
+      required:
+      - name
+      - code
+      - classCode
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique id.
+          format: uuid
+        createdTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time of creation in UTC time.
+          format: date-time
+        modifiedTimestamp:
+          type:
+          - string
+          - 'null'
+          description: The date and time last modification in UTC time.
+          format: date-time
+        name:
+          type: string
+          description: The name of the property type.
+        shortName:
+          type:
+          - string
+          - 'null'
+          description: The short name of the property type.
+        code:
+          type: string
+          description: The unique code for the property type.
+        classCode:
+          enum:
+          - C
+          - R
+          type: string
+          description: The code representing the class of the property type. This will be either "C" for commercial or "R" for residential.
+        rental:
+          type: boolean
+          description: Indicates whether the property type is for rental property transactions.
+      additionalProperties: false
+      description: Represents the type of property for a transaction.
     PropertyType_2:
       type: object
       properties:

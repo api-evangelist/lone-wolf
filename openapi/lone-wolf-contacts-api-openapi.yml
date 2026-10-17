@@ -179,7 +179,59 @@ paths:
           type: string
           format: uuid
 components:
+  responses:
+    Forbidden:
+      description: The caller is not permitted to perform this operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: The request is malformed or contains invalid parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: The access token is missing, invalid, or expired.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    ContactUpdate:
+      allOf:
+      - type: object
+        properties:
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the contact belongs to.
+      - $ref: '#/components/schemas/ContactBase'
+      description: Partial contact representation. Only the provided fields are updated.
+    ContactCreate:
+      allOf:
+      - type: object
+        required:
+        - userId
+        - transactionId
+        properties:
+          userId:
+            type: string
+            format: uuid
+            description: GUID of the user creating the contact.
+          transactionId:
+            type: string
+            format: uuid
+            description: GUID of the transaction the contact belongs to.
+      - $ref: '#/components/schemas/ContactBase'
+      description: Payload for creating a new transaction contact.
     ContactBase:
       type: object
       properties:
@@ -340,23 +392,6 @@ components:
         llcPoa:
           type: string
           description: LLC / power of attorney designation.
-    ContactCreate:
-      allOf:
-      - type: object
-        required:
-        - userId
-        - transactionId
-        properties:
-          userId:
-            type: string
-            format: uuid
-            description: GUID of the user creating the contact.
-          transactionId:
-            type: string
-            format: uuid
-            description: GUID of the transaction the contact belongs to.
-      - $ref: '#/components/schemas/ContactBase'
-      description: Payload for creating a new transaction contact.
     Error:
       type: object
       properties:
@@ -367,41 +402,6 @@ components:
           type: string
           description: Human-readable error description.
       additionalProperties: true
-    ContactUpdate:
-      allOf:
-      - type: object
-        properties:
-          transactionId:
-            type: string
-            format: uuid
-            description: GUID of the transaction the contact belongs to.
-      - $ref: '#/components/schemas/ContactBase'
-      description: Partial contact representation. Only the provided fields are updated.
-  responses:
-    Forbidden:
-      description: The caller is not permitted to perform this operation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: The access token is missing, invalid, or expired.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: The request is malformed or contains invalid parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

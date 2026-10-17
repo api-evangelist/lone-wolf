@@ -673,6 +673,8 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    BusinessContact:
+      type: object
     ApiError:
       type: object
       properties:
@@ -685,13 +687,11 @@ components:
           type: array
           items:
             type: string
-    Address:
+    EmailAddress:
       type: object
     PhoneNumber:
       type: object
-    BusinessContact:
-      type: object
-    EmailAddress:
+    Address:
       type: object
   securitySchemes:
     BearerToken:
