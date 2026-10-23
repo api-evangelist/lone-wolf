@@ -328,3 +328,9 @@ components:
       in: header
       name: X-Auth-ExternalId
       description: External Id for partners authorized to use the External Id authentication scheme. Must be used together with X-Auth-SharedKey.
+x-provenance:
+  method: harvested
+  publisher: Lone Wolf Technologies
+  source: https://apidocs.lwolf.com/doc/zipform-api.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

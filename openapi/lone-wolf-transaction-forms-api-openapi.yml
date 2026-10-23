@@ -267,3 +267,9 @@ components:
       in: header
       name: lw-subscription-key
       description: API subscription key issued by Lone Wolf, sent on every request.
+x-provenance:
+  method: harvested
+  publisher: Lone Wolf Technologies
+  source: https://apidocs.lwolf.com/doc/transact-api.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

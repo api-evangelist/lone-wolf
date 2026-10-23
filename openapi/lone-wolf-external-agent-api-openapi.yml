@@ -717,3 +717,9 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: 'JSON Web Token obtained from the Authentication API (`POST /v1/login`). Pass the token as `Authorization: Bearer <token>` in every request. Tokens expire after the number of seconds specified in the `expiresIn` field of the login response.'
+x-provenance:
+  method: harvested
+  publisher: Lone Wolf Technologies
+  source: https://apidocs.lwolf.com/doc/deals-api.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

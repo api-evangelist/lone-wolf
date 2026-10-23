@@ -872,3 +872,9 @@ components:
 
 
         See the Authentication, Creating a Request, and Creating the Signature sections of the introduction for full details, date format, and worked examples. A separate `LoneWolfKey` scheme exists for resources that deal with your API account; there is never a scenario where you would send more than one type of authorization scheme.'
+x-provenance:
+  method: harvested
+  publisher: Lone Wolf Technologies
+  source: https://apidocs.lwolf.com/doc/wolfconnect-api.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
