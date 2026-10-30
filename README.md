@@ -1,4 +1,4 @@
-# Lone Wolf Technologies (lone-wolf)
+# Lone Wolf Technologies
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,143 +64,218 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Lone Wolf Technologies is the dominant back-office, transaction-management and forms vendor in North American residential real estate, headquartered in Dallas, Texas and backed by Stone Point Capital. Its software runs the paperwork and money side of the deal rather than the listing feed: brokerage accounting and commission processing (Back Office, the brokerWOLF lineage), transaction management in two editions (zipForm Edition and TransactionDesk Edition), Authentisign and Inkless e-signature, Cloud CMA comparative market analysis, Boost digital advertising (HomeSpotter), Spacio open-house lead capture, and Propertybase/Relationships CRM. On 2026-02-02 it launched a public API Portal for the Lone Wolf Foundation platform, and its documentation hub publishes seven complete, anonymously downloadable OpenAPI 3.0 definitions. Documentation is genuinely open; credentials are not.
+Lone Wolf Technologies is the dominant back-office, transaction-management and forms vendor in North American residential real estate, headquartered in Dallas, Texas and backed by Stone Point Capital. Its software runs the paperwork and money side of the deal rather than the listing feed: brokerage accounting and commission processing (Back Office, the brokerWOLF lineage), transaction management in two editions (zipForm Edition and TransactionDesk Edition), Authentisign and Inkless e-signature, Cloud CMA comparative market analysis, Boost digital advertising (HomeSpotter), Spacio open-house lead capture, and Propertybase/Relationships CRM. Its forms suites are distributed to agents as association member benefits through state REALTOR associations and MLSs, which places it between the MLS layer and the brokerage. On API posture it is one of the strongest surfaces in this sector and an instructive counter-example to the MLS data providers: on 2026-02-02 it launched a public API Portal for the Lone Wolf Foundation platform, and its documentation hub at apidocs.lwolf.com publishes seven complete, anonymously downloadable OpenAPI 3.0 definitions (Transact, Deals, Back Office, Authentisign, TransactionDesk, zipForm and WolfConnect) plus an MCP server endpoint. Documentation is genuinely open; credentials are not. Keys are issued only after an access-request form is reviewed by the integrations team, and the zipForm API is explicitly licensed to third-party application partners. Lone Wolf is not a RESO-certified data distributor and publishes no RESO Web API, Data Dictionary endpoint, OData $metadata document or Universal Property Identifier — RESO certification governs MLS listing feeds, which is not the layer Lone Wolf occupies; it consumes MLS data under MLS agreements (Cloud CMA documents RETS live queries) rather than redistributing it.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/lone-wolf/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/lone-wolf/refs/heads/main/apis.yml)
+**Areas:** Real Estate · United States · PropTech · Transaction · Transaction Management · Brokerage Back Office · Real Estate Accounting · Commissions · Forms · zipForm · TransactionDesk · E-Signature
 
-## Tags
+## Lone Wolf Technologies on APIs.io
 
-- Real Estate
-- United States
-- PropTech
-- Transactions
-- Transaction Management
-- Brokerage Back Office
-- Real Estate Accounting
-- Commissions
-- Forms
-- zipForm
-- TransactionDesk
-- E-Signature
-- CMA
-- Valuation
-- CRM
-- MLS
-- Real Estate Agents
-- Brokers
+Everything profiled for Lone Wolf Technologies is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/lone-wolf/](https://apis.io/providers/lone-wolf/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (65)
 
-- **Created:** 2026-07-26
-- **Modified:** 2026-07-26
+- [Lone Wolf Authentisign API](https://apis.io/apis/lone-wolf/lone-wolf-authentisign-api/) — E-signature API for Authentisign, Lone Wolf's signing product. Creates and manages signings, signer roles, documents and signing status. Supports an…
+- [Lone Wolf Technologies Accounts API](https://apis.io/apis/lone-wolf/lone-wolf-accounts-api/) — The Accounts API from Lone Wolf Technologies — 1 operation(s) for accounts.
+- [Lone Wolf Technologies Authentication API](https://apis.io/apis/lone-wolf/lone-wolf-authentication-api/) — The Authentication API from Lone Wolf Technologies — 6 operation(s) for authentication.
+- [Lone Wolf Technologies Authorization API](https://apis.io/apis/lone-wolf/lone-wolf-authorization-api/) — OAuth 2.0 client credentials token endpoint.
+- [Lone Wolf Technologies Business Contact API](https://apis.io/apis/lone-wolf/lone-wolf-business-contact-api/) — The Business Contact API from Lone Wolf Technologies — 8 operation(s) for business contact.
+- [Lone Wolf Technologies Business Contacts API](https://apis.io/apis/lone-wolf/lone-wolf-business-contacts-api/) — Business contacts represent a business or third party that is part of a transaction such as a home inspector or a lawyer. They do not represent the buyer or…
+- [Lone Wolf Technologies Classification API](https://apis.io/apis/lone-wolf/lone-wolf-classification-api/) — The Classification API from Lone Wolf Technologies — 2 operation(s) for classification.
+- [Lone Wolf Technologies Classifications API](https://apis.io/apis/lone-wolf/lone-wolf-classifications-api/) — Classifications relate to the commission structure of a transaction.
+- [Lone Wolf Technologies Client Contact API](https://apis.io/apis/lone-wolf/lone-wolf-client-contact-api/) — The Client Contact API from Lone Wolf Technologies — 8 operation(s) for client contact.
+- [Lone Wolf Technologies Client Contacts API](https://apis.io/apis/lone-wolf/lone-wolf-client-contacts-api/) — Client contacts represent a buyer or seller that is part of a transaction. For all other types of contacts, use business contacts.
+- [Lone Wolf Technologies Commission API](https://apis.io/apis/lone-wolf/lone-wolf-commission-api/) — The Commission API from Lone Wolf Technologies — 2 operation(s) for commission.
+- [Lone Wolf Technologies Commission Fees API](https://apis.io/apis/lone-wolf/lone-wolf-commission-fees-api/) — Represents fees that are associated with commissions.
+- [Lone Wolf Technologies Commissions API](https://apis.io/apis/lone-wolf/lone-wolf-commissions-api/) — Represents the commissions and the related agent's within the brokerage that receive those commissions. For commissions related to agent's that are not part…
+- [Lone Wolf Technologies Condition API](https://apis.io/apis/lone-wolf/lone-wolf-condition-api/) — The Condition API from Lone Wolf Technologies — 2 operation(s) for condition.
+- [Lone Wolf Technologies Condition Type API](https://apis.io/apis/lone-wolf/lone-wolf-condition-type-api/) — The Condition Type API from Lone Wolf Technologies — 2 operation(s) for condition type.
+- [Lone Wolf Technologies Condition Types API](https://apis.io/apis/lone-wolf/lone-wolf-condition-types-api/) — Represents some common conditions that can be added to transactions.
+- [Lone Wolf Technologies Conditions API](https://apis.io/apis/lone-wolf/lone-wolf-conditions-api/) — Represents the conditions that exist on the transaction before it can be closed.
+- [Lone Wolf Technologies Contact Type API](https://apis.io/apis/lone-wolf/lone-wolf-contact-type-api/) — The Contact Type API from Lone Wolf Technologies — 2 operation(s) for contact type.
+- [Lone Wolf Technologies Contact Types API](https://apis.io/apis/lone-wolf/lone-wolf-contact-types-api/) — Represents the types of contacts for both business and client.
+- [Lone Wolf Technologies Contacts API](https://apis.io/apis/lone-wolf/lone-wolf-contacts-api/) — Manage transaction contacts.
+- [Lone Wolf Technologies Deal API](https://apis.io/apis/lone-wolf/lone-wolf-deal-api/) — The Deal API from Lone Wolf Technologies — 7 operation(s) for deal.
+- [Lone Wolf Technologies Deposit API](https://apis.io/apis/lone-wolf/lone-wolf-deposit-api/) — The Deposit API from Lone Wolf Technologies — 2 operation(s) for deposit.
+- [Lone Wolf Technologies Deposits API](https://apis.io/apis/lone-wolf/lone-wolf-deposits-api/) — Represents the deposits that have are required for the transaction.
+- [Lone Wolf Technologies Documents API](https://apis.io/apis/lone-wolf/lone-wolf-documents-api/) — The Documents API from Lone Wolf Technologies — 17 operation(s) for documents.
+- [Lone Wolf Technologies Employees API](https://apis.io/apis/lone-wolf/lone-wolf-employees-api/) — Represents a person that works at the brokerage. This includes the broker themselves, office admins, agent's, everyone.
+- [Lone Wolf Technologies External Agent API](https://apis.io/apis/lone-wolf/lone-wolf-external-agent-api/) — The External Agent API from Lone Wolf Technologies — 8 operation(s) for external agent.
+- [Lone Wolf Technologies External Agents API](https://apis.io/apis/lone-wolf/lone-wolf-external-agents-api/) — Represents agents that are on the transaction but are not part of the brokerage.
+- [Lone Wolf Technologies External Commission API](https://apis.io/apis/lone-wolf/lone-wolf-external-commission-api/) — The External Commission API from Lone Wolf Technologies — 2 operation(s) for external commission.
+- [Lone Wolf Technologies External Commissions API](https://apis.io/apis/lone-wolf/lone-wolf-external-commissions-api/) — Represents the external commissions and the related external agent's that are not part of the brokerage that receive those commissions. For commissions…
+- [Lone Wolf Technologies Features API](https://apis.io/apis/lone-wolf/lone-wolf-features-api/) — Represents the different features that are enabled or disabled for a client.
+- [Lone Wolf Technologies Folders API](https://apis.io/apis/lone-wolf/lone-wolf-folders-api/) — Manage folders within transactions.
+- [Lone Wolf Technologies Form Libraries API](https://apis.io/apis/lone-wolf/lone-wolf-form-libraries-api/) — Browse form libraries and library forms (Forms Design service).
+- [Lone Wolf Technologies Forms and Documents API](https://apis.io/apis/lone-wolf/lone-wolf-forms-and-documents-api/) — Manage forms and file documents within transactions.
+- [Lone Wolf Technologies History API](https://apis.io/apis/lone-wolf/lone-wolf-history-api/) — The History API from Lone Wolf Technologies — 1 operation(s) for history.
+- [Lone Wolf Technologies Layouts API](https://apis.io/apis/lone-wolf/lone-wolf-layouts-api/) — The Layouts API from Lone Wolf Technologies — 3 operation(s) for layouts.
+- [Lone Wolf Technologies Members API](https://apis.io/apis/lone-wolf/lone-wolf-members-api/) — The Members resource is a RESTful web resource running on Microsoft's Web API allowing third parties to access member data. The following actions are…
+- [Lone Wolf Technologies Metadata API](https://apis.io/apis/lone-wolf/lone-wolf-metadata-api/) — Retrieve metadata and property specifications for API resources
+- [Lone Wolf Technologies Offers API](https://apis.io/apis/lone-wolf/lone-wolf-offers-api/) — Manage offers on transactions.
+- [Lone Wolf Technologies Offices API](https://apis.io/apis/lone-wolf/lone-wolf-offices-api/) — Represents the different physical offices that make up the brokerage.
+- [Lone Wolf Technologies Other Endpoints API](https://apis.io/apis/lone-wolf/lone-wolf-other-endpoints-api/) — Additional endpoints including users, form libraries, and transaction forms
+- [Lone Wolf Technologies Participants API](https://apis.io/apis/lone-wolf/lone-wolf-participants-api/) — The Participants API from Lone Wolf Technologies — 3 operation(s) for participants.
+- [Lone Wolf Technologies Property Type API](https://apis.io/apis/lone-wolf/lone-wolf-property-type-api/) — The Property Type API from Lone Wolf Technologies — 2 operation(s) for property type.
+- [Lone Wolf Technologies Property Types API](https://apis.io/apis/lone-wolf/lone-wolf-property-types-api/) — Represents the different property types that can be associated to a transaction.
+- [Lone Wolf Technologies Share Groups API](https://apis.io/apis/lone-wolf/lone-wolf-share-groups-api/) — Share transactions with groups of users and manage group membership.
+- [Lone Wolf Technologies Signings API](https://apis.io/apis/lone-wolf/lone-wolf-signings-api/) — The Signings API from Lone Wolf Technologies — 23 operation(s) for signings.
+- [Lone Wolf Technologies Single Sign On API](https://apis.io/apis/lone-wolf/lone-wolf-single-sign-on-api/) — Generate one-time-use SSO links for the agent dashboard, transaction list, or a specific transaction
+- [Lone Wolf Technologies Source of Business API](https://apis.io/apis/lone-wolf/lone-wolf-source-of-business-api/) — The Source of Business API from Lone Wolf Technologies — 1 operation(s) for source of business.
+- [Lone Wolf Technologies Sources of Business API](https://apis.io/apis/lone-wolf/lone-wolf-sources-of-business-api/) — Represents the different sources of business that were used to find the buyers and sellers.
+- [Lone Wolf Technologies SSO API](https://apis.io/apis/lone-wolf/lone-wolf-sso-api/) — The Sso API from Lone Wolf Technologies — 2 operation(s) for sso.
+- [Lone Wolf Technologies Teams API](https://apis.io/apis/lone-wolf/lone-wolf-teams-api/) — Manage team-based transaction access for agents in brokerage or team scenarios.
+- [Lone Wolf Technologies Templates API](https://apis.io/apis/lone-wolf/lone-wolf-templates-api/) — List and apply transaction templates.
+- [Lone Wolf Technologies Tier API](https://apis.io/apis/lone-wolf/lone-wolf-tier-api/) — The Tier API from Lone Wolf Technologies — 3 operation(s) for tier.
+- [Lone Wolf Technologies Tiers API](https://apis.io/apis/lone-wolf/lone-wolf-tiers-api/) — Represents a tier or sub-transaction for a given transaction. All transactions must have at least one tier.
+- [Lone Wolf Technologies Title Integration API](https://apis.io/apis/lone-wolf/lone-wolf-title-integration-api/) — Allow title partners to update title order status and manage notes on transactions.
+- [Lone Wolf Technologies Transaction Contact Types API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-contact-types-api/) — Manage contact type definitions
+- [Lone Wolf Technologies Transaction Contacts API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-contacts-api/) — Manage contacts associated with transaction files
+- [Lone Wolf Technologies Transaction Documents API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-documents-api/) — Manage documents within transaction files
+- [Lone Wolf Technologies Transaction Forms API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-forms-api/) — Manage forms attached to a transaction's form package (Forms Editor service).
+- [Lone Wolf Technologies Transaction Statuses API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-statuses-api/) — Manage transaction status definitions
+- [Lone Wolf Technologies Transaction Summary API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-summary-api/) — Create, read, update, and delete transaction files and their property details
+- [Lone Wolf Technologies Transaction Templates API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-templates-api/) — Read transaction templates available to a user.
+- [Lone Wolf Technologies Transaction Types API](https://apis.io/apis/lone-wolf/lone-wolf-transaction-types-api/) — Manage transaction type definitions
+- [Lone Wolf Technologies Transactions API](https://apis.io/apis/lone-wolf/lone-wolf-transactions-api/) — Represents a transaction.
+- [Lone Wolf Technologies Users and Offices API](https://apis.io/apis/lone-wolf/lone-wolf-users-and-offices-api/) — Users and offices belonging to a client account (Platform service).
+- [Lone Wolf Technologies C Cs API](https://apis.io/apis/lone-wolf/lone-wolf-c-cs-api/) — The C Cs API from Lone Wolf Technologies — 2 operation(s) for c cs.
 
-## RESO Posture
+### Published properties
 
-**Not RESO certified.** No RESO Web API certification, no Data Dictionary certification, no `$metadata` document (`https://api.lwolf.com/$metadata` → HTTP 404), and no Universal Property Identifier. A full-text search of all seven harvested OpenAPI definitions for "RESO", "Data Dictionary" and "UPI" returned zero matches, and RESO's public certificates listing contains no Lone Wolf entry.
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-This is the correct and structural answer, not a governance failure. RESO certification governs MLS listing feeds; Lone Wolf occupies the transaction and back-office layer instead, consuming MLS data under MLS agreements (Cloud CMA documents RETS live queries) rather than redistributing it.
+#### AsyncAPI (1)
 
-**Do not mistake OData for RESO.** The Transact and WolfConnect APIs document OData query options (`$filter`, `$expand`) applied to Lone Wolf's own proprietary entity model. That is query grammar, not the RESO Web API — there is no service metadata document and no Data Dictionary field alignment.
+Event-driven and webhook contracts.
 
-Lone Wolf is the clean control case for this sector's central question, and it inverts the usual pattern: where a RESO-certified MLS endpoint is a standardized contract you cannot reach without a licence, Lone Wolf offers a non-standardized, entirely proprietary contract that you can read completely and anonymously. Standardization and reachability are independent axes.
+- [Lone Wolf Authentisign Webhooks](https://apis.io/asyncapis/lone-wolf/lone-wolf-authentisign-webhooks/)
 
-## Access Gate
+#### MCP servers (1)
 
-**application-approval.** Read the docs freely, then complete the access-request form at [https://www.lwolf.com/api-getting-started](https://www.lwolf.com/api-getting-started), which states: *"Complete the access request form and a member of our integrations team will be in touch to get you access to the APIs you need."* There is no self-serve key issuance anywhere on the estate.
+Model Context Protocol servers that expose the API to agents.
 
-No MLS membership, board membership, IDX/VOW agreement or real-estate licence is required to read the documentation or download the specs — a material difference from the MLS-feed providers in this sector. The zipForm Partner API is separately licensed, described in its own specification as *"made available on a licensed basis to third-party application partners."*
+- [mcp](https://apis.io/servers/lone-wolf/mcp/)
 
-**Open data:** none. Every endpoint requires issued credentials.
+#### Agentic access (1)
 
-## Auth Model
+Which operations an agent can call, which act, and which need a human in the loop.
 
-Auth0-backed OpenID Connect at `gateway.lwolf.com`, with a live discovery document fetched anonymously ([openid-configuration](https://gateway.lwolf.com/.well-known/openid-configuration), HTTP 200) supporting `client_credentials`, `authorization_code`, `refresh_token` and token exchange. Only standard OIDC identity scopes are advertised — no product- or resource-level API scopes are publicly inspectable.
+- [Lone Wolf Agentic Access](https://apis.io/agentic-access/lone-wolf/lone-wolf-agentic-access/)
 
-Five distinct schemes across the estate, tracing the acquisition roll-up:
+#### Collections (7)
 
-| API | Scheme |
+Postman and Open Collection request collections.
+
+- [Authentisign API](https://apis.io/collections/lone-wolf/open-lone-wolf-authentisign-api/)
+- [Back Office API](https://apis.io/collections/lone-wolf/open-lone-wolf-back-office-online-api/)
+- [Deals API](https://apis.io/collections/lone-wolf/open-lone-wolf-deals-api/)
+- [Transact API](https://apis.io/collections/lone-wolf/open-lone-wolf-transact-api/)
+- [TransactionDesk Partner API](https://apis.io/collections/lone-wolf/open-lone-wolf-transactiondesk-api/)
+- [WolfConnect API](https://apis.io/collections/lone-wolf/open-lone-wolf-wolfconnect-api/)
+- [ZipForm Partner API](https://apis.io/collections/lone-wolf/open-lone-wolf-zipform-api/)
+
+#### Overlays (7)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Lone Wolf Authentisign Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-authentisign-api-overlay/)
+- [Lone Wolf Back Office Online Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-back-office-online-api-overlay/)
+- [Lone Wolf Deals Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-deals-api-overlay/)
+- [Lone Wolf Transact Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-transact-api-overlay/)
+- [Lone Wolf Transactiondesk Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-transactiondesk-api-overlay/)
+- [Lone Wolf Wolfconnect Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-wolfconnect-api-overlay/)
+- [Lone Wolf Zipform Api Overlay](https://apis.io/overlays/lone-wolf/lone-wolf-zipform-api-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Lone Wolf Authentication](https://apis.io/security/lone-wolf/lone-wolf-authentication/)
+- [Lone Wolf Domain Security](https://apis.io/security/lone-wolf/lone-wolf-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Lone Wolf Scopes](https://apis.io/scopes/lone-wolf/lone-wolf-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Lone Wolf Plans Pricing](https://apis.io/plans/lone-wolf/lone-wolf-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Lone Wolf Rate Limits](https://apis.io/rate-limits/lone-wolf/lone-wolf-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.lwolf.com/)
+- [Documentation](https://apidocs.lwolf.com/)
+- [Getting started](https://www.lwolf.com/api-getting-started)
+- [API reference](https://apidocs.lwolf.com/)
+- [Sign up](https://www.lwolf.com/api-getting-started)
+- [Support](https://www.lwolf.com/support)
+- [Blog](https://www.lwolf.com/blog)
+- [Terms of service](https://www.lwolf.com/terms-of-use)
+- [Privacy policy](https://www.lwolf.com/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 48.4** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
 |---|---|
-| Transact | `bearerAuth` + `subscriptionKey` |
-| Deals | JWT Bearer via `POST https://authentication.api.lwolf.com/v1/login` |
-| TransactionDesk | OAuth 2.0 authorization-code (one-time code, 10-minute expiry) |
-| zipForm | `X-Auth-SharedKey` + `X-Auth-ContextId` / External Id |
-| WolfConnect | `LoneWolfToken` signed (HMAC) Authorization header |
-| Authentisign | *no securitySchemes declared* |
-| Back Office | *no securitySchemes declared* |
+| Discoverability | 78.3 |
+| Contract quality | 56.4 |
+| Contract governance | 4.5 |
+| Operational transparency | 23.7 |
+| Developer ergonomics | 56.5 |
+| Access clarity | 34.2 |
 
-## APIs
+**Agent readiness 47.7** — agent-ready (gated down from agent-native)
 
-Seven OpenAPI 3.0 definitions, harvested 2026-07-26 from the Bump.sh hub at `apidocs.lwolf.com`, all confirmed to parse. **348 operations total.**
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | mostly |
 
-### Lone Wolf Transact API
+**Regulatory alignment 38.0** — Securities & Market Data
 
-Full transaction lifecycle — transactions, offers, contacts, folders, documents, share groups, form libraries and e-signature dispatch. Resources scoped under `/users/{userId}`. 37 paths / 53 operations.
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/lone-wolf/](https://apis.io/providers/lone-wolf/).
 
-- **Human URL:** [https://apidocs.lwolf.com/doc/transact-api](https://apidocs.lwolf.com/doc/transact-api)
-- **Base URL:** `https://gateway.lwolf.com`
-- [OpenAPI](openapi/lone-wolf-transact-api-openapi.yml)
+## How this profile is made
 
-### Lone Wolf Deals API
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
 
-Partner-integration API (release 25.01.00) covering deal records across the Foundation platform. The largest published surface — 53 paths / 86 operations — but declares no servers block, so no base URL is asserted.
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Lone Wolf Technologies: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
 
-- **Human URL:** [https://apidocs.lwolf.com/doc/deals-api](https://apidocs.lwolf.com/doc/deals-api)
-- [OpenAPI](openapi/lone-wolf-deals-api-openapi.yml)
+## Open an issue
 
-### Lone Wolf Back Office API
-
-Brokerage accounting — commissions, commission fees and tiers, deposits, conditions, classifications, employees, offices and contacts. The brokerWOLF lineage. 39 paths / 69 operations.
-
-- **Human URL:** [https://apidocs.lwolf.com/doc/back-office-online-api](https://apidocs.lwolf.com/doc/back-office-online-api)
-- **Base URL:** `https://api.lwolf.com/backoffice`
-- [OpenAPI](openapi/lone-wolf-back-office-online-api-openapi.yml)
-
-### Lone Wolf Authentisign API
-
-E-signature — signings, signer roles, documents and status. Supports an optional `CallbackUrl` per signing plus a PATCH endpoint to update it: the only genuine webhook surface across the estate. 41 paths / 46 operations.
-
-- **Human URL:** [https://apidocs.lwolf.com/doc/authentisign-api](https://apidocs.lwolf.com/doc/authentisign-api)
-- **Base URL:** `https://api.lwolf.com/authentisign`
-- [OpenAPI](openapi/lone-wolf-authentisign-api-openapi.yml)
-
-### Lone Wolf TransactionDesk Partner API
-
-Transaction summaries, documents, contacts, types, statuses, single sign-on and resource metadata. Full OAuth 2.0 authorization-code flow. 25 paths / 44 operations. Only a preproduction host is published.
-
-- **Human URL:** [https://apidocs.lwolf.com/doc/transactiondesk-api](https://apidocs.lwolf.com/doc/transactiondesk-api)
-- **Base URL:** `https://api.pre.transactiondesk.com`
-- [OpenAPI](openapi/lone-wolf-transactiondesk-api-openapi.yml)
-
-### Lone Wolf zipForm Partner API
-
-The zipForm REST web service (v5.1) — transaction data, PDF forms, templates, teams and title integration. Licensed to third-party application partners. 22 paths / 28 operations.
-
-- **Human URL:** [https://apidocs.lwolf.com/doc/zipform-api](https://apidocs.lwolf.com/doc/zipform-api)
-- **Base URL:** `https://ws.zipformplus.com/api`
-- [OpenAPI](openapi/lone-wolf-zipform-api-openapi.yml)
-
-### Lone Wolf WolfConnect API
-
-RESTful access to members, transactions, classifications, conditions, contact types, property types and sources of business. Documents OData support, concurrency checking and permissions. 15 paths / 22 operations, with a real sandbox host.
-
-- **Human URL:** [https://apidocs.lwolf.com/doc/wolfconnect-api](https://apidocs.lwolf.com/doc/wolfconnect-api)
-- **Base URL:** `https://api.globalwolfweb.com`
-- [OpenAPI](openapi/lone-wolf-wolfconnect-api-openapi.yml)
-
-## Sibling Product Documentation
-
-Linked from the official API Portal but documented outside the Bump.sh hub, with no downloadable specification:
-
-- [Cloud CMA Developers](https://cloudcma.com/developers) — CMA, Buyer Tour and Property Reports; documents MLS Security and RETS Live Queries
-- [Boost / HomeSpotter API Reference](https://docs.homespotter.com/) — social advertising checkout; `openapi.json` and `swagger.json` both return HTML, not specifications
-- [Spacio API Reference](https://spac.io/docs/api/) — open-house lead capture; `https://ws.spac.io/api/v1/`, apikey header, 12,000 calls/hour default
-- [Propertybase / Front Office API Docs](https://apidocs.propertybase.com/) — CRM
-
-## Notes
-
-- Developer portal: [https://www.lwolf.com/api-portal](https://www.lwolf.com/api-portal) (HTTP 200, launched 2026-02-02)
-- Documentation hub: [https://apidocs.lwolf.com/](https://apidocs.lwolf.com/) — with a live MCP server at `https://apidocs.lwolf.com/mcp` and a Markdown export at `?format=md`
-- No SDKs, client libraries, CLI, Postman collection or GitHub organization were found.
-- The API Portal's "Back Office — Review API docs" link is broken: it resolves to `bump.sh/doc/back-office-api` (HTTP 404). The working document is `/doc/back-office-online-api`.
-
-See [review.yml](review.yml) for the full probe log, RESO evidence and harvest provenance.
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/lone-wolf/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
